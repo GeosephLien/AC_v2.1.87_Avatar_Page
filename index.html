@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Avatar Creator 2</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="landing-shell">
+    <section class="landing">
+      <header class="topbar">
+        <div class="brand">
+          <img class="brand-logo" src="images/VIVERSE_MainLogo_Digital_Primary_Gradient_Black.svg" alt="VIVERSE logo">
+          <span>AVATAR CREATOR</span>
+        </div>
+        <div class="top-actions">
+          <div class="hamburger-wrap">
+            <button class="hamburger-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="top-dropdown">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <nav id="top-dropdown" class="dropdown-menu" aria-label="Avatar options">
+              <a href="#">Marketplace</a>
+              <a href="#">Realistic Avatar</a>
+              <a href="#">Retro Avatar</a>
+              <a href="#">Upload VRM</a>
+              <a href="#">My Avatar</a>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      <section class="hero">
+        <section class="hero-copy">
+          <h1>
+            <span class="title-main">Create Your Own</span>
+            <span class="title-gradient" data-text="Unique Character">Unique Character</span>
+          </h1>
+          <p class="desc">
+            Customize style, colors, and details - no two avatars look the same.
+          </p>
+          <button id="start-creating" class="btn btn-primary" type="button">Start Creating!</button>
+        </section>
+
+        <section class="hero-visual" aria-label="Creative hero visual">
+          <div class="blob blob-a"></div>
+          <div class="blob blob-b"></div>
+          <div class="blob blob-c"></div>
+          <div class="hero-carousel" aria-live="polite">
+            <img class="hero-slide is-active" src="images/Yaya_Collection_print_v2.png" alt="Yaya collection character visual">
+            <img class="hero-slide" src="images/Michael_print_Collection.png" alt="Michael collection character visual">
+            <img class="hero-slide" src="images/Iris.png" alt="Iris character visual">
+            <img class="hero-slide" src="images/ca2_suit_tb_01.png" alt="Suit character visual">
+            <img class="hero-slide" src="images/ca2_suit_tb_05.png" alt="Suit character visual 05">
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <div id="loading-overlay" class="loading-overlay" aria-hidden="true">
+    <div id="caption-wrapper">
+      <div id="loading-container">
+        <div id="loading-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="player-version">v2.1.87</div>
+
+  <div id="container" aria-hidden="true">
+    <canvas id="game-canvas" data-pixel-art=""></canvas>
+  </div>
+
+  <script src="Build/AC_v2.1.87_WebGL.loader.js"></script>
+  <script>
+    (() => {
+      const startButton = document.getElementById('start-creating');
+      const loadingOverlay = document.getElementById('loading-overlay');
+      const loadingBar = document.getElementById('loading-bar');
+      const landingShell = document.querySelector('.landing-shell');
+      const container = document.getElementById('container');
+      const canvasElement = document.getElementById('game-canvas');
+      const versionBadge = document.getElementById('player-version');
+
+      let canvas = canvasElement;
+      let unityReady = false;
+      let enterRequested = false;
+      let hasEnteredUnity = false;
+      let revealFinalizeTimerId = null;
+      let revealOrigin = null;
+
+      function progressHandler(progress) {
+        loadingBar.style.width = (progress * 100) + '%';
+      }
+
+      function onResize() {
+        setRevealOrigin();
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+      }
+
+      function setRevealOrigin() {
+        revealOrigin = {
+          x: window.innerWidth / 2,
+          y: window.innerHeight / 2
+        };
+
+        const maxHorizontal = Math.max(revealOrigin.x, window.innerWidth - revealOrigin.x);
+        const maxVertical = Math.max(revealOrigin.y, window.innerHeight - revealOrigin.y);
+        const finalRadius = Math.ceil(Math.sqrt((maxHorizontal * maxHorizontal) + (maxVertical * maxVertical)));
+
+        document.body.style.setProperty('--unity-reveal-x', revealOrigin.x + 'px');
+        document.body.style.setProperty('--unity-reveal-y', revealOrigin.y + 'px');
+        document.body.style.setProperty('--unity-reveal-end-radius', finalRadius + 'px');
+      }
+
+      function showLoadingOverlay() {
+        document.body.classList.add('show-loading-overlay');
+        loadingOverlay.setAttribute('aria-hidden', 'false');
+      }
+
+      function hideLoadingOverlay() {
+        document.body.classList.remove('show-loading-overlay');
+        loadingOverlay.setAttribute('aria-hidden', 'true');
+      }
+
+      function enterUnity() {
+        if (!unityReady || hasEnteredUnity) return;
+        hasEnteredUnity = true;
+        hideLoadingOverlay();
+        document.body.classList.add('enter-unity');
+        container.setAttribute('aria-hidden', 'false');
+        if (revealFinalizeTimerId !== null) {
+          window.clearTimeout(revealFinalizeTimerId);
+        }
+        revealFinalizeTimerId = window.setTimeout(function () {
+          document.body.classList.add('unity-visible');
+          landingShell.setAttribute('aria-hidden', 'true');
+          versionBadge.style.display = 'none';
+        }, 1050);
+        onResize();
+      }
+
+      function queueUnityEntry() {
+        setRevealOrigin();
+        enterRequested = true;
+        if (unityReady) {
+          enterUnity();
+          return;
+        }
+        showLoadingOverlay();
+      }
+
+      (() => {
+        const wrap = document.querySelector('.hamburger-wrap');
+        if (!wrap) return;
+        const button = wrap.querySelector('.hamburger-btn');
+        const menu = wrap.querySelector('.dropdown-menu');
+
+        function closeMenu() {
+          wrap.classList.remove('open');
+          button.setAttribute('aria-expanded', 'false');
+        }
+
+        button.addEventListener('click', function (event) {
+          event.stopPropagation();
+          const isOpen = wrap.classList.toggle('open');
+          button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', function (event) {
+          if (!wrap.contains(event.target)) closeMenu();
+        });
+
+        document.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape') closeMenu();
+        });
+
+        menu.addEventListener('click', closeMenu);
+      })();
+
+      (() => {
+        const slides = Array.prototype.slice.call(document.querySelectorAll('.hero-slide'));
+        if (slides.length < 2) return;
+
+        let currentIndex = 0;
+        window.setInterval(function () {
+          const nextIndex = (currentIndex + 1) % slides.length;
+          slides[currentIndex].classList.remove('is-active');
+          slides[nextIndex].classList.add('is-active');
+          currentIndex = nextIndex;
+        }, 4000);
+      })();
+
+      startButton.addEventListener('click', queueUnityEntry);
+      setRevealOrigin();
+
+      function startUnityPreload() {
+        createUnityInstance(canvasElement, {
+          dataUrl: 'Build/AC_v2.1.87_WebGL.data.unityweb',
+          frameworkUrl: 'Build/AC_v2.1.87_WebGL.framework.js.unityweb',
+          codeUrl: 'Build/AC_v2.1.87_WebGL.wasm.unityweb'
+        }, progressHandler).then(function (instance) {
+          unityReady = true;
+          canvas = instance.Module.canvas;
+          loadingBar.style.width = '100%';
+          document.body.classList.add('unity-ready');
+          onResize();
+
+          if (enterRequested) {
+            enterUnity();
+          }
+        }).catch(function (error) {
+          showLoadingOverlay();
+          console.error(error);
+        });
+      }
+
+      window.addEventListener('resize', onResize);
+      window.addEventListener('resize', function () {
+        setRevealOrigin();
+      });
+      window.addEventListener('load', startUnityPreload, { once: true });
+      onResize();
+    })();
+  </script>
+</body>
+</html>
