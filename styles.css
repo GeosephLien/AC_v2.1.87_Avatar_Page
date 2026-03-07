@@ -221,6 +221,40 @@ body::after {
     0 0 30px rgba(181, 102, 216, 0.3);
 }
 
+#start-creating {
+  position: relative;
+  isolation: isolate;
+}
+
+#start-creating::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(102deg, rgba(87, 110, 255, 0.7), rgba(181, 102, 216, 0.72), rgba(255, 111, 180, 0.68));
+  filter: blur(18px);
+  opacity: 0.72;
+  animation: start-button-glow 5s ease-in-out infinite;
+}
+
+#start-creating:hover::before {
+  opacity: 0.96;
+  filter: blur(22px);
+}
+
+@keyframes start-button-glow {
+  0%,
+  100% {
+    transform: scale(0.96);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.6;
+  }
+}
+
 .btn-top {
   color: #ffffff;
   background: transparent;
