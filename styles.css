@@ -154,7 +154,7 @@ body::after {
   pointer-events: none;
   opacity: 1;
   filter: blur(12px) saturate(2) brightness(1) contrast(1.08);
-  animation: title-glow-breathe 5s ease-in-out infinite;
+  animation: title-glow-breathe 8s ease-in-out infinite;
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
@@ -178,7 +178,7 @@ body::after {
   }
 
   50% {
-    opacity: 1;
+    opacity: 1.35;
   }
 }
 
@@ -235,7 +235,7 @@ body::after {
   background: linear-gradient(102deg, rgba(87, 110, 255, 0.7), rgba(181, 102, 216, 0.72), rgba(255, 111, 180, 0.68));
   filter: blur(18px);
   opacity: 0.72;
-  animation: start-button-glow 5s ease-in-out infinite;
+  animation: start-button-glow 6s ease-in-out infinite;
 }
 
 #start-creating:hover::before {
@@ -246,11 +246,11 @@ body::after {
 @keyframes start-button-glow {
   0%,
   100% {
-    transform: scale(0.96);
+    transform: scale(0.5);
     opacity: 0.3;
   }
   50% {
-    transform: scale(1.05);
+    transform: scale(0.8);
     opacity: 0.6;
   }
 }
