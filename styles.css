@@ -153,8 +153,8 @@ body::after {
   color: transparent;
   pointer-events: none;
   opacity: 1;
-  filter: blur(12px) saturate(1.7) brightness(1.35) contrast(1.08);
-  animation: title-glow-breathe 3.8s ease-in-out infinite;
+  filter: blur(12px) saturate(2) brightness(1) contrast(1.08);
+  animation: title-glow-breathe 5s ease-in-out infinite;
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
@@ -174,7 +174,7 @@ body::after {
 @keyframes title-glow-breathe {
   0%,
   100% {
-    opacity: 0.78;
+    opacity: 0.48;
   }
 
   50% {
@@ -368,7 +368,7 @@ body::after {
   width: 120%;
   height: auto;
   opacity: 0;
-  transition: opacity 1s ease;
+  transition: opacity 1.5s ease;
   pointer-events: none;
   position: absolute;
   top: 0;
