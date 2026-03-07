@@ -12,11 +12,23 @@
 <body>
   <div class="page">
     <div class="top-strip">
-      <span class="htc-mark">HTC</span>
+      <svg class="htc-mark" viewBox="0 0 111.1 36.8" aria-label="HTC" role="img">
+        <g>
+          <path d="M101.9,31.2c-5.9,0-11.4,0.1-13-0.1c-3.1-0.3-5.2-2.3-5.5-5.3c-0.2-2-0.2-3.6,0-5.2c0.3-2.9,2.7-5.7,5.5-5.9c1-0.1,3.6,0,8.4,0l13.9,0V8.9c0,0-11,0-14.4,0c-4.5,0-6.7,0-8.1,0c-3.1,0.1-5.7,1.2-7.8,3.3c-1.9,2-3.1,5.1-3.2,8.2c-0.1,1.7-0.1,3.9,0,5.2c0.3,3.4,1.4,6,3.2,7.9c2,2,4.9,3.3,7.8,3.3c2.3,0,22.5,0,22.5,0v-5.7C111.1,31.1,105,31.1,101.9,31.2z"></path>
+          <polygon points="39.3,9.3 39.3,15 53,15 53,36.8 58.7,36.8 58.7,15 72.4,15 72.4,9.3"></polygon>
+          <path d="M33.3,20.1c0-3.1-1.1-5.7-3.2-7.9C27.8,10,24.5,9,22.3,8.9c-1.9-0.1-9.5-0.1-11.2,0C8.5,9,6.7,9.8,5.8,10.5c0,0,0,0,0,0V0H0v36.9h5.8c0,0-0.1-15.1,0-16.7c0.2-2.9,2.4-5.2,5.3-5.5c2.3-0.2,9.1-0.1,11.2,0c2.9,0.2,5.1,2.5,5.3,5.6c0.1,1.1,0,16.6,0,16.6h5.8C33.3,36.9,33.3,21.4,33.3,20.1z"></path>
+        </g>
+      </svg>
     </div>
 
     <header class="site-header">
       <div class="header-inner">
+        <button class="mobile-menu-button" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
         <a class="brand" href="#" aria-label="VIVERSE Avatar">
           <img class="brand-logo" src="../images/VIVERSE_MainLogo_Digital_Primary_Gradient_Black.svg" alt="VIVERSE logo">
           <span class="brand-name">VIVERSE</span>
@@ -29,14 +41,16 @@
           <a href="#">Create</a>
           <a href="#">Business</a>
           <a href="#">Marketplace</a>
-          <a class="active" href="#">Avatar</a>
+          <a href="#">Avatar</a>
           <a href="#">Blog</a>
         </nav>
 
         <div class="header-actions">
           <button class="icon-button" type="button" aria-label="Language">
             <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20Zm6.92 9h-3.02a15.55 15.55 0 0 0-1.34-5.02A8.03 8.03 0 0 1 18.92 11ZM12 4.04c.89 1.08 1.95 3.41 2.38 6.96H9.62C10.05 7.45 11.11 5.12 12 4.04ZM9.44 5.98A15.55 15.55 0 0 0 8.1 11H5.08a8.03 8.03 0 0 1 4.36-5.02ZM5.08 13H8.1a15.55 15.55 0 0 0 1.34 5.02A8.03 8.03 0 0 1 5.08 13Zm6.92 6.96c-.89-1.08-1.95-3.41-2.38-6.96h4.76c-.43 3.55-1.49 5.88-2.38 6.96Zm2.56-1.94A15.55 15.55 0 0 0 15.9 13h3.02a8.03 8.03 0 0 1-4.36 5.02Z"/>
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3 12h18"></path>
+              <path d="M12 3c2.7 2.7 4.1 5.7 4.1 9s-1.4 6.3-4.1 9c-2.7-2.7-4.1-5.7-4.1-9s1.4-6.3 4.1-9Z"></path>
             </svg>
           </button>
 
@@ -51,7 +65,8 @@
 
           <button class="icon-button" type="button" aria-label="Notifications">
             <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-4H5v-1.5l1.5-1.5V11a5.5 5.5 0 0 1 4.5-5.4V5a1 1 0 1 1 2 0v.6A5.5 5.5 0 0 1 17.5 11v4l1.5 1.5V18Z"/>
+              <path class="bell-fill" d="M12 3.5a4.8 4.8 0 0 0-4.8 4.8v1.6c0 .8-.22 1.58-.64 2.26L5.2 14.3c-.5.8.07 1.82 1.01 1.82h11.58c.94 0 1.51-1.02 1.01-1.82l-1.38-2.2a4.26 4.26 0 0 1-.62-2.25V8.3A4.8 4.8 0 0 0 12 3.5Z"></path>
+              <path class="bell-fill" d="M10.1 18.2a1.9 1.9 0 0 0 3.8 0Z"></path>
             </svg>
           </button>
 
@@ -60,9 +75,52 @@
           </button>
         </div>
       </div>
+
+      <nav class="mobile-nav-panel" id="mobile-nav" aria-label="Mobile primary" hidden>
+        <a href="#">Worlds</a>
+        <a href="#">Create</a>
+        <a href="#">Business</a>
+        <a href="#">Marketplace</a>
+        <a href="#">Avatar</a>
+        <a href="#">Blog</a>
+      </nav>
     </header>
 
     <main class="content-black" aria-label="Landing content placeholder"></main>
   </div>
+  <script>
+    const menuButton = document.querySelector(".mobile-menu-button");
+    const mobileNav = document.getElementById("mobile-nav");
+    const header = document.querySelector(".site-header");
+
+    if (menuButton && mobileNav && header) {
+      const closeMenu = () => {
+        menuButton.setAttribute("aria-expanded", "false");
+        mobileNav.hidden = true;
+      };
+
+      menuButton.addEventListener("click", () => {
+        const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+        menuButton.setAttribute("aria-expanded", String(!isOpen));
+        mobileNav.hidden = isOpen;
+      });
+
+      mobileNav.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", closeMenu);
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!header.contains(event.target)) {
+          closeMenu();
+        }
+      });
+
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 800) {
+          closeMenu();
+        }
+      });
+    }
+  </script>
 </body>
 </html>
