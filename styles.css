@@ -314,18 +314,19 @@ body::after {
 
 .hero-visual {
   position: relative;
+  width: 100%;
   min-height: 620px;
   display: grid;
   place-items: center;
-  overflow: visible;
-  padding-top: 28px;
-  margin-top: -28px;
+  overflow: hidden;
+  padding: 28px 0 0;
+  isolation: isolate;
 }
 
 .hero-visual::before {
   content: "";
   position: absolute;
-  inset: 6% -10% 4% -10%;
+  inset: 8% 0 4%;
   border-radius: 49% 51% 58% 42% / 46% 39% 61% 54%;
   background:
     radial-gradient(circle at 18% 62%, rgba(85, 176, 255, 0.3), transparent 20%),
@@ -337,11 +338,13 @@ body::after {
 .hero-carousel {
   position: relative;
   z-index: 2;
-  width: min(1100px, 240%);
-  height: min(80vh, 760px);
+  width: min(100%, 800px);
+  aspect-ratio: 4 / 3;
+  max-height: min(80vh, 600px);
   display: grid;
   place-items: center;
-  overflow: visible;
+  overflow: hidden;
+  margin-inline: auto;
 }
 
 .hero-slide {
@@ -651,12 +654,12 @@ body.unity-visible #container {
     min-height: 380px;
     justify-items: center;
     padding-top: 18px;
-    margin-top: -18px;
   }
 
   .hero-carousel {
-    width: min(760px, 100%);
-    height: min(74vh, 520px);
+    width: min(100%, 640px);
+    aspect-ratio: 4 / 3;
+    max-height: min(74vh, 480px);
     display: grid;
     margin-left: auto;
     margin-right: auto;
