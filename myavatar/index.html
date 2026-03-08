@@ -412,19 +412,29 @@
         const contentWidth = avatarSelectorViewport.scrollWidth;
         const maxScroll = Math.max(contentWidth - visibleWidth, 0);
         const hasOverflow = maxScroll > 1;
+        const fadeSize = 30;
 
         avatarScrollbar.hidden = !hasOverflow;
 
         if (!hasOverflow) {
           avatarScrollbarThumb.style.width = '100%';
           avatarScrollbarThumb.style.transform = 'translateX(0)';
+          avatarSelectorViewport.style.setProperty('--avatar-fade-left', '0px');
+          avatarSelectorViewport.style.setProperty('--avatar-fade-right', '0px');
           return;
         }
+
+        const scrollLeft = avatarSelectorViewport.scrollLeft;
+        const atStart = scrollLeft <= 1;
+        const atEnd = scrollLeft >= maxScroll - 1;
+
+        avatarSelectorViewport.style.setProperty('--avatar-fade-left', atStart ? '0px' : `${fadeSize}px`);
+        avatarSelectorViewport.style.setProperty('--avatar-fade-right', atEnd ? '0px' : `${fadeSize}px`);
 
         const ratio = visibleWidth / contentWidth;
         const thumbWidth = Math.max(ratio * visibleWidth, 36);
         const travel = visibleWidth - thumbWidth;
-        const progress = maxScroll === 0 ? 0 : avatarSelectorViewport.scrollLeft / maxScroll;
+        const progress = maxScroll === 0 ? 0 : scrollLeft / maxScroll;
         const thumbOffset = travel * progress;
 
         avatarScrollbarThumb.style.width = `${thumbWidth}px`;

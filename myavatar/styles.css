@@ -81,6 +81,7 @@ body::after {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  max-width: 768px;
 }
 
 .creator-button {
@@ -88,7 +89,10 @@ body::after {
 }
 
 .avatar-selector-viewport {
-  width: min(1000px, calc(100vw - 5rem));
+  position: relative;
+  --avatar-fade-left: 0px;
+  --avatar-fade-right: 0px;
+  width: min(calc(768px - 2rem), calc(100vw - 5rem));
   overflow-x: auto;
   overflow-y: hidden;
   cursor: grab;
@@ -96,6 +100,20 @@ body::after {
   -ms-overflow-style: none;
   user-select: none;
   touch-action: pan-x;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--avatar-fade-left),
+    #000 calc(100% - var(--avatar-fade-right)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--avatar-fade-left),
+    #000 calc(100% - var(--avatar-fade-right)),
+    transparent 100%
+  );
 }
 
 .avatar-selector-viewport::-webkit-scrollbar {
@@ -118,7 +136,7 @@ body::after {
 
 .avatar-scrollbar {
   position: relative;
-  width: min(1000px, calc(100vw - 5rem));
+  width: min(calc(768px - 2rem), calc(100vw - 5rem));
   height: 2px;
   margin-top: 0.55rem;
   border-radius: 999px;
