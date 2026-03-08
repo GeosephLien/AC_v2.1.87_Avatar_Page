@@ -21,28 +21,29 @@
   </script>
 </head>
 <body>
-  <a class="btn btn-primary creator-button" href="http://127.0.0.1:5501/index.html">Avatar Creator</a>
-
   <main class="page-shell">
-    <aside class="avatar-selector" aria-label="Avatar selector">
-      <button
-        class="avatar-button is-active"
-        type="button"
-        data-avatar-button
-        data-vrm="./vrms/Iris_o3vg.vrm"
-        aria-pressed="true"
-      >
-        <img src="./images/thb_Iris.png" alt="Load Iris avatar">
-      </button>
-      <button
-        class="avatar-button"
-        type="button"
-        data-avatar-button
-        data-vrm="./vrms/Michael_b8ab.vrm"
-        aria-pressed="false"
-      >
-        <img src="./images/thb_Michael.png" alt="Load Michael avatar">
-      </button>
+    <aside class="control-panel" aria-label="Avatar controls">
+      <a class="btn btn-primary creator-button" href="http://127.0.0.1:5501/index.html">Avatar Creator</a>
+      <div class="avatar-selector" aria-label="Avatar selector">
+        <button
+          class="avatar-button is-active"
+          type="button"
+          data-avatar-button
+          data-vrm="./vrms/Iris_o3vg.vrm"
+          aria-pressed="true"
+        >
+          <img src="./images/thb_Iris.png" alt="Load Iris avatar">
+        </button>
+        <button
+          class="avatar-button"
+          type="button"
+          data-avatar-button
+          data-vrm="./vrms/Michael_b8ab.vrm"
+          aria-pressed="false"
+        >
+          <img src="./images/thb_Michael.png" alt="Load Michael avatar">
+        </button>
+      </div>
     </aside>
     <section class="viewer-stage">
       <canvas id="avatar-canvas" aria-label="VRM avatar preview"></canvas>
