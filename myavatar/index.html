@@ -69,7 +69,6 @@
 
     const canvas = document.getElementById('avatar-canvas');
     const errorPanel = document.getElementById('viewer-error');
-    const creatorButton = document.querySelector('.creator-button');
     const avatarSelector = document.querySelector('.avatar-selector');
     const avatarSelectorViewport = document.querySelector('[data-avatar-scroll]');
     const avatarScrollbar = document.querySelector('[data-avatar-scrollbar]');
@@ -613,9 +612,6 @@
         }
 
         if (button.hasAttribute('data-customize-button')) {
-          if (creatorButton?.href) {
-            window.location.href = creatorButton.href;
-          }
           return;
         }
 
