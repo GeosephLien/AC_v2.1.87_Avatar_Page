@@ -298,7 +298,7 @@
         cameraState.currentPivot.copy(cameraState.targetPivot);
         updateCamera(1 / 60);
 
-        const animationGltf = await loadGLTF('./vrms/ani_Idle_Stand_Female.vrma');
+        const animationGltf = await loadGLTF('./vrmas/ani_Idle_Stand_Female.vrma');
         const vrmAnimation = animationGltf.userData.vrmAnimations?.[0];
 
         if (vrmAnimation) {
