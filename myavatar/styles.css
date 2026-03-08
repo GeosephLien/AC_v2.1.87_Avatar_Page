@@ -106,8 +106,8 @@ body::after {
 
 .viewer-stage {
   position: relative;
-  width: min(100vw, 100vh);
-  height: min(100vw, 100vh);
+  width: min(1280px, 100vw, 100vh);
+  height: min(1280px, 100vw, 100vh);
   display: grid;
   place-items: center;
 }
