@@ -74,25 +74,27 @@ body::after {
   gap: 0;
   justify-content: center;
   flex-wrap: nowrap;
-  padding: 1rem 1rem 0;
+  padding: 0.3rem 1rem 0;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 28px;
   background: rgba(7, 10, 34, 0.42);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
-  max-width: 768px;
+  max-width: 640px;
 }
 
 .creator-button {
   position: relative;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.92rem;
 }
 
 .avatar-selector-viewport {
   position: relative;
   --avatar-fade-left: 0px;
   --avatar-fade-right: 0px;
-  width: min(calc(768px - 2rem), calc(100vw - 5rem));
+  width: min(calc(640px - 2rem), calc(100vw - 5rem));
   overflow-x: auto;
   overflow-y: hidden;
   cursor: grab;
@@ -135,10 +137,12 @@ body::after {
 }
 
 .avatar-scrollbar {
-  position: relative;
-  width: min(calc(768px - 2rem), calc(100vw - 5rem));
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 0;
+  width: min(calc(640px - 2rem), calc(100vw - 5rem));
   height: 2px;
-  margin-top: 0.55rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.14);
   overflow: hidden;
@@ -161,8 +165,8 @@ body::after {
 .avatar-button {
   position: relative;
   flex: 0 0 auto;
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 24px;
@@ -193,23 +197,6 @@ body::after {
   height: 100%;
   display: block;
   object-fit: cover;
-  pointer-events: none;
-}
-
-.avatar-button-customize::after {
-  content: "Create";
-  position: absolute;
-  left: 50%;
-  bottom: 0.55rem;
-  transform: translateX(-50%);
-  padding: 0.18rem 0.5rem;
-  border-radius: 999px;
-  background: rgba(8, 12, 36, 0.78);
-  color: #fff;
-  font-size: 0.64rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   pointer-events: none;
 }
 
@@ -256,7 +243,7 @@ body::after {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.9rem 1.6rem;
+  padding: 0.65rem 1.6rem;
   border-radius: 999px;
   text-decoration: none;
   font-size: 1rem;
