@@ -9,15 +9,186 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.1/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.1/examples/jsm/",
+        "@pixiv/three-vrm": "https://esm.sh/@pixiv/three-vrm@2.1.2?bundle&external=three",
+        "@pixiv/three-vrm-animation": "https://esm.sh/@pixiv/three-vrm-animation@2.1.2?bundle&external=three,@pixiv/three-vrm"
+      }
+    }
+  </script>
 </head>
 <body>
+  <a class="btn btn-primary creator-button" href="http://127.0.0.1:5501/index.html">Avatar Creator</a>
+
   <main class="page-shell">
-    <section class="panel">
-      <p class="eyebrow">My Avatar</p>
-      <h1>Open Avatar Creator</h1>
-      <p class="copy">Launch the creator and continue in the same tab.</p>
-      <a class="btn btn-primary" href="http://127.0.0.1:5501/index.html">Avatar Creator</a>
+    <section class="viewer-stage">
+      <div class="viewer-frame">
+        <canvas id="avatar-canvas" aria-label="VRM avatar preview"></canvas>
+        <div class="viewer-error" id="viewer-error" hidden></div>
+      </div>
     </section>
   </main>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { VRMLoaderPlugin, VRMUtils } from '@pixiv/three-vrm';
+    import {
+      VRMAnimationLoaderPlugin,
+      createVRMAnimationClip
+    } from '@pixiv/three-vrm-animation';
+
+    const canvas = document.getElementById('avatar-canvas');
+    const errorPanel = document.getElementById('viewer-error');
+    const scene = new THREE.Scene();
+    scene.background = null;
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      alpha: true
+    });
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
+    camera.position.set(0, 1.45, 2.8);
+
+    const controls = new OrbitControls(camera, canvas);
+    controls.target.set(0, 1.15, 0);
+    controls.enableDamping = true;
+    controls.minDistance = 1.2;
+    controls.maxDistance = 4.5;
+    controls.minPolarAngle = 0.6;
+    controls.maxPolarAngle = 1.75;
+    controls.enablePan = false;
+    controls.update();
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x3c3455, 1.8));
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.6);
+    keyLight.position.set(1.2, 2.4, 2.2);
+    scene.add(keyLight);
+
+    const rimLight = new THREE.DirectionalLight(0x9db3ff, 1.2);
+    rimLight.position.set(-1.5, 1.8, -1.6);
+    scene.add(rimLight);
+
+    const floor = new THREE.Mesh(
+      new THREE.CircleGeometry(1.35, 64),
+      new THREE.MeshStandardMaterial({
+        color: 0x7394ff,
+        transparent: true,
+        opacity: 0.14,
+        roughness: 0.7,
+        metalness: 0.05
+      })
+    );
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -0.02;
+    scene.add(floor);
+
+    const clock = new THREE.Clock();
+    const loader = new GLTFLoader();
+    loader.crossOrigin = 'anonymous';
+    loader.register((parser) => new VRMLoaderPlugin(parser));
+    loader.register((parser) => new VRMAnimationLoaderPlugin(parser));
+
+    let currentVrm = null;
+    let mixer = null;
+
+    function showError(message) {
+      errorPanel.textContent = message;
+      errorPanel.hidden = false;
+    }
+
+    function resizeRenderer() {
+      const frame = canvas.parentElement;
+      const width = frame.clientWidth;
+      const height = frame.clientHeight;
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    }
+
+    async function loadGLTF(url) {
+      return await new Promise((resolve, reject) => {
+        loader.load(url, resolve, undefined, reject);
+      });
+    }
+
+    function frameModel(root) {
+      const box = new THREE.Box3().setFromObject(root);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const maxSize = Math.max(size.x, size.y, size.z);
+      const distance = Math.max(maxSize * 1.35, 1.8);
+
+      controls.target.copy(center);
+      camera.position.set(center.x, center.y + size.y * 0.05, center.z + distance);
+      controls.minDistance = Math.max(maxSize * 0.45, 0.8);
+      controls.maxDistance = Math.max(maxSize * 2.2, 3.5);
+      camera.near = 0.01;
+      camera.far = Math.max(distance * 8, 20);
+      camera.updateProjectionMatrix();
+      controls.update();
+    }
+
+    async function loadAvatar() {
+      try {
+        const avatarGltf = await loadGLTF('./vrms/Iris_o3vg.vrm');
+        const vrm = avatarGltf.userData.vrm;
+        if (!vrm) {
+          throw new Error('VRM data was not found in the loaded file.');
+        }
+
+        currentVrm = vrm;
+
+        VRMUtils.removeUnnecessaryVertices(avatarGltf.scene);
+        VRMUtils.removeUnnecessaryJoints(avatarGltf.scene);
+        vrm.scene.rotation.y = Math.PI;
+        scene.add(vrm.scene);
+        frameModel(vrm.scene);
+
+        const animationGltf = await loadGLTF('./vrms/ani_Idle_Stand_Female.vrma');
+        const vrmAnimation = animationGltf.userData.vrmAnimations?.[0];
+
+        if (vrmAnimation) {
+          mixer = new THREE.AnimationMixer(vrm.scene);
+          const clip = createVRMAnimationClip(vrmAnimation, vrm);
+          mixer.clipAction(clip).reset().play();
+        }
+      } catch (error) {
+        console.error(error);
+        showError(`VRM load failed: ${error.message}`);
+      }
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+
+      controls.update();
+
+      if (mixer) {
+        mixer.update(delta);
+      }
+
+      if (currentVrm) {
+        currentVrm.update(delta);
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    resizeRenderer();
+    window.addEventListener('resize', resizeRenderer);
+    loadAvatar();
+    animate();
+  </script>
 </body>
 </html>
