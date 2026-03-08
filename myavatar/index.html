@@ -105,8 +105,8 @@
     let humanoid = null;
 
     const zoomConfig = [
-      { bone: 'hips', offset: new THREE.Vector3(0, 0.05, 0), distance: 3.6 },
-      { bone: 'head', offset: new THREE.Vector3(0, 0, 0.02), distance: 1.05 }
+      { bone: 'hips', offset: new THREE.Vector3(0, 0.05, 0), distance: 3.6, pivot: null },
+      { bone: 'head', offset: new THREE.Vector3(0, 0, 0.02), distance: 1.05, pivot: null }
     ];
 
     const dragState = {
@@ -169,12 +169,9 @@
 
     function getZoomPivot(index) {
       const step = zoomConfig[index] || zoomConfig[0];
-      const bone = getBoneNode(step.bone);
 
-      if (bone) {
-        const worldPosition = new THREE.Vector3();
-        bone.getWorldPosition(worldPosition);
-        return worldPosition.add(step.offset);
+      if (step.pivot) {
+        return step.pivot.clone();
       }
 
       const fallback = new THREE.Box3().setFromObject(currentVrm.scene);
@@ -190,6 +187,22 @@
       cameraState.zoomIndex = clamped;
       cameraState.targetDistance = zoomConfig[clamped].distance;
       cameraState.targetPivot.copy(getZoomPivot(clamped));
+    }
+
+    function cacheZoomPivots() {
+      for (const step of zoomConfig) {
+        const bone = getBoneNode(step.bone);
+
+        if (bone) {
+          const worldPosition = new THREE.Vector3();
+          bone.getWorldPosition(worldPosition);
+          step.pivot = worldPosition.add(step.offset);
+          continue;
+        }
+
+        const fallback = new THREE.Box3().setFromObject(currentVrm.scene);
+        step.pivot = fallback.getCenter(new THREE.Vector3());
+      }
     }
 
     function updateTargetPivot() {
@@ -292,6 +305,8 @@
         VRMUtils.removeUnnecessaryJoints(avatarGltf.scene);
         vrm.scene.rotation.y = Math.PI;
         scene.add(vrm.scene);
+        vrm.update(0);
+        cacheZoomPivots();
         frameModel(vrm.scene);
         cameraState.zoomIndex = 0;
         updateTargetPivot();
@@ -322,7 +337,6 @@
 
       if (currentVrm) {
         currentVrm.update(delta);
-        updateTargetPivot();
       }
 
       updateCamera(delta);
