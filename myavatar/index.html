@@ -24,6 +24,26 @@
   <a class="btn btn-primary creator-button" href="http://127.0.0.1:5501/index.html">Avatar Creator</a>
 
   <main class="page-shell">
+    <aside class="avatar-selector" aria-label="Avatar selector">
+      <button
+        class="avatar-button is-active"
+        type="button"
+        data-avatar-button
+        data-vrm="./vrms/Iris_o3vg.vrm"
+        aria-pressed="true"
+      >
+        <img src="./images/thb_Iris.png" alt="Load Iris avatar">
+      </button>
+      <button
+        class="avatar-button"
+        type="button"
+        data-avatar-button
+        data-vrm="./vrms/Michael_b8ab.vrm"
+        aria-pressed="false"
+      >
+        <img src="./images/thb_Michael.png" alt="Load Michael avatar">
+      </button>
+    </aside>
     <section class="viewer-stage">
       <div class="viewer-frame">
         <canvas id="avatar-canvas" aria-label="VRM avatar preview"></canvas>
@@ -43,6 +63,7 @@
 
     const canvas = document.getElementById('avatar-canvas');
     const errorPanel = document.getElementById('viewer-error');
+    const avatarButtons = [...document.querySelectorAll('[data-avatar-button]')];
     const scene = new THREE.Scene();
     scene.background = null;
 
@@ -103,6 +124,7 @@
     let currentVrm = null;
     let mixer = null;
     let humanoid = null;
+    let activeAvatarUrl = null;
 
     const zoomConfig = [
       { bone: 'hips', offset: new THREE.Vector3(0, 0.05, 0), distance: 3.6, pivot: null },
@@ -140,6 +162,11 @@
       errorPanel.hidden = false;
     }
 
+    function clearError() {
+      errorPanel.hidden = true;
+      errorPanel.textContent = '';
+    }
+
     function resizeRenderer() {
       const frame = canvas.parentElement;
       const width = frame.clientWidth;
@@ -153,6 +180,30 @@
       return await new Promise((resolve, reject) => {
         loader.load(url, resolve, undefined, reject);
       });
+    }
+
+    function setActiveAvatarButton(url) {
+      avatarButtons.forEach((button) => {
+        const isActive = button.dataset.vrm === url;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-pressed', String(isActive));
+      });
+    }
+
+    function disposeCurrentAvatar() {
+      if (!currentVrm) {
+        return;
+      }
+
+      if (mixer) {
+        mixer.stopAllAction();
+        mixer = null;
+      }
+
+      scene.remove(currentVrm.scene);
+      VRMUtils.deepDispose(currentVrm.scene);
+      currentVrm = null;
+      humanoid = null;
     }
 
     function damp(current, target, lambda, dt) {
@@ -290,14 +341,22 @@
       }, { passive: false });
     }
 
-    async function loadAvatar() {
+    async function loadAvatar(url) {
+      if (!url || url === activeAvatarUrl) {
+        return;
+      }
+
       try {
-        const avatarGltf = await loadGLTF('./vrms/Iris_o3vg.vrm');
+        clearError();
+        disposeCurrentAvatar();
+
+        const avatarGltf = await loadGLTF(url);
         const vrm = avatarGltf.userData.vrm;
         if (!vrm) {
           throw new Error('VRM data was not found in the loaded file.');
         }
 
+        activeAvatarUrl = url;
         currentVrm = vrm;
         humanoid = vrm.humanoid;
 
@@ -322,9 +381,28 @@
           mixer.clipAction(clip).reset().play();
         }
       } catch (error) {
+        activeAvatarUrl = null;
         console.error(error);
         showError(`VRM load failed: ${error.message}`);
       }
+    }
+
+    function bindAvatarButtons() {
+      avatarButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+          const nextUrl = button.dataset.vrm;
+          if (!nextUrl) {
+            return;
+          }
+
+          setActiveAvatarButton(nextUrl);
+          await loadAvatar(nextUrl);
+
+          if (!currentVrm) {
+            setActiveAvatarButton(activeAvatarUrl);
+          }
+        });
+      });
     }
 
     function animate() {
@@ -346,7 +424,8 @@
     resizeRenderer();
     window.addEventListener('resize', resizeRenderer);
     bindPointerControls();
-    loadAvatar();
+    bindAvatarButtons();
+    loadAvatar('./vrms/Iris_o3vg.vrm');
     animate();
   </script>
 </body>
