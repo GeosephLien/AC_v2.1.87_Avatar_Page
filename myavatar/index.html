@@ -25,25 +25,30 @@
       <div class="controls-stack">
         <a class="btn btn-primary creator-button" href="http://127.0.0.1:5501/index.html">Avatar Creator</a>
         <aside class="control-panel" aria-label="Avatar controls">
-          <div class="avatar-selector" aria-label="Avatar selector">
-            <button
-              class="avatar-button is-active"
-              type="button"
-              data-avatar-button
-              data-vrm="./vrms/Iris_o3vg.vrm"
-              aria-pressed="true"
-            >
-              <img src="./images/thb_Iris.png" alt="Load Iris avatar">
-            </button>
-            <button
-              class="avatar-button"
-              type="button"
-              data-avatar-button
-              data-vrm="./vrms/Michael_b8ab.vrm"
-              aria-pressed="false"
-            >
-              <img src="./images/thb_Michael.png" alt="Load Michael avatar">
-            </button>
+          <div class="avatar-selector-viewport" data-avatar-scroll>
+            <div class="avatar-selector" aria-label="Avatar selector">
+              <button
+                class="avatar-button is-active"
+                type="button"
+                data-avatar-button
+                data-vrm="./vrms/Iris_o3vg.vrm"
+                aria-pressed="true"
+              >
+                <img src="./images/thb_Iris.png" alt="Load Iris avatar">
+              </button>
+              <button
+                class="avatar-button"
+                type="button"
+                data-avatar-button
+                data-vrm="./vrms/Michael_b8ab.vrm"
+                aria-pressed="false"
+              >
+                <img src="./images/thb_Michael.png" alt="Load Michael avatar">
+              </button>
+            </div>
+          </div>
+          <div class="avatar-scrollbar" data-avatar-scrollbar aria-hidden="true">
+            <div class="avatar-scrollbar-thumb" data-avatar-scrollbar-thumb></div>
           </div>
         </aside>
       </div>
@@ -64,7 +69,11 @@
 
     const canvas = document.getElementById('avatar-canvas');
     const errorPanel = document.getElementById('viewer-error');
-    const avatarButtons = [...document.querySelectorAll('[data-avatar-button]')];
+    const creatorButton = document.querySelector('.creator-button');
+    const avatarSelector = document.querySelector('.avatar-selector');
+    const avatarSelectorViewport = document.querySelector('[data-avatar-scroll]');
+    const avatarScrollbar = document.querySelector('[data-avatar-scrollbar]');
+    const avatarScrollbarThumb = document.querySelector('[data-avatar-scrollbar-thumb]');
     const scene = new THREE.Scene();
     scene.background = null;
 
@@ -138,6 +147,48 @@
       lastY: 0
     };
 
+    const selectorScrollState = {
+      pointerId: null,
+      isPointerDown: false,
+      isDragging: false,
+      startX: 0,
+      startScrollLeft: 0,
+      lastX: 0,
+      lastTime: 0,
+      velocity: 0,
+      inertiaFrame: null,
+      suppressClick: false
+    };
+
+    function getAvatarButtons() {
+      return [...document.querySelectorAll('[data-avatar-button]')];
+    }
+
+    function buildCustomizeButtons() {
+      const fragment = document.createDocumentFragment();
+
+      for (let index = 1; index <= 13; index += 1) {
+        const button = document.createElement('button');
+        const slotLabel = `Customize slot ${index}`;
+        button.className = 'avatar-button avatar-button-customize';
+        button.type = 'button';
+        button.dataset.customizeButton = '';
+        button.dataset.customizeIndex = String(index);
+        button.setAttribute('aria-label', `${slotLabel}, open Avatar Creator`);
+        button.title = `${slotLabel} - Open Avatar Creator`;
+
+        const image = document.createElement('img');
+        image.src = './images/thb_Customize.png';
+        image.alt = `${slotLabel}, open Avatar Creator`;
+        image.draggable = false;
+
+        button.append(image);
+        fragment.append(button);
+      }
+
+      avatarSelector.append(fragment);
+    }
+
     const cameraState = {
       yaw: 0,
       pitch: THREE.MathUtils.degToRad(5),
@@ -184,7 +235,7 @@
     }
 
     function setActiveAvatarButton(url) {
-      avatarButtons.forEach((button) => {
+      getAvatarButtons().forEach((button) => {
         const isActive = button.dataset.vrm === url;
         button.classList.toggle('is-active', isActive);
         button.setAttribute('aria-pressed', String(isActive));
@@ -342,6 +393,162 @@
       }, { passive: false });
     }
 
+    function bindAvatarSelectorScroll() {
+      if (!avatarSelectorViewport || !avatarScrollbar || !avatarScrollbarThumb) {
+        return;
+      }
+
+      const state = selectorScrollState;
+
+      function stopInertia() {
+        if (state.inertiaFrame !== null) {
+          cancelAnimationFrame(state.inertiaFrame);
+          state.inertiaFrame = null;
+        }
+      }
+
+      function updateScrollbar() {
+        const visibleWidth = avatarSelectorViewport.clientWidth;
+        const contentWidth = avatarSelectorViewport.scrollWidth;
+        const maxScroll = Math.max(contentWidth - visibleWidth, 0);
+        const hasOverflow = maxScroll > 1;
+
+        avatarScrollbar.hidden = !hasOverflow;
+
+        if (!hasOverflow) {
+          avatarScrollbarThumb.style.width = '100%';
+          avatarScrollbarThumb.style.transform = 'translateX(0)';
+          return;
+        }
+
+        const ratio = visibleWidth / contentWidth;
+        const thumbWidth = Math.max(ratio * visibleWidth, 36);
+        const travel = visibleWidth - thumbWidth;
+        const progress = maxScroll === 0 ? 0 : avatarSelectorViewport.scrollLeft / maxScroll;
+        const thumbOffset = travel * progress;
+
+        avatarScrollbarThumb.style.width = `${thumbWidth}px`;
+        avatarScrollbarThumb.style.transform = `translateX(${thumbOffset}px)`;
+      }
+
+      function startInertia() {
+        stopInertia();
+
+        const minVelocity = 5;
+        const brake = 0.92;
+
+        function step() {
+          state.velocity *= brake;
+          avatarSelectorViewport.scrollLeft -= state.velocity;
+          updateScrollbar();
+
+          const maxScroll = avatarSelectorViewport.scrollWidth - avatarSelectorViewport.clientWidth;
+          const atEdge = avatarSelectorViewport.scrollLeft <= 0 || avatarSelectorViewport.scrollLeft >= maxScroll;
+
+          if (Math.abs(state.velocity) < minVelocity || atEdge) {
+            state.velocity = 0;
+            state.inertiaFrame = null;
+            return;
+          }
+
+          state.inertiaFrame = requestAnimationFrame(step);
+        }
+
+        if (Math.abs(state.velocity) >= minVelocity) {
+          state.inertiaFrame = requestAnimationFrame(step);
+        }
+      }
+
+      avatarSelectorViewport.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) {
+          return;
+        }
+
+        state.pointerId = event.pointerId;
+        state.isPointerDown = true;
+        state.isDragging = false;
+        state.startX = event.clientX;
+        state.lastX = event.clientX;
+        state.lastTime = performance.now();
+        state.startScrollLeft = avatarSelectorViewport.scrollLeft;
+        state.velocity = 0;
+        state.suppressClick = false;
+        stopInertia();
+        avatarSelectorViewport.classList.add('is-dragging');
+        avatarSelectorViewport.setPointerCapture(event.pointerId);
+      });
+
+      avatarSelectorViewport.addEventListener('pointermove', (event) => {
+        if (!state.isPointerDown || event.pointerId !== state.pointerId) {
+          return;
+        }
+
+        const deltaX = event.clientX - state.startX;
+        const elapsed = Math.max(performance.now() - state.lastTime, 1);
+        const movementX = event.clientX - state.lastX;
+
+        if (Math.abs(deltaX) > 4) {
+          state.isDragging = true;
+          state.suppressClick = true;
+        }
+
+        avatarSelectorViewport.scrollLeft = state.startScrollLeft - deltaX;
+        updateScrollbar();
+
+        state.velocity = movementX / elapsed * 16;
+        state.lastX = event.clientX;
+        state.lastTime = performance.now();
+      });
+
+      function releasePointer(event) {
+        if (event.pointerId !== state.pointerId) {
+          return;
+        }
+
+        state.isPointerDown = false;
+        avatarSelectorViewport.classList.remove('is-dragging');
+
+        if (avatarSelectorViewport.hasPointerCapture(event.pointerId)) {
+          avatarSelectorViewport.releasePointerCapture(event.pointerId);
+        }
+
+        if (state.isDragging) {
+          startInertia();
+          window.setTimeout(() => {
+            state.suppressClick = false;
+          }, 120);
+        } else {
+          state.suppressClick = false;
+        }
+
+        state.pointerId = null;
+      }
+
+      avatarSelectorViewport.addEventListener('pointerup', releasePointer);
+      avatarSelectorViewport.addEventListener('pointercancel', releasePointer);
+      avatarSelectorViewport.addEventListener('pointerleave', (event) => {
+        if (state.isPointerDown) {
+          releasePointer(event);
+        }
+      });
+
+      avatarSelectorViewport.addEventListener('dragstart', (event) => {
+        event.preventDefault();
+      });
+
+      avatarSelectorViewport.addEventListener('scroll', updateScrollbar, { passive: true });
+      window.addEventListener('resize', updateScrollbar);
+
+      avatarSelectorViewport.addEventListener('click', (event) => {
+        if (state.suppressClick) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }, true);
+
+      updateScrollbar();
+    }
+
     async function loadAvatar(url) {
       if (!url || url === activeAvatarUrl) {
         return;
@@ -389,20 +596,34 @@
     }
 
     function bindAvatarButtons() {
-      avatarButtons.forEach((button) => {
-        button.addEventListener('click', async () => {
-          const nextUrl = button.dataset.vrm;
-          if (!nextUrl) {
-            return;
-          }
+      avatarSelector.addEventListener('click', async (event) => {
+        const button = event.target.closest('button');
+        if (!button) {
+          return;
+        }
 
-          setActiveAvatarButton(nextUrl);
-          await loadAvatar(nextUrl);
-
-          if (!currentVrm) {
-            setActiveAvatarButton(activeAvatarUrl);
+        if (button.hasAttribute('data-customize-button')) {
+          if (creatorButton?.href) {
+            window.location.href = creatorButton.href;
           }
-        });
+          return;
+        }
+
+        if (!button.hasAttribute('data-avatar-button')) {
+          return;
+        }
+
+        const nextUrl = button.dataset.vrm;
+        if (!nextUrl) {
+          return;
+        }
+
+        setActiveAvatarButton(nextUrl);
+        await loadAvatar(nextUrl);
+
+        if (!currentVrm) {
+          setActiveAvatarButton(activeAvatarUrl);
+        }
       });
     }
 
@@ -422,9 +643,11 @@
       renderer.render(scene, camera);
     }
 
+    buildCustomizeButtons();
     resizeRenderer();
     window.addEventListener('resize', resizeRenderer);
     bindPointerControls();
+    bindAvatarSelectorScroll();
     bindAvatarButtons();
     loadAvatar('./vrms/Iris_o3vg.vrm');
     animate();

@@ -69,11 +69,12 @@ body::after {
 .control-panel {
   position: relative;
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
   justify-content: center;
-  flex-wrap: wrap;
-  padding: 1rem;
+  flex-wrap: nowrap;
+  padding: 1rem 1rem 0;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 28px;
   background: rgba(7, 10, 34, 0.42);
@@ -86,15 +87,62 @@ body::after {
   position: relative;
 }
 
+.avatar-selector-viewport {
+  width: min(1000px, calc(100vw - 5rem));
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  user-select: none;
+  touch-action: pan-x;
+}
+
+.avatar-selector-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.avatar-selector-viewport.is-dragging {
+  cursor: grabbing;
+}
+
 .avatar-selector {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.9rem;
-  justify-content: center;
+  justify-content: flex-start;
+  width: max-content;
+  padding: 0.1rem;
+}
+
+.avatar-scrollbar {
+  position: relative;
+  width: min(1000px, calc(100vw - 5rem));
+  height: 2px;
+  margin-top: 0.55rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.avatar-scrollbar[hidden] {
+  display: none;
+}
+
+.avatar-scrollbar-thumb {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 20%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(110, 173, 255, 0.95), rgba(208, 126, 255, 0.9));
+  box-shadow: 0 0 10px rgba(127, 157, 255, 0.45);
+  transition: width 0.16s ease;
 }
 
 .avatar-button {
+  position: relative;
+  flex: 0 0 auto;
   width: 94px;
   height: 94px;
   padding: 0;
@@ -124,6 +172,24 @@ body::after {
   height: 100%;
   display: block;
   object-fit: cover;
+  pointer-events: none;
+}
+
+.avatar-button-customize::after {
+  content: "Create";
+  position: absolute;
+  left: 50%;
+  bottom: 0.55rem;
+  transform: translateX(-50%);
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(8, 12, 36, 0.78);
+  color: #fff;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
 }
 
 .viewer-stage {
@@ -200,8 +266,16 @@ body::after {
   .control-panel {
     justify-content: center;
     gap: 0.75rem;
-    width: min(calc(100vw - 1.5rem), 28rem);
-    padding: 0.75rem;
+    width: min(calc(100vw - 1.5rem), 32rem);
+    padding: 0.75rem 0.75rem 0;
+  }
+
+  .avatar-selector-viewport {
+    width: 100%;
+  }
+
+  .avatar-scrollbar {
+    width: 100%;
   }
 
   .avatar-selector {
