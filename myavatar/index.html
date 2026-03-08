@@ -434,8 +434,8 @@
       function startInertia() {
         stopInertia();
 
-        const minVelocity = 5;
-        const brake = 0.92;
+        const minVelocity = 2.2;
+        const brake = 0.965;
 
         function step() {
           state.velocity *= brake;
