@@ -20,34 +20,36 @@
     }
   </script>
 </head>
-<body>
-  <main class="page-shell">
-    <aside class="control-panel" aria-label="Avatar controls">
-      <a class="btn btn-primary creator-button" href="http://127.0.0.1:5501/index.html">Avatar Creator</a>
-      <div class="avatar-selector" aria-label="Avatar selector">
-        <button
-          class="avatar-button is-active"
-          type="button"
-          data-avatar-button
-          data-vrm="./vrms/Iris_o3vg.vrm"
-          aria-pressed="true"
-        >
-          <img src="./images/thb_Iris.png" alt="Load Iris avatar">
-        </button>
-        <button
-          class="avatar-button"
-          type="button"
-          data-avatar-button
-          data-vrm="./vrms/Michael_b8ab.vrm"
-          aria-pressed="false"
-        >
-          <img src="./images/thb_Michael.png" alt="Load Michael avatar">
-        </button>
+  <body>
+    <main class="page-shell">
+      <div class="controls-stack">
+        <a class="btn btn-primary creator-button" href="http://127.0.0.1:5501/index.html">Avatar Creator</a>
+        <aside class="control-panel" aria-label="Avatar controls">
+          <div class="avatar-selector" aria-label="Avatar selector">
+            <button
+              class="avatar-button is-active"
+              type="button"
+              data-avatar-button
+              data-vrm="./vrms/Iris_o3vg.vrm"
+              aria-pressed="true"
+            >
+              <img src="./images/thb_Iris.png" alt="Load Iris avatar">
+            </button>
+            <button
+              class="avatar-button"
+              type="button"
+              data-avatar-button
+              data-vrm="./vrms/Michael_b8ab.vrm"
+              aria-pressed="false"
+            >
+              <img src="./images/thb_Michael.png" alt="Load Michael avatar">
+            </button>
+          </div>
+        </aside>
       </div>
-    </aside>
-    <section class="viewer-stage">
-      <canvas id="avatar-canvas" aria-label="VRM avatar preview"></canvas>
-      <div class="viewer-error" id="viewer-error" hidden></div>
+      <section class="viewer-stage">
+        <canvas id="avatar-canvas" aria-label="VRM avatar preview"></canvas>
+        <div class="viewer-error" id="viewer-error" hidden></div>
     </section>
   </main>
 

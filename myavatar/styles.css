@@ -54,15 +54,25 @@ body::after {
   padding: 0;
 }
 
-.control-panel {
+.controls-stack {
   position: fixed;
   z-index: 3;
-  top: 50%;
-  left: calc(50vw - min(1280px, 100vw, 100vh) / 2);
-  transform: translate(-100%, -50%);
-  display: grid;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.control-panel {
+  position: relative;
+  display: flex;
+  align-items: center;
   gap: 1rem;
-  justify-items: start;
+  justify-content: center;
+  flex-wrap: wrap;
   padding: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 28px;
@@ -73,14 +83,15 @@ body::after {
 }
 
 .creator-button {
-  position: static;
-  z-index: auto;
+  position: relative;
 }
 
 .avatar-selector {
-  display: grid;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 0.9rem;
-  justify-items: center;
+  justify-content: center;
 }
 
 .avatar-button {
@@ -117,8 +128,10 @@ body::after {
 
 .viewer-stage {
   position: relative;
-  width: min(1280px, 100vw, 100vh);
+  width: min(1280px, 100vw);
+  max-width: 1280px;
   height: min(1280px, 100vw, 100vh);
+  max-height: 1280px;
   display: grid;
   place-items: center;
 }
@@ -185,19 +198,22 @@ body::after {
   }
 
   .control-panel {
-    top: auto;
-    bottom: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    justify-items: center;
+    justify-content: center;
     gap: 0.75rem;
     width: min(calc(100vw - 1.5rem), 28rem);
     padding: 0.75rem;
   }
 
   .avatar-selector {
-    grid-auto-flow: column;
     gap: 0.75rem;
+  }
+
+  .creator-button {
+    align-self: stretch;
+  }
+
+  .controls-stack {
+    width: min(calc(100vw - 1.5rem), 28rem);
   }
 
   .viewer-stage {
