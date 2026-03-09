@@ -9,6 +9,8 @@
   --accent-pink: #b566d8;
   --panel-bg: rgba(8, 11, 40, 0.34);
   --panel-border: rgba(255, 255, 255, 0.14);
+  --creator-panel-width: 1280;
+  --creator-panel-height: 780;
 }
 
 * {
@@ -343,7 +345,7 @@ body::after {
   z-index: 9;
   display: grid;
   place-items: center;
-  padding: 1.25rem;
+  padding: 32px;
   background: rgba(4, 7, 20, 0.58);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -353,11 +355,22 @@ body::after {
   display: none;
 }
 
+.creator-panel-wrap {
+  position: relative;
+  aspect-ratio: calc(var(--creator-panel-width) / var(--creator-panel-height));
+  width: min(
+    calc(var(--creator-panel-width) * 1px),
+    calc(100vw - 64px),
+    calc((100vh - 64px) * var(--creator-panel-width) / var(--creator-panel-height))
+  );
+  max-width: 100%;
+  max-height: calc(100vh - 64px);
+}
+
 .creator-panel {
-  width: min(1100px, calc(100vw - 2rem));
-  height: min(780px, calc(100vh - 2rem));
+  width: 100%;
+  height: 100%;
   display: grid;
-  grid-template-rows: auto 1fr;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 28px;
@@ -365,22 +378,11 @@ body::after {
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.42);
 }
 
-.creator-panel-topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.15rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.creator-panel-topbar h2 {
-  margin: 0;
-  font-size: 1rem;
-  letter-spacing: 0.04em;
-}
-
 .creator-panel-close {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 0.75rem);
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -549,12 +551,25 @@ body::after {
   }
 
   .creator-panel {
-    width: min(calc(100vw - 1rem), 1100px);
-    height: min(calc(100vh - 1rem), 780px);
     border-radius: 22px;
   }
 
-  .creator-panel-topbar {
-    padding: 0.85rem 0.95rem;
+  .creator-panel-wrap {
+    width: min(
+      calc(var(--creator-panel-width) * 1px),
+      calc(100vw - 64px),
+      calc((100vh - 64px) * var(--creator-panel-width) / var(--creator-panel-height))
+    );
+  }
+
+  .creator-panel-close {
+    top: 0;
+    left: auto;
+    right: 0;
+    transform: translateY(calc(-100% - 0.5rem));
+  }
+
+  .creator-panel-close:hover {
+    transform: translateY(calc(-100% - 0.5rem)) scale(1.05);
   }
 }

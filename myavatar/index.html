@@ -83,18 +83,17 @@
         <div class="viewer-error" id="viewer-error" hidden></div>
       </section>
       <div class="creator-overlay" id="creator-panel-overlay" hidden>
-        <div class="creator-panel" role="dialog" aria-modal="true" aria-labelledby="creator-panel-title">
-          <div class="creator-panel-topbar">
-            <h2 id="creator-panel-title">Avatar Creator</h2>
-            <button class="creator-panel-close" type="button" data-creator-close aria-label="Close Avatar Creator panel">X</button>
+        <div class="creator-panel-wrap">
+          <button class="creator-panel-close" type="button" data-creator-close aria-label="Close Avatar Creator panel">X</button>
+          <div class="creator-panel" role="dialog" aria-modal="true" aria-label="Avatar Creator panel">
+            <iframe
+              class="creator-panel-frame"
+              src="http://127.0.0.1:5501/index.html"
+              title="Avatar Creator"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            ></iframe>
           </div>
-          <iframe
-            class="creator-panel-frame"
-            src="http://127.0.0.1:5501/index.html"
-            title="Avatar Creator"
-            loading="lazy"
-            referrerpolicy="no-referrer"
-          ></iframe>
         </div>
       </div>
       <div class="confirm-overlay" id="avatar-delete-confirm" hidden>
