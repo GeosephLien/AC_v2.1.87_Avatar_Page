@@ -339,6 +339,10 @@
     function closeCreatorPanel() {
       creatorOverlay.hidden = true;
       creatorOpenButton.setAttribute('aria-expanded', 'false');
+      creatorOverlay
+        .querySelector('.creator-panel-frame')
+        ?.contentWindow
+        ?.postMessage({ type: 'avatar-creator-reset' }, '*');
       resumeRenderLoop();
     }
 

@@ -137,6 +137,23 @@
         loadingOverlay.setAttribute('aria-hidden', 'true');
       }
 
+      function resetToLanding() {
+        enterRequested = false;
+        hasEnteredUnity = false;
+
+        if (revealFinalizeTimerId !== null) {
+          window.clearTimeout(revealFinalizeTimerId);
+          revealFinalizeTimerId = null;
+        }
+
+        hideLoadingOverlay();
+        document.body.classList.remove('enter-unity');
+        document.body.classList.remove('unity-visible');
+        landingShell.setAttribute('aria-hidden', 'false');
+        container.setAttribute('aria-hidden', 'true');
+        loadingBar.style.width = '0%';
+      }
+
       function enterUnity() {
         if (!unityReady || hasEnteredUnity) return;
         hasEnteredUnity = true;
@@ -306,6 +323,11 @@
       window.addEventListener('resize', onResize);
       window.addEventListener('resize', function () {
         setRevealOrigin();
+      });
+      window.addEventListener('message', function (event) {
+        if (event.data?.type === 'avatar-creator-reset') {
+          resetToLanding();
+        }
       });
       window.addEventListener('load', preloadUnityRuntime, { once: true });
       onResize();
