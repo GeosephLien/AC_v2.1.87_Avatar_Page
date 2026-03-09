@@ -77,7 +77,6 @@
     <canvas id="game-canvas" data-pixel-art=""></canvas>
   </div>
 
-  <script src="Build/AC_v2.1.87_WebGL.loader.js"></script>
   <script>
     (() => {
       const startButton = document.getElementById('start-creating');
@@ -87,13 +86,21 @@
       const container = document.getElementById('container');
       const canvasElement = document.getElementById('game-canvas');
       const versionBadge = document.getElementById('player-version');
+      const unityLoaderUrl = 'Build/AC_v2.1.87_WebGL.loader.js';
+      const unityFrameworkUrl = 'Build/AC_v2.1.87_WebGL.framework.js.unityweb';
+      const unityCodeUrl = 'Build/AC_v2.1.87_WebGL.wasm.unityweb';
+      const unityDataUrl = 'Build/AC_v2.1.87_WebGL.data.unityweb';
 
       let canvas = canvasElement;
       let unityReady = false;
       let enterRequested = false;
       let hasEnteredUnity = false;
+      let unityLoadStarted = false;
       let revealFinalizeTimerId = null;
       let revealOrigin = null;
+      let unityRuntimeReady = false;
+      let unityRuntimePreloadPromise = null;
+      let unityInstancePromise = null;
 
       function progressHandler(progress) {
         loadingBar.style.width = (progress * 100) + '%';
@@ -154,6 +161,7 @@
           return;
         }
         showLoadingOverlay();
+        startUnityLoad();
       }
 
       (() => {
@@ -200,22 +208,96 @@
       startButton.addEventListener('click', queueUnityEntry);
       setRevealOrigin();
 
-      function startUnityPreload() {
-        createUnityInstance(canvasElement, {
-          dataUrl: 'Build/AC_v2.1.87_WebGL.data.unityweb',
-          frameworkUrl: 'Build/AC_v2.1.87_WebGL.framework.js.unityweb',
-          codeUrl: 'Build/AC_v2.1.87_WebGL.wasm.unityweb'
-        }, progressHandler).then(function (instance) {
-          unityReady = true;
-          canvas = instance.Module.canvas;
-          loadingBar.style.width = '100%';
-          document.body.classList.add('unity-ready');
-          onResize();
-
-          if (enterRequested) {
-            enterUnity();
+      function warmFetch(url) {
+        return fetch(url, { credentials: 'same-origin' }).then(function (response) {
+          if (!response.ok) {
+            throw new Error('Failed to preload ' + url + ' (' + response.status + ')');
           }
+          return response.arrayBuffer();
+        });
+      }
+
+      function loadUnityLoaderScript() {
+        return new Promise(function (resolve, reject) {
+          if (typeof createUnityInstance === 'function') {
+            resolve();
+            return;
+          }
+
+          const existingScript = document.querySelector('script[data-unity-loader="true"]');
+          if (existingScript) {
+            existingScript.addEventListener('load', resolve, { once: true });
+            existingScript.addEventListener('error', reject, { once: true });
+            return;
+          }
+
+          const script = document.createElement('script');
+          script.src = unityLoaderUrl;
+          script.async = true;
+          script.dataset.unityLoader = 'true';
+          script.addEventListener('load', resolve, { once: true });
+          script.addEventListener('error', function () {
+            reject(new Error('Failed to load Unity loader script.'));
+          }, { once: true });
+          document.body.appendChild(script);
+        });
+      }
+
+      function preloadUnityRuntime() {
+        if (!unityRuntimePreloadPromise) {
+          unityRuntimePreloadPromise = Promise.all([
+            loadUnityLoaderScript(),
+            warmFetch(unityFrameworkUrl),
+            warmFetch(unityCodeUrl)
+          ]).then(function () {
+            unityRuntimeReady = true;
+          }).catch(function (error) {
+            console.error(error);
+            throw error;
+          });
+        }
+
+        return unityRuntimePreloadPromise;
+      }
+
+      function createUnityPlayer() {
+        if (!unityInstancePromise) {
+          unityInstancePromise = createUnityInstance(canvasElement, {
+            dataUrl: unityDataUrl,
+            frameworkUrl: unityFrameworkUrl,
+            codeUrl: unityCodeUrl
+          }, progressHandler).then(function (instance) {
+            unityReady = true;
+            canvas = instance.Module.canvas;
+            loadingBar.style.width = '100%';
+            document.body.classList.add('unity-ready');
+            onResize();
+
+            if (enterRequested) {
+              enterUnity();
+            }
+
+            return instance;
+          }).catch(function (error) {
+            unityLoadStarted = false;
+            unityInstancePromise = null;
+            showLoadingOverlay();
+            console.error(error);
+            throw error;
+          });
+        }
+
+        return unityInstancePromise;
+      }
+
+      function startUnityLoad() {
+        if (unityLoadStarted) return;
+        unityLoadStarted = true;
+
+        preloadUnityRuntime().then(function () {
+          createUnityPlayer();
         }).catch(function (error) {
+          unityLoadStarted = false;
           showLoadingOverlay();
           console.error(error);
         });
@@ -225,7 +307,7 @@
       window.addEventListener('resize', function () {
         setRevealOrigin();
       });
-      window.addEventListener('load', startUnityPreload, { once: true });
+      window.addEventListener('load', preloadUnityRuntime, { once: true });
       onResize();
     })();
   </script>
