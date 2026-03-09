@@ -357,12 +357,8 @@ body::after {
 
 .creator-panel-wrap {
   position: relative;
-  aspect-ratio: calc(var(--creator-panel-width) / var(--creator-panel-height));
-  width: min(
-    calc(var(--creator-panel-width) * 1px),
-    calc(100vw - 64px),
-    calc((100vh - 64px) * var(--creator-panel-width) / var(--creator-panel-height))
-  );
+  width: min(calc(var(--creator-panel-width) * 1px), calc(100vw - 64px));
+  height: min(calc(var(--creator-panel-height) * 1px), calc(100vh - 64px));
   max-width: 100%;
   max-height: calc(100vh - 64px);
 }
@@ -555,11 +551,8 @@ body::after {
   }
 
   .creator-panel-wrap {
-    width: min(
-      calc(var(--creator-panel-width) * 1px),
-      calc(100vw - 64px),
-      calc((100vh - 64px) * var(--creator-panel-width) / var(--creator-panel-height))
-    );
+    width: min(calc(var(--creator-panel-width) * 1px), calc(100vw - 64px));
+    height: min(calc(var(--creator-panel-height) * 1px), calc(100vh - 64px));
   }
 
   .creator-panel-close {
