@@ -30,12 +30,16 @@
           rel="noreferrer"
         >Explore Worlds</a>
         <div class="control-panel-wrap">
-          <a
+          <button
             class="creator-button"
-            href="http://127.0.0.1:5501/index.html"
-            aria-label="Open Avatar Creator"
+            type="button"
+            aria-label="Open Avatar Creator panel"
             title="Open Avatar Creator"
-          >+</a>
+            data-creator-open
+            aria-haspopup="dialog"
+            aria-expanded="false"
+            aria-controls="creator-panel-overlay"
+          >+</button>
           <aside class="control-panel" aria-label="Avatar controls">
             <div class="avatar-selector-viewport" data-avatar-scroll>
               <div class="avatar-selector" aria-label="Avatar selector">
@@ -78,6 +82,21 @@
         <canvas id="avatar-canvas" aria-label="VRM avatar preview"></canvas>
         <div class="viewer-error" id="viewer-error" hidden></div>
       </section>
+      <div class="creator-overlay" id="creator-panel-overlay" hidden>
+        <div class="creator-panel" role="dialog" aria-modal="true" aria-labelledby="creator-panel-title">
+          <div class="creator-panel-topbar">
+            <h2 id="creator-panel-title">Avatar Creator</h2>
+            <button class="creator-panel-close" type="button" data-creator-close aria-label="Close Avatar Creator panel">X</button>
+          </div>
+          <iframe
+            class="creator-panel-frame"
+            src="http://127.0.0.1:5501/index.html"
+            title="Avatar Creator"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          ></iframe>
+        </div>
+      </div>
       <div class="confirm-overlay" id="avatar-delete-confirm" hidden>
         <div class="confirm-panel" role="dialog" aria-modal="true" aria-labelledby="avatar-delete-title">
           <h2 id="avatar-delete-title">Remove avatar?</h2>
@@ -108,6 +127,9 @@
     const deleteConfirm = document.getElementById('avatar-delete-confirm');
     const deleteConfirmButton = deleteConfirm.querySelector('[data-confirm-delete]');
     const deleteCancelButton = deleteConfirm.querySelector('[data-confirm-cancel]');
+    const creatorOpenButton = document.querySelector('[data-creator-open]');
+    const creatorOverlay = document.getElementById('creator-panel-overlay');
+    const creatorCloseButton = creatorOverlay.querySelector('[data-creator-close]');
     const scene = new THREE.Scene();
     scene.background = null;
 
@@ -203,6 +225,10 @@
 
     function getVisibleAvatarButtons() {
       return getAvatarButtons().filter((button) => !button.closest('[data-avatar-entry]')?.hidden);
+    }
+
+    function hasVisibleAvatarButtons() {
+      return getVisibleAvatarButtons().length > 0;
     }
 
     function buildCustomizeButtons() {
@@ -303,6 +329,16 @@
       deleteConfirm.hidden = true;
     }
 
+    function openCreatorPanel() {
+      creatorOverlay.hidden = false;
+      creatorOpenButton.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeCreatorPanel() {
+      creatorOverlay.hidden = true;
+      creatorOpenButton.setAttribute('aria-expanded', 'false');
+    }
+
     function openDeleteConfirm(button) {
       pendingDeleteButton = button;
       deleteConfirm.hidden = false;
@@ -332,6 +368,10 @@
       }
 
       updateAvatarScrollbar();
+
+      if (!hasVisibleAvatarButtons()) {
+        openCreatorPanel();
+      }
     }
 
     function disposeCurrentAvatar() {
@@ -720,6 +760,7 @@
         }
 
         if (button.hasAttribute('data-customize-button')) {
+          openCreatorPanel();
           return;
         }
 
@@ -766,6 +807,28 @@
       });
     }
 
+    function bindCreatorPanel() {
+      creatorOpenButton.addEventListener('click', () => {
+        openCreatorPanel();
+      });
+
+      creatorCloseButton.addEventListener('click', () => {
+        closeCreatorPanel();
+      });
+
+      creatorOverlay.addEventListener('click', (event) => {
+        if (event.target === creatorOverlay) {
+          closeCreatorPanel();
+        }
+      });
+
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !creatorOverlay.hidden) {
+          closeCreatorPanel();
+        }
+      });
+    }
+
     function animate() {
       requestAnimationFrame(animate);
       const delta = clock.getDelta();
@@ -789,7 +852,13 @@
     bindAvatarSelectorScroll();
     bindAvatarButtons();
     bindDeleteConfirm();
+    bindCreatorPanel();
     loadAvatar('./vrms/Iris_o3vg.vrm');
+
+    if (!hasVisibleAvatarButtons()) {
+      openCreatorPanel();
+    }
+
     animate();
   </script>
 </body>
