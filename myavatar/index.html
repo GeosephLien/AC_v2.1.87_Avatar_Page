@@ -191,6 +191,8 @@
     let mixer = null;
     let humanoid = null;
     let activeAvatarUrl = null;
+    let animationFrameId = null;
+    let isRenderPaused = false;
 
     const zoomConfig = [
       { bone: 'hips', offset: new THREE.Vector3(0, -0.08, 0), distance: 4.1, pivot: null },
@@ -330,6 +332,7 @@
     }
 
     function openCreatorPanel() {
+      pauseRenderLoop();
       creatorOverlay.hidden = false;
       creatorOpenButton.setAttribute('aria-expanded', 'true');
     }
@@ -337,6 +340,7 @@
     function closeCreatorPanel() {
       creatorOverlay.hidden = true;
       creatorOpenButton.setAttribute('aria-expanded', 'false');
+      resumeRenderLoop();
     }
 
     function openDeleteConfirm(button) {
@@ -830,7 +834,7 @@
     }
 
     function animate() {
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
       const delta = clock.getDelta();
 
       if (mixer) {
@@ -843,6 +847,31 @@
 
       updateCamera(delta);
       renderer.render(scene, camera);
+    }
+
+    function pauseRenderLoop() {
+      if (isRenderPaused) {
+        return;
+      }
+
+      isRenderPaused = true;
+
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+
+      clock.stop();
+    }
+
+    function resumeRenderLoop() {
+      if (!isRenderPaused) {
+        return;
+      }
+
+      isRenderPaused = false;
+      clock.start();
+      animate();
     }
 
     buildCustomizeButtons();

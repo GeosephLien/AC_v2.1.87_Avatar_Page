@@ -85,6 +85,7 @@ body::after {
 
 .control-panel {
   position: relative;
+  width: fit-content;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -98,7 +99,7 @@ body::after {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
-  max-width: 640px;
+  max-width: min(640px, calc(100vw - 5rem));
 }
 
 .control-panel-wrap {
@@ -147,7 +148,8 @@ body::after {
   position: relative;
   --avatar-fade-left: 0px;
   --avatar-fade-right: 0px;
-  width: min(calc(640px - 2rem), calc(100vw - 5rem));
+  width: auto;
+  max-width: min(calc(640px - 2rem), calc(100vw - 5rem));
   overflow-x: auto;
   overflow-y: hidden;
   cursor: grab;
@@ -203,7 +205,6 @@ body::after {
   left: 1rem;
   right: 1rem;
   bottom: 0;
-  width: min(calc(640px - 2rem), calc(100vw - 5rem));
   height: 2px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.14);
@@ -502,16 +503,19 @@ body::after {
   .control-panel {
     justify-content: center;
     gap: 0.75rem;
-    width: min(calc(100vw - 1.5rem), 32rem);
+    width: fit-content;
+    max-width: min(calc(100vw - 1.5rem), 32rem);
     padding: 0.75rem 0.75rem 0;
   }
 
   .avatar-selector-viewport {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
   }
 
   .avatar-scrollbar {
-    width: 100%;
+    left: 0.75rem;
+    right: 0.75rem;
   }
 
   .avatar-selector {
