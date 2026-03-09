@@ -81,7 +81,7 @@ body::after {
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   gap: 0.75rem;
 }
 
@@ -110,8 +110,11 @@ body::after {
 
 .creator-button {
   position: absolute;
-  top: 0;
-  right: calc(100% + 0.9rem);
+  top: auto;
+  right: auto;
+  left: 0;
+  bottom: calc(100% + 0.75rem);
+  margin-right: 0;
   transform: none;
   display: inline-flex;
   align-items: center;
@@ -141,10 +144,10 @@ body::after {
 }
 
 .worlds-button {
-  align-self: center;
+  align-self: flex-end;
   padding: 0.5rem 1.35rem;
   font-size: 0.92rem;
- }
+}
 
 .avatar-selector-viewport {
   position: relative;
@@ -522,18 +525,18 @@ body::after {
 
   .creator-button {
     right: auto;
-    left: 50%;
+    left: 0;
     top: auto;
     bottom: calc(100% + 0.75rem);
-    transform: translateX(-50%);
+    transform: none;
   }
 
   .creator-button:hover {
-    transform: translateX(-50%) scale(1.04);
+    transform: scale(1.04);
   }
 
   .worlds-button {
-    align-self: center;
+    align-self: flex-end;
   }
 
   .controls-stack {
