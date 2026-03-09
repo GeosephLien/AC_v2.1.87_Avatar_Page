@@ -483,8 +483,6 @@
         state.velocity = 0;
         state.suppressClick = false;
         stopInertia();
-        avatarSelectorViewport.classList.add('is-dragging');
-        avatarSelectorViewport.setPointerCapture(event.pointerId);
       });
 
       avatarSelectorViewport.addEventListener('pointermove', (event) => {
@@ -497,8 +495,12 @@
         const movementX = event.clientX - state.lastX;
 
         if (Math.abs(deltaX) > 4) {
-          state.isDragging = true;
-          state.suppressClick = true;
+          if (!state.isDragging) {
+            state.isDragging = true;
+            state.suppressClick = true;
+            avatarSelectorViewport.classList.add('is-dragging');
+            avatarSelectorViewport.setPointerCapture(event.pointerId);
+          }
         }
 
         avatarSelectorViewport.scrollLeft = state.startScrollLeft - deltaX;
