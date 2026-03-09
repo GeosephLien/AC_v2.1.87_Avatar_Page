@@ -54,6 +54,23 @@ body::after {
   padding: 0;
 }
 
+.brand {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.brand-logo {
+  display: block;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
 .controls-stack {
   position: fixed;
   z-index: 3;
@@ -401,6 +418,11 @@ body::after {
 }
 
 @media (max-width: 768px) {
+  .brand {
+    top: 0.85rem;
+    left: 0.85rem;
+  }
+
   .page-shell {
     padding: 0;
   }
