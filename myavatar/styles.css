@@ -171,6 +171,15 @@ body::after {
   padding: 0.45rem;
 }
 
+.avatar-entry {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.avatar-entry[hidden] {
+  display: none;
+}
+
 .avatar-scrollbar {
   position: absolute;
   left: 1rem;
@@ -210,6 +219,41 @@ body::after {
   overflow: hidden;
   cursor: pointer;
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.avatar-delete-button {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(14, 18, 50, 0.92);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.32);
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
+  transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.avatar-delete-button:hover {
+  transform: scale(1.08);
+  border-color: rgba(255, 166, 166, 0.72);
+  background: rgba(132, 33, 57, 0.96);
+}
+
+.avatar-delete-button:focus-visible,
+.avatar-button:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid rgba(165, 204, 255, 0.95);
+  outline-offset: 2px;
 }
 
 .avatar-button:hover {
@@ -274,6 +318,49 @@ body::after {
   -webkit-backdrop-filter: blur(10px);
 }
 
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(4, 7, 20, 0.56);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.confirm-overlay[hidden] {
+  display: none;
+}
+
+.confirm-panel {
+  width: min(360px, calc(100vw - 2rem));
+  padding: 1.15rem 1.15rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 24px;
+  background: rgba(11, 14, 40, 0.94);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.36);
+}
+
+.confirm-panel h2 {
+  margin: 0 0 0.45rem;
+  font-size: 1.15rem;
+}
+
+.confirm-panel p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -299,6 +386,18 @@ body::after {
     0 10px 28px rgba(101, 103, 236, 0.34),
     0 0 18px rgba(95, 108, 245, 0.22),
     0 0 30px rgba(181, 102, 216, 0.18);
+}
+
+.btn-ghost {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.btn-danger {
+  color: #fff;
+  background: linear-gradient(120deg, #c5486c, #f06c72);
+  box-shadow: 0 10px 24px rgba(201, 72, 108, 0.28);
 }
 
 @media (max-width: 768px) {

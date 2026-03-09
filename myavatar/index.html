@@ -39,24 +39,30 @@
           <aside class="control-panel" aria-label="Avatar controls">
             <div class="avatar-selector-viewport" data-avatar-scroll>
               <div class="avatar-selector" aria-label="Avatar selector">
-                <button
-                  class="avatar-button is-active"
-                  type="button"
-                  data-avatar-button
-                  data-vrm="./vrms/Iris_o3vg.vrm"
-                  aria-pressed="true"
-                >
-                  <img src="./images/thb_Iris.png" alt="Load Iris avatar">
-                </button>
-                <button
-                  class="avatar-button"
-                  type="button"
-                  data-avatar-button
-                  data-vrm="./vrms/Michael_b8ab.vrm"
-                  aria-pressed="false"
-                >
-                  <img src="./images/thb_Michael.png" alt="Load Michael avatar">
-                </button>
+                <div class="avatar-entry" data-avatar-entry>
+                  <button
+                    class="avatar-button is-active"
+                    type="button"
+                    data-avatar-button
+                    data-vrm="./vrms/Iris_o3vg.vrm"
+                    aria-pressed="true"
+                  >
+                    <img src="./images/thb_Iris.png" alt="Load Iris avatar">
+                  </button>
+                  <button class="avatar-delete-button" type="button" data-avatar-delete aria-label="Remove Iris avatar" title="Remove avatar">X</button>
+                </div>
+                <div class="avatar-entry" data-avatar-entry>
+                  <button
+                    class="avatar-button"
+                    type="button"
+                    data-avatar-button
+                    data-vrm="./vrms/Michael_b8ab.vrm"
+                    aria-pressed="false"
+                  >
+                    <img src="./images/thb_Michael.png" alt="Load Michael avatar">
+                  </button>
+                  <button class="avatar-delete-button" type="button" data-avatar-delete aria-label="Remove Michael avatar" title="Remove avatar">X</button>
+                </div>
               </div>
             </div>
             <div class="avatar-scrollbar" data-avatar-scrollbar aria-hidden="true">
@@ -68,7 +74,17 @@
       <section class="viewer-stage">
         <canvas id="avatar-canvas" aria-label="VRM avatar preview"></canvas>
         <div class="viewer-error" id="viewer-error" hidden></div>
-    </section>
+      </section>
+      <div class="confirm-overlay" id="avatar-delete-confirm" hidden>
+        <div class="confirm-panel" role="dialog" aria-modal="true" aria-labelledby="avatar-delete-title">
+          <h2 id="avatar-delete-title">Remove avatar?</h2>
+          <p>This avatar icon will be hidden from the list.</p>
+          <div class="confirm-actions">
+            <button class="btn btn-ghost" type="button" data-confirm-cancel>Cancel</button>
+            <button class="btn btn-danger" type="button" data-confirm-delete>Confirm</button>
+          </div>
+        </div>
+      </div>
   </main>
 
   <script type="module">
@@ -86,6 +102,9 @@
     const avatarSelectorViewport = document.querySelector('[data-avatar-scroll]');
     const avatarScrollbar = document.querySelector('[data-avatar-scrollbar]');
     const avatarScrollbarThumb = document.querySelector('[data-avatar-scrollbar-thumb]');
+    const deleteConfirm = document.getElementById('avatar-delete-confirm');
+    const deleteConfirmButton = deleteConfirm.querySelector('[data-confirm-delete]');
+    const deleteCancelButton = deleteConfirm.querySelector('[data-confirm-cancel]');
     const scene = new THREE.Scene();
     scene.background = null;
 
@@ -172,14 +191,25 @@
       suppressClick: false
     };
 
+    let updateAvatarScrollbar = () => {};
+    let pendingDeleteButton = null;
+
     function getAvatarButtons() {
       return [...document.querySelectorAll('[data-avatar-button]')];
+    }
+
+    function getVisibleAvatarButtons() {
+      return getAvatarButtons().filter((button) => !button.closest('[data-avatar-entry]')?.hidden);
     }
 
     function buildCustomizeButtons() {
       const fragment = document.createDocumentFragment();
 
       for (let index = 1; index <= 13; index += 1) {
+        const entry = document.createElement('div');
+        entry.className = 'avatar-entry';
+        entry.dataset.avatarEntry = '';
+
         const button = document.createElement('button');
         const slotLabel = `Customize slot ${index}`;
         button.className = 'avatar-button avatar-button-customize';
@@ -195,7 +225,18 @@
         image.draggable = false;
 
         button.append(image);
-        fragment.append(button);
+        entry.append(button);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'avatar-delete-button';
+        deleteButton.type = 'button';
+        deleteButton.dataset.avatarDelete = '';
+        deleteButton.setAttribute('aria-label', `Remove ${slotLabel}`);
+        deleteButton.title = 'Remove avatar';
+        deleteButton.textContent = 'X';
+
+        entry.append(deleteButton);
+        fragment.append(entry);
       }
 
       avatarSelector.append(fragment);
@@ -252,6 +293,42 @@
         button.classList.toggle('is-active', isActive);
         button.setAttribute('aria-pressed', String(isActive));
       });
+    }
+
+    function closeDeleteConfirm() {
+      pendingDeleteButton = null;
+      deleteConfirm.hidden = true;
+    }
+
+    function openDeleteConfirm(button) {
+      pendingDeleteButton = button;
+      deleteConfirm.hidden = false;
+    }
+
+    function removeAvatarEntry(button) {
+      const entry = button.closest('[data-avatar-entry]');
+      if (!entry || entry.hidden) {
+        return;
+      }
+
+      const wasActive = button.classList.contains('is-active');
+      entry.hidden = true;
+
+      if (wasActive) {
+        const nextButton = getVisibleAvatarButtons()[0] || null;
+
+        if (nextButton?.dataset.vrm) {
+          setActiveAvatarButton(nextButton.dataset.vrm);
+          loadAvatar(nextButton.dataset.vrm);
+        } else {
+          activeAvatarUrl = null;
+          clearError();
+          setActiveAvatarButton(null);
+          disposeCurrentAvatar();
+        }
+      }
+
+      updateAvatarScrollbar();
     }
 
     function disposeCurrentAvatar() {
@@ -453,6 +530,8 @@
         avatarScrollbarThumb.style.transform = `translateX(${thumbOffset}px)`;
       }
 
+      updateAvatarScrollbar = updateScrollbar;
+
       function startInertia() {
         stopInertia();
 
@@ -621,7 +700,18 @@
 
     function bindAvatarButtons() {
       avatarSelector.addEventListener('click', async (event) => {
-        const button = event.target.closest('button');
+        const deleteButton = event.target.closest('[data-avatar-delete]');
+        if (deleteButton) {
+          event.preventDefault();
+          event.stopPropagation();
+          const button = deleteButton.closest('[data-avatar-entry]')?.querySelector('.avatar-button');
+          if (button) {
+            openDeleteConfirm(button);
+          }
+          return;
+        }
+
+        const button = event.target.closest('.avatar-button');
         if (!button) {
           return;
         }
@@ -648,6 +738,31 @@
       });
     }
 
+    function bindDeleteConfirm() {
+      deleteConfirm.addEventListener('click', (event) => {
+        if (event.target === deleteConfirm) {
+          closeDeleteConfirm();
+        }
+      });
+
+      deleteCancelButton.addEventListener('click', () => {
+        closeDeleteConfirm();
+      });
+
+      deleteConfirmButton.addEventListener('click', () => {
+        if (pendingDeleteButton) {
+          removeAvatarEntry(pendingDeleteButton);
+        }
+        closeDeleteConfirm();
+      });
+
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !deleteConfirm.hidden) {
+          closeDeleteConfirm();
+        }
+      });
+    }
+
     function animate() {
       requestAnimationFrame(animate);
       const delta = clock.getDelta();
@@ -670,6 +785,7 @@
     bindPointerControls();
     bindAvatarSelectorScroll();
     bindAvatarButtons();
+    bindDeleteConfirm();
     loadAvatar('./vrms/Iris_o3vg.vrm');
     animate();
   </script>
