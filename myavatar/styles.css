@@ -62,7 +62,7 @@ body::after {
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.75rem;
 }
 
@@ -84,11 +84,46 @@ body::after {
   max-width: 640px;
 }
 
-.creator-button {
+.control-panel-wrap {
   position: relative;
-  padding: 0.5rem 1.2rem;
-  font-size: 0.92rem;
 }
+
+.creator-button {
+  position: absolute;
+  top: 0;
+  right: calc(100% + 0.9rem);
+  transform: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.7rem;
+  font-weight: 500;
+  line-height: 1;
+  background: linear-gradient(102deg, var(--accent-blue), var(--accent-violet) 50%, var(--accent-pink));
+  box-shadow:
+    0 10px 28px rgba(101, 103, 236, 0.34),
+    0 0 18px rgba(95, 108, 245, 0.22),
+    0 0 30px rgba(181, 102, 216, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.creator-button:hover {
+  transform: scale(1.04);
+  filter: brightness(1.06);
+}
+
+.worlds-button {
+  align-self: center;
+  padding: 0.5rem 1.35rem;
+  font-size: 0.92rem;
+ }
 
 .avatar-selector-viewport {
   position: relative;
@@ -291,7 +326,19 @@ body::after {
   }
 
   .creator-button {
-    align-self: stretch;
+    right: auto;
+    left: 50%;
+    top: auto;
+    bottom: calc(100% + 0.75rem);
+    transform: translateX(-50%);
+  }
+
+  .creator-button:hover {
+    transform: translateX(-50%) scale(1.04);
+  }
+
+  .worlds-button {
+    align-self: center;
   }
 
   .controls-stack {
