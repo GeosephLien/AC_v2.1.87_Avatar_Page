@@ -457,6 +457,21 @@ img {
   transform: translate(6px, 50px);
 }
 
+.hero-figure-left img,
+.hero-figure-right img {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+}
+
+body.hero-assets-ready .hero-figure-left img {
+  animation: hero-figure-enter-left 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+body.hero-assets-ready .hero-figure-right img {
+  animation: hero-figure-enter-right 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .hero-figure-right img {
   width: auto;
   filter:
@@ -552,6 +567,26 @@ img {
   margin-top: 30px;
   display: flex;
   justify-content: center;
+}
+
+@keyframes hero-figure-enter-left {
+  0% {
+    transform: translate3d(-72px, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hero-figure-enter-right {
+  0% {
+    transform: translate3d(72px, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 @media (max-width: 768px) {
@@ -684,6 +719,7 @@ img {
     order: 2;
     justify-self: center;
     justify-content: center;
+    animation: none;
     transform: none;
     margin-top: 60px;
   }
@@ -692,6 +728,7 @@ img {
     order: 3;
     justify-self: center;
     justify-content: center;
+    animation: none;
     transform: none;
     margin-top: 30px;
   }

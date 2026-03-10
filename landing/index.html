@@ -122,6 +122,47 @@
     const menuButton = document.querySelector(".mobile-menu-button");
     const mobileNav = document.getElementById("mobile-nav");
     const header = document.querySelector(".site-header");
+    const heroFigureImages = Array.from(document.querySelectorAll(".hero-figure img"));
+
+    const waitForImageReady = (image) => {
+      if (image.complete && image.naturalWidth > 0) {
+        if (typeof image.decode === "function") {
+          return image.decode().catch(() => {});
+        }
+        return Promise.resolve();
+      }
+
+      return new Promise((resolve) => {
+        const finish = () => {
+          cleanup();
+          if (typeof image.decode === "function") {
+            image.decode().catch(() => {}).finally(resolve);
+            return;
+          }
+          resolve();
+        };
+        const cleanup = () => {
+          image.removeEventListener("load", finish);
+          image.removeEventListener("error", finish);
+        };
+
+        image.addEventListener("load", finish, { once: true });
+        image.addEventListener("error", finish, { once: true });
+      });
+    };
+
+    const startHeroEntryWhenReady = () => {
+      if (window.innerWidth <= 768 || heroFigureImages.length === 0) {
+        document.body.classList.add("hero-assets-ready");
+        return;
+      }
+
+      Promise.all(heroFigureImages.map(waitForImageReady)).finally(() => {
+        window.requestAnimationFrame(() => {
+          document.body.classList.add("hero-assets-ready");
+        });
+      });
+    };
 
     if (menuButton && mobileNav && header) {
       const closeMenu = () => {
@@ -151,6 +192,8 @@
         }
       });
     }
+
+    startHeroEntryWhenReady();
   </script>
 </body>
 </html>
