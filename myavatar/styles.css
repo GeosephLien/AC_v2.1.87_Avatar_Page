@@ -861,11 +861,7 @@ body::after {
   box-shadow: 0 10px 24px rgba(201, 72, 108, 0.28);
 }
 
-@media (max-width: 768px) {
-  :root {
-    --controls-stack-width: min(calc(100vw - 1.5rem), 28rem);
-  }
-
+@media (max-width: 1180px) {
   .site-header {
     position: absolute;
   }
@@ -956,6 +952,12 @@ body::after {
   .avatar-gradient {
     width: 32px;
     height: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --controls-stack-width: min(calc(100vw - 1.5rem), 28rem);
   }
 
   .page-shell {
