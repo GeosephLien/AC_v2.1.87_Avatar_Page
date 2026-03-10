@@ -25,7 +25,7 @@
               <a href="#">Realisitc Avatar</a>
               <a href="#">Retro Avatar</a>
               <a href="https://market.viverse.com/zh-TW/?_gl=1*15khbrs*_gcl_au*MTUyODIxNjg5Mi4xNzY4OTg5Mjg1LjQzOTM2NTE3NS4xNzcxOTUxNDA3LjE3NzE5NTE0MDY.*_ga*MTc2MDg1NDkzMC4xNzUxNDc4NDQ0*_ga_DGG9JZZMCG*czE3NzI5MjIyMzckbzI0MyRnMSR0MTc3MjkyMzQzNiRqNTkkbDAkaDA." target="_blank" rel="noopener noreferrer">Marketplace</a>
-              <a href="#">Upload VRM</a>
+              <button class="dropdown-action" type="button" data-upload-vrm-trigger>Upload VRM</button>
             </nav>
           </div>
         </div>
@@ -73,9 +73,13 @@
     <canvas id="game-canvas" data-pixel-art=""></canvas>
   </div>
 
+  <input id="upload-vrm-input" type="file" accept=".vrm,model/vrm" hidden>
+
   <script>
     (() => {
       const startButton = document.getElementById('start-creating');
+      const uploadVrmTrigger = document.querySelector('[data-upload-vrm-trigger]');
+      const uploadVrmInput = document.getElementById('upload-vrm-input');
       const loadingOverlay = document.getElementById('loading-overlay');
       const loadingBar = document.getElementById('loading-bar');
       const landingShell = document.querySelector('.landing-shell');
@@ -206,6 +210,42 @@
 
         menu.addEventListener('click', closeMenu);
       })();
+
+      function notifyParent(message) {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage(message, '*');
+        }
+      }
+
+      function handleUploadSelection() {
+        const file = uploadVrmInput.files?.[0];
+        uploadVrmInput.value = '';
+
+        if (!file) {
+          return;
+        }
+
+        if (!/\.vrm$/i.test(file.name)) {
+          notifyParent({
+            type: 'avatar-upload-error',
+            message: 'Only .vrm files can be uploaded.'
+          });
+          return;
+        }
+
+        notifyParent({
+          type: 'avatar-upload-vrm',
+          file
+        });
+      }
+
+      if (uploadVrmTrigger && uploadVrmInput) {
+        uploadVrmTrigger.addEventListener('click', () => {
+          uploadVrmInput.click();
+        });
+
+        uploadVrmInput.addEventListener('change', handleUploadSelection);
+      }
 
       (() => {
         const slides = Array.prototype.slice.call(document.querySelectorAll('.hero-slide'));

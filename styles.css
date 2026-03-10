@@ -337,7 +337,8 @@ body::after {
   transform: translateY(0);
 }
 
-.dropdown-menu a {
+.dropdown-menu a,
+.dropdown-menu button {
   color: #b8b9d6;
   text-decoration: none;
   font-size: 12px;
@@ -348,7 +349,15 @@ body::after {
   white-space: nowrap;
 }
 
-.dropdown-menu a:hover {
+.dropdown-menu button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
   background: transparent;
   color: #ffffff;
 }

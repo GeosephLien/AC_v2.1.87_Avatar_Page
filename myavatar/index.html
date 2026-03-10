@@ -239,6 +239,7 @@
     const creatorOpenButton = document.querySelector('[data-creator-open]');
     const creatorOverlay = document.getElementById('creator-panel-overlay');
     const creatorCloseButton = creatorOverlay.querySelector('[data-creator-close]');
+    const creatorFrame = creatorOverlay.querySelector('.creator-panel-frame');
     const scene = new THREE.Scene();
     scene.background = null;
 
@@ -330,6 +331,16 @@
     let updateAvatarScrollbar = () => {};
     let pendingDeleteButton = null;
     let openAvatarMenuEntry = null;
+    let uploadedAvatarSequence = 0;
+
+    const uploadedAvatarStore = new Map();
+    const thumbnailGradientStops = [
+      ['#4a8dff', '#9d6bff', '#ff8a63'],
+      ['#18b7a0', '#4b7eff', '#9f6dff'],
+      ['#ff7b7b', '#ffb36b', '#6b8dff'],
+      ['#11b5d8', '#2c7ef0', '#9b45f7'],
+      ['#f25f8b', '#f59a58', '#ffd166']
+    ];
 
     function buildAvatarActionControls(label) {
       const fragment = document.createDocumentFragment();
@@ -379,6 +390,265 @@
       actionPanel.append(downloadButton, deleteButton);
       fragment.append(menuButton, actionPanel);
       return fragment;
+    }
+
+    function sanitizeAvatarLabel(name) {
+      const stem = name.replace(/\.[^.]+$/, '').trim();
+      return stem || 'Uploaded avatar';
+    }
+
+    function toDownloadSlug(value) {
+      return sanitizeAvatarLabel(value)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') || 'avatar';
+    }
+
+    function createRandomThumbnailGradient(context, size) {
+      const colors = thumbnailGradientStops[Math.floor(Math.random() * thumbnailGradientStops.length)];
+      const gradient = context.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, colors[0]);
+      gradient.addColorStop(0.52, colors[1]);
+      gradient.addColorStop(1, colors[2]);
+      return gradient;
+    }
+
+    function createAvatarEntryElement({ label, imageSrc, vrmUrl, avatarId, downloadName, thumbnailName }) {
+      const entry = document.createElement('div');
+      entry.className = 'avatar-entry';
+      entry.dataset.avatarEntry = '';
+
+      const button = document.createElement('button');
+      button.className = 'avatar-button';
+      button.type = 'button';
+      button.dataset.avatarButton = '';
+      button.dataset.vrm = vrmUrl;
+      button.dataset.avatarId = avatarId;
+      button.dataset.downloadName = downloadName;
+      button.dataset.thumbnailName = thumbnailName;
+      button.setAttribute('aria-label', `Load ${label} avatar`);
+      button.setAttribute('aria-pressed', 'false');
+      button.title = label;
+
+      const image = document.createElement('img');
+      image.src = imageSrc;
+      image.alt = `Load ${label} avatar`;
+      image.draggable = false;
+
+      button.append(image);
+      entry.append(button);
+      entry.append(buildAvatarActionControls(label));
+      return entry;
+    }
+
+    function getCustomizeInsertBeforeNode() {
+      return avatarSelector.querySelector('[data-customize-index]')?.closest('[data-avatar-entry]') || null;
+    }
+
+    function registerUploadedAvatar(file, thumbnailUrl) {
+      const avatarId = `upload-${Date.now()}-${uploadedAvatarSequence += 1}`;
+      const objectUrl = URL.createObjectURL(file);
+      const label = sanitizeAvatarLabel(file.name);
+
+      uploadedAvatarStore.set(avatarId, {
+        file,
+        label,
+        objectUrl,
+        thumbnailUrl
+      });
+
+      return {
+        avatarId,
+        label,
+        objectUrl,
+        thumbnailUrl,
+        downloadName: file.name,
+        thumbnailName: `${toDownloadSlug(file.name)}-thumb.png`
+      };
+    }
+
+    function disposeUploadedAvatar(button) {
+      const avatarId = button?.dataset.avatarId;
+      if (!avatarId) {
+        return;
+      }
+
+      const uploadedAvatar = uploadedAvatarStore.get(avatarId);
+      if (!uploadedAvatar) {
+        return;
+      }
+
+      URL.revokeObjectURL(uploadedAvatar.objectUrl);
+      uploadedAvatarStore.delete(avatarId);
+    }
+
+    function triggerDownload(href, filename) {
+      if (!href || !filename) {
+        return;
+      }
+
+      const link = document.createElement('a');
+      link.href = href;
+      link.download = filename;
+      document.body.append(link);
+      link.click();
+      link.remove();
+    }
+
+    function downloadAvatarEntry(entry) {
+      const avatarButton = entry?.querySelector('[data-avatar-button]');
+      if (!avatarButton) {
+        return;
+      }
+
+      const downloadHref = avatarButton.dataset.vrm;
+      if (!downloadHref) {
+        return;
+      }
+
+      const downloadName = avatarButton.dataset.downloadName || downloadHref.split('/').pop() || 'avatar.vrm';
+      const thumbnailImage = avatarButton.querySelector('img');
+      const thumbnailHref = thumbnailImage?.currentSrc || thumbnailImage?.src || '';
+      const thumbnailName = avatarButton.dataset.thumbnailName
+        || thumbnailHref.split('/').pop()
+        || `${toDownloadSlug(avatarButton.title || downloadName)}-thumb.png`;
+
+      triggerDownload(downloadHref, downloadName);
+
+      if (thumbnailHref) {
+        window.setTimeout(() => {
+          triggerDownload(thumbnailHref, thumbnailName);
+        }, 120);
+      }
+    }
+
+    async function createAvatarThumbnail(url) {
+      const thumbnailSize = 256;
+      const renderCanvas = document.createElement('canvas');
+      const outputCanvas = document.createElement('canvas');
+      renderCanvas.width = thumbnailSize;
+      renderCanvas.height = thumbnailSize;
+      outputCanvas.width = thumbnailSize;
+      outputCanvas.height = thumbnailSize;
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas: renderCanvas,
+        antialias: true,
+        alpha: true,
+        preserveDrawingBuffer: true
+      });
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.setPixelRatio(1);
+      renderer.setSize(thumbnailSize, thumbnailSize, false);
+
+      const thumbnailScene = new THREE.Scene();
+      const thumbnailCamera = new THREE.PerspectiveCamera(22, 1, 0.01, 20);
+      let thumbnailMixer = null;
+
+      try {
+        const avatarGltf = await loadGLTF(url);
+        const vrm = avatarGltf.userData.vrm;
+        if (!vrm) {
+          throw new Error('VRM data was not found in the uploaded file.');
+        }
+
+        thumbnailScene.add(new THREE.HemisphereLight(0xffffff, 0x2b355a, 1.9));
+
+        const keyLight = new THREE.DirectionalLight(0xffffff, 1.55);
+        keyLight.position.set(1.4, 2.8, 2.2);
+        thumbnailScene.add(keyLight);
+
+        const fillLight = new THREE.DirectionalLight(0x8ec5ff, 1.05);
+        fillLight.position.set(-1.6, 1.4, 1.8);
+        thumbnailScene.add(fillLight);
+
+        const rimLight = new THREE.DirectionalLight(0xffb38a, 0.7);
+        rimLight.position.set(0.8, 1.8, -2);
+        thumbnailScene.add(rimLight);
+
+        VRMUtils.removeUnnecessaryVertices(avatarGltf.scene);
+        VRMUtils.removeUnnecessaryJoints(avatarGltf.scene);
+        vrm.scene.rotation.y = Math.PI;
+        thumbnailScene.add(vrm.scene);
+        vrm.update(0);
+        vrm.scene.updateMatrixWorld(true);
+
+        const animationGltf = await loadGLTF('./vrmas/ani_Idle_Action_01.vrma');
+        const vrmAnimation = animationGltf.userData.vrmAnimations?.[0];
+        if (vrmAnimation) {
+          thumbnailMixer = new THREE.AnimationMixer(vrm.scene);
+          const clip = createVRMAnimationClip(vrmAnimation, vrm);
+          const action = thumbnailMixer.clipAction(clip);
+          action.reset().play();
+          thumbnailMixer.update(0.42);
+          vrm.update(0.42);
+          vrm.scene.updateMatrixWorld(true);
+        }
+
+        const bounds = new THREE.Box3().setFromObject(vrm.scene);
+        const size = bounds.getSize(new THREE.Vector3());
+        const fallbackTarget = bounds.getCenter(new THREE.Vector3()).add(new THREE.Vector3(0, size.y * 0.18, 0));
+        const headBone = vrm.humanoid?.getNormalizedBoneNode('head') || vrm.humanoid?.getRawBoneNode('head') || null;
+        const target = headBone ? headBone.getWorldPosition(new THREE.Vector3()) : fallbackTarget;
+        target.y += 0.015;
+
+        const faceSpan = Math.max(size.x * 0.34, size.y * 0.24, 0.24);
+        const distance = Math.max(faceSpan / (2 * Math.tan(THREE.MathUtils.degToRad(thumbnailCamera.fov / 2))), 0.4) + size.z * 0.18;
+        thumbnailCamera.position.copy(target).add(new THREE.Vector3(0, 0, distance));
+        thumbnailCamera.lookAt(target);
+        thumbnailCamera.far = Math.max(distance + size.z * 3, 10);
+        thumbnailCamera.updateProjectionMatrix();
+
+        renderer.render(thumbnailScene, thumbnailCamera);
+
+        const outputContext = outputCanvas.getContext('2d');
+        outputContext.fillStyle = createRandomThumbnailGradient(outputContext, thumbnailSize);
+        outputContext.fillRect(0, 0, thumbnailSize, thumbnailSize);
+        outputContext.drawImage(renderCanvas, 0, 0, thumbnailSize, thumbnailSize);
+
+        thumbnailScene.remove(vrm.scene);
+        VRMUtils.deepDispose(vrm.scene);
+
+        return outputCanvas.toDataURL('image/png');
+      } finally {
+        if (thumbnailMixer) {
+          thumbnailMixer.stopAllAction();
+        }
+        renderer.dispose();
+        renderer.forceContextLoss();
+      }
+    }
+
+    async function addUploadedAvatar(file) {
+      if (!(file instanceof File) || !/\.vrm$/i.test(file.name)) {
+        throw new Error('Only .vrm files can be uploaded.');
+      }
+
+      clearError();
+      const transientUrl = URL.createObjectURL(file);
+      let thumbnailUrl = '';
+
+      try {
+        thumbnailUrl = await createAvatarThumbnail(transientUrl);
+      } finally {
+        URL.revokeObjectURL(transientUrl);
+      }
+
+      const uploadedAvatar = registerUploadedAvatar(file, thumbnailUrl);
+      const entry = createAvatarEntryElement({
+        label: uploadedAvatar.label,
+        imageSrc: uploadedAvatar.thumbnailUrl,
+        vrmUrl: uploadedAvatar.objectUrl,
+        avatarId: uploadedAvatar.avatarId,
+        downloadName: uploadedAvatar.downloadName,
+        thumbnailName: uploadedAvatar.thumbnailName
+      });
+
+      avatarSelector.insertBefore(entry, getCustomizeInsertBeforeNode());
+      updateAvatarScrollbar();
+      closeCreatorPanel();
+      setActiveAvatarButton(uploadedAvatar.objectUrl);
+      await loadAvatar(uploadedAvatar.objectUrl);
     }
 
     function getAvatarButtons() {
@@ -557,8 +827,7 @@
     function closeCreatorPanel() {
       creatorOverlay.hidden = true;
       creatorOpenButton.setAttribute('aria-expanded', 'false');
-      creatorOverlay
-        .querySelector('.creator-panel-frame')
+      creatorFrame
         ?.contentWindow
         ?.postMessage({ type: 'avatar-creator-reset' }, '*');
       resumeRenderLoop();
@@ -576,6 +845,7 @@
       }
 
       closeAvatarActionMenu(entry);
+      disposeUploadedAvatar(button);
 
       const wasActive = button.classList.contains('is-active');
       entry.hidden = true;
@@ -994,7 +1264,9 @@
         if (downloadButton) {
           event.preventDefault();
           event.stopPropagation();
-          closeAvatarActionMenu(downloadButton.closest('[data-avatar-entry]'));
+          const entry = downloadButton.closest('[data-avatar-entry]');
+          closeAvatarActionMenu(entry);
+          downloadAvatarEntry(entry);
           return;
         }
 
@@ -1073,6 +1345,24 @@
       window.addEventListener('keydown', (event) => {
         if (event.key === 'Escape' && !creatorOverlay.hidden) {
           closeCreatorPanel();
+        }
+      });
+
+      window.addEventListener('message', async (event) => {
+        if (event.data?.type === 'avatar-upload-error') {
+          showError(event.data.message || 'VRM upload failed.');
+          return;
+        }
+
+        if (event.data?.type !== 'avatar-upload-vrm') {
+          return;
+        }
+
+        try {
+          await addUploadedAvatar(event.data.file);
+        } catch (error) {
+          console.error(error);
+          showError(`VRM upload failed: ${error.message}`);
         }
       });
     }
