@@ -331,7 +331,7 @@ img {
   min-height: calc(100vh - 86px);
   display: grid;
   place-items: center;
-  padding: 110px 32px 48px;
+  padding: 80px 32px 48px;
   position: relative;
   z-index: 1;
 }
@@ -343,6 +343,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-inline: clamp(24px, 4vw, 64px);
   overflow: visible;
 }
 
@@ -373,7 +374,7 @@ img {
 .hero-grid {
   width: 100%;
   display: grid;
-  grid-template-columns: minmax(360px, 1fr) 520px minmax(360px, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 520px) minmax(0, 1fr);
   align-items: center;
   gap: clamp(20px, 4vw, 48px);
   overflow: visible;
@@ -386,6 +387,7 @@ img {
   align-items: center;
   justify-content: center;
   overflow: visible;
+  min-width: 0;
   width: 100%;
 }
 
@@ -402,14 +404,14 @@ img {
 
 .hero-figure-left {
   justify-self: stretch;
-  justify-content: flex-start;
-  transform: translate(-100px, 50px);
+  justify-content: center;
+  transform: translate(-56px, 50px);
 }
 
 .hero-figure-right {
   justify-self: stretch;
-  justify-content: flex-end;
-  transform: translate(100px, 50px);
+  justify-content: center;
+  transform: translate(56px, 50px);
 }
 
 .hero-figure-right img {
@@ -438,7 +440,7 @@ img {
   justify-self: center;
   width: min(100%, 520px);
   text-align: center;
-  padding: 28px 12px;
+  padding: 28px 36px;
 }
 
 .eyebrow {
