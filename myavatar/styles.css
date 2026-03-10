@@ -491,7 +491,7 @@ body::after {
   height: 64px;
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 24px;
+  border-radius: 999px;
   background: rgba(10, 14, 44, 0.52);
   box-shadow: 0 18px 30px rgba(0, 0, 0, 0.2);
   overflow: hidden;
