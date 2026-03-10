@@ -118,6 +118,7 @@ body::after {
   bottom: calc(100% + 0.75rem);
   margin-right: 0;
   transform: none;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -136,16 +137,40 @@ body::after {
     0 10px 28px rgba(101, 103, 236, 0.34),
     0 0 18px rgba(95, 108, 245, 0.22),
     0 0 30px rgba(181, 102, 216, 0.18);
-  transition: transform 0.2s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  transition: box-shadow 0.25s ease, filter 0.25s ease;
   cursor: pointer;
 }
 
+.creator-button::before,
+.worlds-button::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(102deg, rgba(87, 110, 255, 0.7), rgba(181, 102, 216, 0.72), rgba(255, 111, 180, 0.68));
+  filter: blur(18px);
+  opacity: 0.72;
+  animation: start-button-glow 6s ease-in-out infinite;
+}
+
 .creator-button:hover {
-  transform: scale(1.04);
   filter: brightness(1.06);
+  box-shadow:
+    0 10px 28px rgba(101, 103, 236, 0.34),
+    0 0 18px rgba(95, 108, 245, 0.4),
+    0 0 30px rgba(181, 102, 216, 0.3);
+}
+
+.creator-button:hover::before,
+.worlds-button:hover::before {
+  opacity: 0.96;
+  filter: blur(22px);
 }
 
 .worlds-button {
+  position: relative;
+  isolation: isolate;
   align-self: flex-end;
   padding: 0.5rem 1.35rem;
   font-size: 0.92rem;
@@ -458,17 +483,17 @@ body::after {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   padding: 0.65rem 1.6rem;
   border-radius: 999px;
   text-decoration: none;
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.04em;
-  transition: transform 0.2s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  transition: box-shadow 0.25s ease, filter 0.25s ease;
 }
 
 .btn:hover {
-  transform: translateY(-1px);
   filter: brightness(1.06);
 }
 
@@ -479,6 +504,13 @@ body::after {
     0 10px 28px rgba(101, 103, 236, 0.34),
     0 0 18px rgba(95, 108, 245, 0.22),
     0 0 30px rgba(181, 102, 216, 0.18);
+}
+
+.btn-primary:hover {
+  box-shadow:
+    0 10px 28px rgba(101, 103, 236, 0.34),
+    0 0 18px rgba(95, 108, 245, 0.4),
+    0 0 30px rgba(181, 102, 216, 0.3);
 }
 
 .btn-ghost {
@@ -538,7 +570,10 @@ body::after {
   }
 
   .creator-button:hover {
-    transform: scale(1.04);
+    box-shadow:
+      0 10px 28px rgba(101, 103, 236, 0.34),
+      0 0 18px rgba(95, 108, 245, 0.4),
+      0 0 30px rgba(181, 102, 216, 0.3);
   }
 
   .worlds-button {
@@ -573,5 +608,17 @@ body::after {
 
   .creator-panel-close:hover {
     transform: translateY(calc(-100% - 0.5rem)) scale(1.05);
+  }
+}
+
+@keyframes start-button-glow {
+  0%,
+  100% {
+    transform: scale(0.5);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(0.8);
+    opacity: 0.6;
   }
 }
