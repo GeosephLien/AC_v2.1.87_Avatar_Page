@@ -405,13 +405,13 @@ img {
 .hero-figure-left {
   justify-self: stretch;
   justify-content: center;
-  transform: translate(-56px, 50px);
+  transform: translate(-6px, 50px);
 }
 
 .hero-figure-right {
   justify-self: stretch;
   justify-content: center;
-  transform: translate(56px, 50px);
+  transform: translate(6px, 50px);
 }
 
 .hero-figure-right img {
@@ -466,6 +466,10 @@ img {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+.hero-title-tail {
+  padding-bottom: 0.14em;
 }
 
 .hero-description {
