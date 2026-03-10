@@ -129,15 +129,20 @@ img {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   color: var(--text-main);
   text-decoration: none;
   flex: 0 0 auto;
 }
 
 .brand-logo {
-  width: 26px;
-  height: auto;
+  display: block;
+  width: 144px;
+  height: 56px;
+  flex: 0 0 144px;
+  object-fit: contain;
+  object-position: left center;
+  margin-right: 2px;
 }
 
 .brand-name,
@@ -230,10 +235,6 @@ img {
   font-weight: 700;
   white-space: nowrap;
   background: linear-gradient(90deg, var(--cyan), var(--cyan-strong));
-  box-shadow:
-    0 8px 18px rgba(0, 167, 255, 0.18),
-    0 0 12px rgba(56, 215, 255, 0.1),
-    0 0 20px rgba(0, 167, 255, 0.06);
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
@@ -259,7 +260,6 @@ img {
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
-.cta-button::before,
 .hero-cta::before {
   content: "";
   position: absolute;
@@ -269,10 +269,6 @@ img {
   filter: blur(18px);
   opacity: 0.42;
   animation: start-button-glow 6s ease-in-out infinite;
-}
-
-.cta-button::before {
-  background: linear-gradient(90deg, rgba(56, 215, 255, 0.72), rgba(0, 167, 255, 0.68));
 }
 
 .hero-cta::before {
@@ -288,14 +284,6 @@ img {
   outline: none;
 }
 
-.cta-button:hover,
-.cta-button:focus-visible {
-  box-shadow:
-    0 14px 30px rgba(0, 167, 255, 0.3),
-    0 0 20px rgba(56, 215, 255, 0.32),
-    0 0 34px rgba(0, 167, 255, 0.22);
-}
-
 .hero-cta:hover,
 .hero-cta:focus-visible {
   box-shadow:
@@ -304,8 +292,6 @@ img {
     0 0 38px rgba(36, 185, 255, 0.24);
 }
 
-.cta-button:hover::before,
-.cta-button:focus-visible::before,
 .hero-cta:hover::before,
 .hero-cta:focus-visible::before {
   opacity: 0.96;
@@ -591,7 +577,9 @@ img {
   }
 
   .brand-logo {
-    width: 32px;
+    width: 176px;
+    height: 64px;
+    flex-basis: 176px;
   }
 
   .brand-name {
