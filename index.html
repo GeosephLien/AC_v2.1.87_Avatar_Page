@@ -14,9 +14,6 @@
   <main class="landing-shell">
     <section class="landing">
       <header class="topbar">
-        <a class="brand" href="http://127.0.0.1:5501/landing/index.html">
-          <img class="brand-logo" src="images/VIVERSE_MainLogo_Digital_Primary_Gradient_Black.svg" alt="VIVERSE logo">
-        </a>
         <div class="top-actions">
           <div class="hamburger-wrap">
             <button class="hamburger-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="top-dropdown">
@@ -25,11 +22,10 @@
               <span></span>
             </button>
             <nav id="top-dropdown" class="dropdown-menu" aria-label="Avatar options">
-              <a href="https://market.viverse.com/zh-TW/?_gl=1*15khbrs*_gcl_au*MTUyODIxNjg5Mi4xNzY4OTg5Mjg1LjQzOTM2NTE3NS4xNzcxOTUxNDA3LjE3NzE5NTE0MDY.*_ga*MTc2MDg1NDkzMC4xNzUxNDc4NDQ0*_ga_DGG9JZZMCG*czE3NzI5MjIyMzckbzI0MyRnMSR0MTc3MjkyMzQzNiRqNTkkbDAkaDA." target="_blank" rel="noopener noreferrer">Marketplace</a>
-              <a href="#">Realistic Avatar</a>
+              <a href="#">Realisitc Avatar</a>
               <a href="#">Retro Avatar</a>
+              <a href="https://market.viverse.com/zh-TW/?_gl=1*15khbrs*_gcl_au*MTUyODIxNjg5Mi4xNzY4OTg5Mjg1LjQzOTM2NTE3NS4xNzcxOTUxNDA3LjE3NzE5NTE0MDY.*_ga*MTc2MDg1NDkzMC4xNzUxNDc4NDQ0*_ga_DGG9JZZMCG*czE3NzI5MjIyMzckbzI0MyRnMSR0MTc3MjkyMzQzNiRqNTkkbDAkaDA." target="_blank" rel="noopener noreferrer">Marketplace</a>
               <a href="#">Upload VRM</a>
-              <a href="http://127.0.0.1:5501/myavatar/index.html">My Avatar</a>
             </nav>
           </div>
         </div>
@@ -190,12 +186,14 @@
         function closeMenu() {
           wrap.classList.remove('open');
           button.setAttribute('aria-expanded', 'false');
+          button.setAttribute('aria-label', 'Open menu');
         }
 
         button.addEventListener('click', function (event) {
           event.stopPropagation();
           const isOpen = wrap.classList.toggle('open');
           button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          button.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
         });
 
         document.addEventListener('click', function (event) {

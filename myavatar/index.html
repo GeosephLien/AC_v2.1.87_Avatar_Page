@@ -21,6 +21,78 @@
   </script>
   </head>
   <body>
+    <div class="top-strip">
+      <svg class="htc-mark" viewBox="0 0 111.1 36.8" aria-label="HTC" role="img">
+        <g>
+          <path d="M101.9,31.2c-5.9,0-11.4,0.1-13-0.1c-3.1-0.3-5.2-2.3-5.5-5.3c-0.2-2-0.2-3.6,0-5.2c0.3-2.9,2.7-5.7,5.5-5.9c1-0.1,3.6,0,8.4,0l13.9,0V8.9c0,0-11,0-14.4,0c-4.5,0-6.7,0-8.1,0c-3.1,0.1-5.7,1.2-7.8,3.3c-1.9,2-3.1,5.1-3.2,8.2c-0.1,1.7-0.1,3.9,0,5.2c0.3,3.4,1.4,6,3.2,7.9c2,2,4.9,3.3,7.8,3.3c2.3,0,22.5,0,22.5,0v-5.7C111.1,31.1,105,31.1,101.9,31.2z"></path>
+          <polygon points="39.3,9.3 39.3,15 53,15 53,36.8 58.7,36.8 58.7,15 72.4,15 72.4,9.3"></polygon>
+          <path d="M33.3,20.1c0-3.1-1.1-5.7-3.2-7.9C27.8,10,24.5,9,22.3,8.9c-1.9-0.1-9.5-0.1-11.2,0C8.5,9,6.7,9.8,5.8,10.5c0,0,0,0,0,0V0H0v36.9h5.8c0,0-0.1-15.1,0-16.7c0.2-2.9,2.4-5.2,5.3-5.5c2.3-0.2,9.1-0.1,11.2,0c2.9,0.2,5.1,2.5,5.3,5.6c0.1,1.1,0,16.6,0,16.6h5.8C33.3,36.9,33.3,21.4,33.3,20.1z"></path>
+        </g>
+      </svg>
+    </div>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <button class="mobile-menu-button" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <a class="brand" href="../index.html" aria-label="VIVERSE Avatar">
+          <img class="brand-logo" src="../images/VIVERSE_AlternateLogo_Digital_Primary_Gradient_White.svg" alt="VIVERSE logo">
+          <span class="brand-divider" aria-hidden="true"></span>
+          <span class="brand-text">Avatar</span>
+        </a>
+
+        <nav class="main-nav" aria-label="Primary">
+          <a href="#">Worlds</a>
+          <a href="#">Create</a>
+          <a href="#">Business</a>
+          <a href="https://market.viverse.com/" target="_blank" rel="noopener noreferrer">Marketplace</a>
+          <a class="active" href="../landing/index.html">Avatar</a>
+          <a href="#">Blog</a>
+        </nav>
+
+        <div class="header-actions">
+          <button class="icon-button" type="button" aria-label="Language">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3 12h18"></path>
+              <path d="M12 3c2.7 2.7 4.1 5.7 4.1 9s-1.4 6.3-4.1 9c-2.7-2.7-4.1-5.7-4.1-9s1.4-6.3 4.1-9Z"></path>
+            </svg>
+          </button>
+
+          <div class="divider" aria-hidden="true"></div>
+
+          <button class="pill-button" type="button" aria-label="Points">
+            <span class="pill-icon">&#10022;</span>
+            <span>635</span>
+          </button>
+
+          <button class="icon-button" type="button" aria-label="Notifications">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path class="bell-fill" d="M12 3.5a4.8 4.8 0 0 0-4.8 4.8v1.6c0 .8-.22 1.58-.64 2.26L5.2 14.3c-.5.8.07 1.82 1.01 1.82h11.58c.94 0 1.51-1.02 1.01-1.82l-1.38-2.2a4.26 4.26 0 0 1-.62-2.25V8.3A4.8 4.8 0 0 0 12 3.5Z"></path>
+              <path class="bell-fill" d="M10.1 18.2a1.9 1.9 0 0 0 3.8 0Z"></path>
+            </svg>
+          </button>
+
+          <button class="header-avatar-button" type="button" aria-label="Profile">
+            <span class="avatar-gradient"></span>
+          </button>
+        </div>
+      </div>
+
+      <nav class="mobile-nav-panel" id="mobile-nav" aria-label="Mobile primary" hidden>
+        <a href="#">Worlds</a>
+        <a href="#">Create</a>
+        <a href="#">Business</a>
+        <a href="https://market.viverse.com/" target="_blank" rel="noopener noreferrer">Marketplace</a>
+        <a href="../landing/index.html">Avatar</a>
+        <a href="#">Blog</a>
+      </nav>
+    </header>
+
     <main class="page-shell">
       <div class="controls-stack">
         <a
@@ -33,13 +105,13 @@
           <button
             class="creator-button"
             type="button"
-            aria-label="Open Avatar Creator panel"
-            title="Open Avatar Creator"
+            aria-label="Create New"
+            title="Create New"
             data-creator-open
             aria-haspopup="dialog"
             aria-expanded="false"
             aria-controls="creator-panel-overlay"
-          >+</button>
+          >Create New</button>
           <aside class="control-panel" aria-label="Avatar controls">
             <div class="avatar-selector-viewport" data-avatar-scroll>
               <div class="avatar-selector" aria-label="Avatar selector">
@@ -76,37 +148,36 @@
         </div>
       </div>
       <section class="viewer-stage">
-        <a class="brand" href="http://127.0.0.1:5501/landing/index.html" aria-label="Back to Avatar Creator home">
-          <img class="brand-logo" src="../images/VIVERSE_MainLogo_Digital_Primary_Gradient_Black.svg" alt="VIVERSE logo">
-        </a>
         <canvas id="avatar-canvas" aria-label="VRM avatar preview"></canvas>
         <div class="viewer-error" id="viewer-error" hidden></div>
       </section>
-      <div class="creator-overlay" id="creator-panel-overlay" hidden>
-        <div class="creator-panel-wrap">
-          <button class="creator-panel-close" type="button" data-creator-close aria-label="Close Avatar Creator panel">X</button>
-          <div class="creator-panel" role="dialog" aria-modal="true" aria-label="Avatar Creator panel">
-            <iframe
-              class="creator-panel-frame"
-              src="http://127.0.0.1:5501/index.html"
-              title="Avatar Creator"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-            ></iframe>
-          </div>
+    </main>
+
+    <div class="creator-overlay" id="creator-panel-overlay" hidden>
+      <div class="creator-panel-wrap">
+        <button class="creator-panel-close" type="button" data-creator-close aria-label="Close Avatar Creator panel"></button>
+        <div class="creator-panel" role="dialog" aria-modal="true" aria-label="Avatar Creator panel">
+          <iframe
+            class="creator-panel-frame"
+            src="http://127.0.0.1:5501/index.html"
+            title="Avatar Creator"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          ></iframe>
         </div>
       </div>
-      <div class="confirm-overlay" id="avatar-delete-confirm" hidden>
-        <div class="confirm-panel" role="dialog" aria-modal="true" aria-labelledby="avatar-delete-title">
-          <h2 id="avatar-delete-title">Remove avatar?</h2>
-          <p>This avatar icon will be hidden from the list.</p>
-          <div class="confirm-actions">
-            <button class="btn btn-ghost" type="button" data-confirm-cancel>Cancel</button>
-            <button class="btn btn-danger" type="button" data-confirm-delete>Confirm</button>
-          </div>
+    </div>
+
+    <div class="confirm-overlay" id="avatar-delete-confirm" hidden>
+      <div class="confirm-panel" role="dialog" aria-modal="true" aria-labelledby="avatar-delete-title">
+        <h2 id="avatar-delete-title">Remove avatar?</h2>
+        <p>This avatar icon will be hidden from the list.</p>
+        <div class="confirm-actions">
+          <button class="btn btn-ghost" type="button" data-confirm-cancel>Cancel</button>
+          <button class="btn btn-danger" type="button" data-confirm-delete>Confirm</button>
         </div>
       </div>
-  </main>
+    </div>
 
   <script type="module">
     import * as THREE from 'three';
@@ -117,6 +188,9 @@
       createVRMAnimationClip
     } from '@pixiv/three-vrm-animation';
 
+    const menuButton = document.querySelector('.mobile-menu-button');
+    const mobileNav = document.getElementById('mobile-nav');
+    const header = document.querySelector('.site-header');
     const canvas = document.getElementById('avatar-canvas');
     const errorPanel = document.getElementById('viewer-error');
     const avatarSelector = document.querySelector('.avatar-selector');
@@ -291,6 +365,35 @@
       zoomBrake: 10,
       pivotBrake: 10
     };
+
+    if (menuButton && mobileNav && header) {
+      const closeMenu = () => {
+        menuButton.setAttribute('aria-expanded', 'false');
+        mobileNav.hidden = true;
+      };
+
+      menuButton.addEventListener('click', () => {
+        const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
+        menuButton.setAttribute('aria-expanded', String(!isOpen));
+        mobileNav.hidden = isOpen;
+      });
+
+      mobileNav.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', closeMenu);
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!header.contains(event.target)) {
+          closeMenu();
+        }
+      });
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 880) {
+          closeMenu();
+        }
+      });
+    }
 
     function showError(message) {
       errorPanel.textContent = message;
