@@ -317,6 +317,7 @@ body::after {
 .control-panel {
   position: relative;
   width: fit-content;
+  min-width: 360px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
