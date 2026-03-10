@@ -125,7 +125,25 @@
                   >
                     <img src="./images/thb_Iris.png" alt="Load Iris avatar">
                   </button>
-                  <button class="avatar-delete-button" type="button" data-avatar-delete aria-label="Remove Iris avatar" title="Remove avatar">X</button>
+                  <button class="avatar-menu-button" type="button" data-avatar-menu aria-label="Avatar actions" aria-expanded="false" title="Avatar actions">
+                    <span></span>
+                    <span></span>
+                  </button>
+                  <div class="avatar-action-panel" data-avatar-actions hidden>
+                    <button class="avatar-action-button" type="button" data-avatar-download aria-label="Download Iris avatar" title="Download avatar">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 4v10"></path>
+                        <path d="m8 10 4 4 4-4"></path>
+                        <path d="M6 18h12"></path>
+                      </svg>
+                    </button>
+                    <button class="avatar-action-button avatar-action-button-delete" type="button" data-avatar-delete aria-label="Remove Iris avatar" title="Remove avatar">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 6 18 18"></path>
+                        <path d="M18 6 6 18"></path>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
                 <div class="avatar-entry" data-avatar-entry>
                   <button
@@ -137,7 +155,25 @@
                   >
                     <img src="./images/thb_Michael.png" alt="Load Michael avatar">
                   </button>
-                  <button class="avatar-delete-button" type="button" data-avatar-delete aria-label="Remove Michael avatar" title="Remove avatar">X</button>
+                  <button class="avatar-menu-button" type="button" data-avatar-menu aria-label="Avatar actions" aria-expanded="false" title="Avatar actions">
+                    <span></span>
+                    <span></span>
+                  </button>
+                  <div class="avatar-action-panel" data-avatar-actions hidden>
+                    <button class="avatar-action-button" type="button" data-avatar-download aria-label="Download Michael avatar" title="Download avatar">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 4v10"></path>
+                        <path d="m8 10 4 4 4-4"></path>
+                        <path d="M6 18h12"></path>
+                      </svg>
+                    </button>
+                    <button class="avatar-action-button avatar-action-button-delete" type="button" data-avatar-delete aria-label="Remove Michael avatar" title="Remove avatar">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 6 18 18"></path>
+                        <path d="M18 6 6 18"></path>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -293,6 +329,57 @@
 
     let updateAvatarScrollbar = () => {};
     let pendingDeleteButton = null;
+    let openAvatarMenuEntry = null;
+
+    function buildAvatarActionControls(label) {
+      const fragment = document.createDocumentFragment();
+
+      const menuButton = document.createElement('button');
+      menuButton.className = 'avatar-menu-button';
+      menuButton.type = 'button';
+      menuButton.dataset.avatarMenu = '';
+      menuButton.setAttribute('aria-label', `${label} actions`);
+      menuButton.setAttribute('aria-expanded', 'false');
+      menuButton.title = 'Avatar actions';
+
+      menuButton.append(document.createElement('span'), document.createElement('span'));
+
+      const actionPanel = document.createElement('div');
+      actionPanel.className = 'avatar-action-panel';
+      actionPanel.dataset.avatarActions = '';
+      actionPanel.hidden = true;
+
+      const downloadButton = document.createElement('button');
+      downloadButton.className = 'avatar-action-button';
+      downloadButton.type = 'button';
+      downloadButton.dataset.avatarDownload = '';
+      downloadButton.setAttribute('aria-label', `Download ${label}`);
+      downloadButton.title = 'Download avatar';
+      downloadButton.innerHTML = `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 4v10"></path>
+          <path d="m8 10 4 4 4-4"></path>
+          <path d="M6 18h12"></path>
+        </svg>
+      `;
+
+      const deleteButton = document.createElement('button');
+      deleteButton.className = 'avatar-action-button avatar-action-button-delete';
+      deleteButton.type = 'button';
+      deleteButton.dataset.avatarDelete = '';
+      deleteButton.setAttribute('aria-label', `Remove ${label}`);
+      deleteButton.title = 'Remove avatar';
+      deleteButton.innerHTML = `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6 18 18"></path>
+          <path d="M18 6 6 18"></path>
+        </svg>
+      `;
+
+      actionPanel.append(downloadButton, deleteButton);
+      fragment.append(menuButton, actionPanel);
+      return fragment;
+    }
 
     function getAvatarButtons() {
       return [...document.querySelectorAll('[data-avatar-button]')];
@@ -330,16 +417,7 @@
 
         button.append(image);
         entry.append(button);
-
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'avatar-delete-button';
-        deleteButton.type = 'button';
-        deleteButton.dataset.avatarDelete = '';
-        deleteButton.setAttribute('aria-label', `Remove ${slotLabel}`);
-        deleteButton.title = 'Remove avatar';
-        deleteButton.textContent = 'X';
-
-        entry.append(deleteButton);
+        entry.append(buildAvatarActionControls(slotLabel));
         fragment.append(entry);
       }
 
@@ -433,6 +511,44 @@
       deleteConfirm.hidden = true;
     }
 
+    function closeAvatarActionMenu(entry = openAvatarMenuEntry) {
+      if (!entry) {
+        return;
+      }
+
+      entry.classList.remove('menu-open');
+      entry.querySelector('[data-avatar-menu]')?.setAttribute('aria-expanded', 'false');
+      const actionPanel = entry.querySelector('[data-avatar-actions]');
+      if (actionPanel) {
+        actionPanel.hidden = true;
+      }
+
+      if (openAvatarMenuEntry === entry) {
+        openAvatarMenuEntry = null;
+      }
+    }
+
+    function toggleAvatarActionMenu(entry) {
+      if (!entry) {
+        return;
+      }
+
+      const isOpen = entry === openAvatarMenuEntry;
+      closeAvatarActionMenu();
+
+      if (isOpen) {
+        return;
+      }
+
+      entry.classList.add('menu-open');
+      entry.querySelector('[data-avatar-menu]')?.setAttribute('aria-expanded', 'true');
+      const actionPanel = entry.querySelector('[data-avatar-actions]');
+      if (actionPanel) {
+        actionPanel.hidden = false;
+      }
+      openAvatarMenuEntry = entry;
+    }
+
     function openCreatorPanel() {
       pauseRenderLoop();
       creatorOverlay.hidden = false;
@@ -459,6 +575,8 @@
       if (!entry || entry.hidden) {
         return;
       }
+
+      closeAvatarActionMenu(entry);
 
       const wasActive = button.classList.contains('is-active');
       entry.hidden = true;
@@ -853,10 +971,19 @@
 
     function bindAvatarButtons() {
       avatarSelector.addEventListener('click', async (event) => {
+        const menuButton = event.target.closest('[data-avatar-menu]');
+        if (menuButton) {
+          event.preventDefault();
+          event.stopPropagation();
+          toggleAvatarActionMenu(menuButton.closest('[data-avatar-entry]'));
+          return;
+        }
+
         const deleteButton = event.target.closest('[data-avatar-delete]');
         if (deleteButton) {
           event.preventDefault();
           event.stopPropagation();
+          closeAvatarActionMenu(deleteButton.closest('[data-avatar-entry]'));
           const button = deleteButton.closest('[data-avatar-entry]')?.querySelector('.avatar-button');
           if (button) {
             openDeleteConfirm(button);
@@ -864,8 +991,17 @@
           return;
         }
 
+        const downloadButton = event.target.closest('[data-avatar-download]');
+        if (downloadButton) {
+          event.preventDefault();
+          event.stopPropagation();
+          closeAvatarActionMenu(downloadButton.closest('[data-avatar-entry]'));
+          return;
+        }
+
         const button = event.target.closest('.avatar-button');
         if (!button) {
+          closeAvatarActionMenu();
           return;
         }
 
@@ -888,6 +1024,14 @@
 
         if (!currentVrm) {
           setActiveAvatarButton(activeAvatarUrl);
+        }
+
+        closeAvatarActionMenu();
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!avatarSelector.contains(event.target)) {
+          closeAvatarActionMenu();
         }
       });
     }

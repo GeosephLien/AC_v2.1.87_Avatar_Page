@@ -499,35 +499,104 @@ body::after {
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-.avatar-delete-button {
+.avatar-entry {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.avatar-menu-button {
   position: absolute;
-  top: -6px;
-  right: -6px;
+  top: 4px;
+  right: 4px;
   z-index: 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.34);
+  border: 0;
   border-radius: 999px;
-  color: #fff;
-  background: rgba(14, 18, 50, 0.92);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.32);
+  background: rgba(12, 18, 44, 0.78);
+  opacity: 0;
+  pointer-events: none;
   cursor: pointer;
-  font-size: 0.95rem;
-  line-height: 1;
-  transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+  transition: opacity 0.18s ease, background-color 0.18s ease;
 }
 
-.avatar-delete-button:hover {
-  transform: scale(1.08);
-  border-color: rgba(255, 166, 166, 0.72);
-  background: rgba(132, 33, 57, 0.96);
+.avatar-entry:hover .avatar-menu-button,
+.avatar-entry:focus-within .avatar-menu-button,
+.avatar-entry.menu-open .avatar-menu-button {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.avatar-delete-button:focus-visible,
+.avatar-menu-button span {
+  position: absolute;
+  width: 8px;
+  height: 2px;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.avatar-menu-button span:first-child {
+  transform: translateY(-2px);
+}
+
+.avatar-menu-button span:last-child {
+  transform: translateY(2px);
+}
+
+.avatar-action-panel {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  justify-items: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgba(18, 18, 22, 0.92);
+  box-shadow: inset 0 0 0 1px rgba(97, 177, 255, 0.18);
+}
+
+.avatar-action-panel[hidden] {
+  display: none;
+}
+
+.avatar-action-button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #dbe6f5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.avatar-action-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.avatar-action-button-delete svg {
+  stroke-width: 2.1;
+}
+
+.avatar-action-button:hover {
+  color: #fff;
+}
+
+.avatar-action-button:focus-visible,
 .avatar-button:focus-visible,
 .btn:focus-visible {
   outline: 2px solid rgba(165, 204, 255, 0.95);
