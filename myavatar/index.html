@@ -509,7 +509,7 @@
         vrm.update(0);
         vrm.scene.updateMatrixWorld(true);
 
-        const animationGltf = await loadGLTF('./vrmas/ani_Idle_Action_01.vrma');
+        const animationGltf = await loadGLTF('./vrmas/ani_Idle_Stand_Female.vrma');
         const vrmAnimation = animationGltf.userData.vrmAnimations?.[0];
         if (vrmAnimation) {
           thumbnailMixer = new THREE.AnimationMixer(vrm.scene);
@@ -1329,4 +1329,5 @@
   </script>
 </body>
 </html>
+
 
