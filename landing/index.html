@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avatar Landing</title>
+  <title>VIVERSE Avatar Landing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -29,7 +29,7 @@
           <span></span>
         </button>
 
-        <a class="brand" href="#" aria-label="VIVERSE Avatar">
+        <a class="brand" href="../index.html" aria-label="VIVERSE Avatar">
           <img class="brand-logo" src="../images/VIVERSE_MainLogo_Digital_Primary_Gradient_Black.svg" alt="VIVERSE logo">
           <span class="brand-name">VIVERSE</span>
           <span class="brand-divider" aria-hidden="true"></span>
@@ -40,8 +40,8 @@
           <a href="#">Worlds</a>
           <a href="#">Create</a>
           <a href="#">Business</a>
-          <a href="#">Marketplace</a>
-          <a href="http://127.0.0.1:5501/landing/index.html">Avatar</a>
+          <a href="https://market.viverse.com/" target="_blank" rel="noopener noreferrer">Marketplace</a>
+          <a class="active" href="../landing/index.html">Avatar</a>
           <a href="#">Blog</a>
         </nav>
 
@@ -54,7 +54,7 @@
             </svg>
           </button>
 
-          <a class="cta-button" href="http://127.0.0.1:5501/index.html">Create for Free</a>
+          <a class="cta-button" href="../index.html">Create for Free</a>
 
           <div class="divider" aria-hidden="true"></div>
 
@@ -80,21 +80,45 @@
         <a href="#">Worlds</a>
         <a href="#">Create</a>
         <a href="#">Business</a>
-        <a href="#">Marketplace</a>
-        <a href="http://127.0.0.1:5501/landing/index.html">Avatar</a>
+        <a href="https://market.viverse.com/" target="_blank" rel="noopener noreferrer">Marketplace</a>
+        <a href="../landing/index.html">Avatar</a>
         <a href="#">Blog</a>
       </nav>
     </header>
 
-    <main class="content-black" aria-label="Landing content placeholder">
-      <div class="bottom-link-bar" aria-label="Quick links">
-        <a class="bottom-link-button" href="http://127.0.0.1:5501/index.html">Avatar Creator</a>
-        <a class="bottom-link-button" href="http://127.0.0.1:5501/myavatar/index.html">My Avatar</a>
-        <a class="bottom-link-button" href="https://market.viverse.com/?_gl=1*15khbrs*_gcl_au*MTUyODIxNjg5Mi4xNzY4OTg5Mjg1LjQzOTM2NTE3NS4xNzcxOTUxNDA3LjE3NzE5NTE0MDY.*_ga*MTc2MDg1NDkzMC4xNzUxNDc4NDQ0*_ga_DGG9JZZMCG*czE3NzI5MjIyMzckbzI0MyRnMSR0MTc3MjkyMzQzNiRqNTkkbDAkaDA." target="_blank" rel="noopener noreferrer">Marketplace</a>
-        <a class="bottom-link-button" href="http://127.0.0.1:5501/vrmguide/index.html">VRM Guide</a>
-      </div>
+    <main class="hero-shell">
+      <section class="hero" aria-label="Avatar landing hero">
+        <div class="hero-backdrop hero-backdrop-left" aria-hidden="true"></div>
+        <div class="hero-backdrop hero-backdrop-right" aria-hidden="true"></div>
+        <div class="hero-grid">
+          <figure class="hero-figure hero-figure-left">
+            <div class="figure-glow"></div>
+            <img src="Iris_org.png" alt="Iris avatar character">
+          </figure>
+
+          <section class="hero-copy">
+            <p class="eyebrow">VIVERSE Avatar Experience</p>
+            <h1>
+              Build Your
+              <span>Metaverse Identity</span>
+            </h1>
+            <p class="hero-description">
+              Create expressive avatars, refine every detail, and step into immersive worlds with a character that feels like yours.
+            </p>
+            <div class="hero-actions">
+              <a class="hero-cta" href="../index.html">Create for Free</a>
+            </div>
+          </section>
+
+          <figure class="hero-figure hero-figure-right">
+            <div class="figure-glow"></div>
+            <img src="zack_org.png" alt="Zack avatar character">
+          </figure>
+        </div>
+      </section>
     </main>
   </div>
+
   <script>
     const menuButton = document.querySelector(".mobile-menu-button");
     const mobileNav = document.getElementById("mobile-nav");
@@ -123,7 +147,7 @@
       });
 
       window.addEventListener("resize", () => {
-        if (window.innerWidth > 800) {
+        if (window.innerWidth > 880) {
           closeMenu();
         }
       });
