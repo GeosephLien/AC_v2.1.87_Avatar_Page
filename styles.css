@@ -102,7 +102,6 @@ body::after {
 .hero {
   position: relative;
   z-index: 1;
-  margin-top: 1.8rem;
   display: grid;
   grid-template-columns: 0.82fr 1.18fr;
   align-items: center;
