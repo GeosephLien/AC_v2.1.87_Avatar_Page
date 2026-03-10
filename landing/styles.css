@@ -480,31 +480,7 @@ img {
   justify-content: center;
 }
 
-@media (max-width: 1080px) {
-  .header-inner {
-    padding: 8px 20px;
-    gap: 20px;
-  }
-
-  .main-nav {
-    gap: 16px;
-    margin-right: 8px;
-  }
-
-  .main-nav a {
-    font-size: 16px;
-  }
-
-  .brand-logo {
-    width: 24px;
-  }
-
-  .hero-grid {
-    grid-template-columns: minmax(280px, 1.2fr) 420px minmax(280px, 1.2fr);
-  }
-}
-
-@media (max-width: 880px) {
+@media (max-width: 768px) {
   .site-header {
     position: absolute;
   }
@@ -603,7 +579,7 @@ img {
 
   .hero-shell {
     min-height: calc(100vh - 86px);
-    padding: 96px 20px 32px;
+    padding: 92px 16px 28px;
   }
 
   .hero {
@@ -647,21 +623,6 @@ img {
   .hero-backdrop-left,
   .hero-backdrop-right {
     width: 58vw;
-  }
-}
-
-@media (max-width: 560px) {
-  .top-strip {
-    padding: 0 16px;
-  }
-
-  .htc-mark {
-    width: 43px;
-    height: 13px;
-  }
-
-  .hero-shell {
-    padding: 92px 16px 28px;
   }
 
   .hero-copy h1 {
