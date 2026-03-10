@@ -416,22 +416,21 @@ img {
 
 .hero-figure-right img {
   width: auto;
+  filter:
+    drop-shadow(0 30px 50px rgba(0, 0, 0, 0.5))
+    drop-shadow(0 0 24px rgba(214, 102, 255, 0.62))
+    drop-shadow(0 0 58px rgba(122, 76, 255, 0.44));
+}
+
+.hero-figure-left img {
+  filter:
+    drop-shadow(0 30px 50px rgba(0, 0, 0, 0.5))
+    drop-shadow(0 0 22px rgba(74, 220, 255, 0.58))
+    drop-shadow(0 0 54px rgba(48, 154, 255, 0.42));
 }
 
 .figure-glow {
-  position: absolute;
-  inset: 16% 18%;
-  border-radius: 50%;
-  filter: blur(50px);
-  opacity: 0.78;
-}
-
-.hero-figure-left .figure-glow {
-  background: radial-gradient(circle, rgba(56, 215, 255, 0.46), rgba(56, 215, 255, 0));
-}
-
-.hero-figure-right .figure-glow {
-  background: radial-gradient(circle, rgba(186, 71, 255, 0.56), rgba(186, 71, 255, 0));
+  display: none;
 }
 
 .hero-copy {
