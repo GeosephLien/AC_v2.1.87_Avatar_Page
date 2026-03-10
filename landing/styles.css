@@ -519,7 +519,7 @@ img {
 .hero-copy h1 span {
   display: block;
   position: relative;
-  padding-bottom: 0.14em;
+  padding-bottom: 0.24em;
   background: linear-gradient(180deg, #7bf2ff 0%, #27c3ff 44%, #a34bff 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -540,23 +540,23 @@ img {
   animation: title-glow-breathe 8s ease-in-out infinite;
   -webkit-mask-image: linear-gradient(
     to right,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.75) 32%,
-    rgba(0, 0, 0, 0.28) 56%,
-    transparent 100%
+    transparent 0%,
+    rgba(0, 0, 0, 0.28) 44%,
+    rgba(0, 0, 0, 0.75) 68%,
+    rgba(0, 0, 0, 1) 100%
   );
   mask-image: linear-gradient(
     to right,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.75) 32%,
-    rgba(0, 0, 0, 0.28) 56%,
-    transparent 100%
+    transparent 0%,
+    rgba(0, 0, 0, 0.28) 44%,
+    rgba(0, 0, 0, 0.75) 68%,
+    rgba(0, 0, 0, 1) 100%
   );
 }
 
 .hero-description {
   max-width: 440px;
-  margin: 20px auto 0;
+  margin: 8px auto 0;
   color: var(--text-dim);
   font-size: 1.02rem;
   line-height: 1.7;
