@@ -115,66 +115,6 @@
           <aside class="control-panel" aria-label="Avatar controls">
             <div class="avatar-selector-viewport" data-avatar-scroll>
               <div class="avatar-selector" aria-label="Avatar selector">
-                <div class="avatar-entry" data-avatar-entry>
-                  <button
-                    class="avatar-button is-active"
-                    type="button"
-                    data-avatar-button
-                    data-vrm="./vrms/Iris_o3vg.vrm"
-                    aria-pressed="true"
-                  >
-                    <img src="./images/thb_Iris.png" alt="Load Iris avatar">
-                  </button>
-                  <button class="avatar-menu-button" type="button" data-avatar-menu aria-label="Avatar actions" aria-expanded="false" title="Avatar actions">
-                    <span></span>
-                    <span></span>
-                  </button>
-                  <div class="avatar-action-panel" data-avatar-actions hidden>
-                    <button class="avatar-action-button" type="button" data-avatar-download aria-label="Download Iris avatar" title="Download avatar">
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M12 4v10"></path>
-                        <path d="m8 10 4 4 4-4"></path>
-                        <path d="M6 18h12"></path>
-                      </svg>
-                    </button>
-                    <button class="avatar-action-button avatar-action-button-delete" type="button" data-avatar-delete aria-label="Remove Iris avatar" title="Remove avatar">
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M6 6 18 18"></path>
-                        <path d="M18 6 6 18"></path>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-                <div class="avatar-entry" data-avatar-entry>
-                  <button
-                    class="avatar-button"
-                    type="button"
-                    data-avatar-button
-                    data-vrm="./vrms/Michael_b8ab.vrm"
-                    aria-pressed="false"
-                  >
-                    <img src="./images/thb_Michael.png" alt="Load Michael avatar">
-                  </button>
-                  <button class="avatar-menu-button" type="button" data-avatar-menu aria-label="Avatar actions" aria-expanded="false" title="Avatar actions">
-                    <span></span>
-                    <span></span>
-                  </button>
-                  <div class="avatar-action-panel" data-avatar-actions hidden>
-                    <button class="avatar-action-button" type="button" data-avatar-download aria-label="Download Michael avatar" title="Download avatar">
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M12 4v10"></path>
-                        <path d="m8 10 4 4 4-4"></path>
-                        <path d="M6 18h12"></path>
-                      </svg>
-                    </button>
-                    <button class="avatar-action-button avatar-action-button-delete" type="button" data-avatar-delete aria-label="Remove Michael avatar" title="Remove avatar">
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M6 6 18 18"></path>
-                        <path d="M18 6 6 18"></path>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
             <div class="avatar-scrollbar" data-avatar-scrollbar aria-hidden="true">
@@ -441,10 +381,6 @@
       return entry;
     }
 
-    function getCustomizeInsertBeforeNode() {
-      return avatarSelector.querySelector('[data-customize-index]')?.closest('[data-avatar-entry]') || null;
-    }
-
     function registerUploadedAvatar(file, thumbnailUrl) {
       const avatarId = `upload-${Date.now()}-${uploadedAvatarSequence += 1}`;
       const objectUrl = URL.createObjectURL(file);
@@ -644,7 +580,7 @@
         thumbnailName: uploadedAvatar.thumbnailName
       });
 
-      avatarSelector.insertBefore(entry, getCustomizeInsertBeforeNode());
+      avatarSelector.append(entry);
       updateAvatarScrollbar();
       closeCreatorPanel();
       setActiveAvatarButton(uploadedAvatar.objectUrl);
@@ -661,36 +597,6 @@
 
     function hasVisibleAvatarButtons() {
       return getVisibleAvatarButtons().length > 0;
-    }
-
-    function buildCustomizeButtons() {
-      const fragment = document.createDocumentFragment();
-
-      for (let index = 1; index <= 9; index += 1) {
-        const entry = document.createElement('div');
-        entry.className = 'avatar-entry';
-        entry.dataset.avatarEntry = '';
-
-        const button = document.createElement('button');
-        const slotLabel = `Customize slot ${index}`;
-        button.className = 'avatar-button avatar-button-customize';
-        button.type = 'button';
-        button.dataset.customizeIndex = String(index);
-        button.setAttribute('aria-label', slotLabel);
-        button.title = slotLabel;
-
-        const image = document.createElement('img');
-        image.src = './images/thb_Customize.png';
-        image.alt = slotLabel;
-        image.draggable = false;
-
-        button.append(image);
-        entry.append(button);
-        entry.append(buildAvatarActionControls(slotLabel));
-        fragment.append(entry);
-      }
-
-      avatarSelector.append(fragment);
     }
 
     const cameraState = {
@@ -1407,8 +1313,6 @@
       clock.start();
       animate();
     }
-
-    buildCustomizeButtons();
     resizeRenderer();
     window.addEventListener('resize', resizeRenderer);
     bindPointerControls();
@@ -1416,7 +1320,6 @@
     bindAvatarButtons();
     bindDeleteConfirm();
     bindCreatorPanel();
-    loadAvatar('./vrms/Iris_o3vg.vrm');
 
     if (!hasVisibleAvatarButtons()) {
       openCreatorPanel();
@@ -1426,3 +1329,4 @@
   </script>
 </body>
 </html>
+
