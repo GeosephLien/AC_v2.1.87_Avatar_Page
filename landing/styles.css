@@ -461,14 +461,11 @@ img {
 
 .hero-copy h1 span {
   display: block;
+  padding-bottom: 0.14em;
   background: linear-gradient(180deg, #7bf2ff 0%, #27c3ff 44%, #a34bff 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-}
-
-.hero-title-tail {
-  padding-bottom: 0.14em;
 }
 
 .hero-description {
