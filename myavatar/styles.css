@@ -374,8 +374,8 @@ body::after {
 
 .creator-button {
   position: absolute;
+  top: 0;
   left: 0;
-  bottom: calc(100% + 0.75rem);
 }
 
 .worlds-button,
@@ -1078,6 +1078,7 @@ body::after {
     opacity: 0.6;
   }
 }
+
 
 
 
