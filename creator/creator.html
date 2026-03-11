@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Avatar Creator 2</title>
-  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" type="image/png" href="../images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <main class="landing-shell">
@@ -48,11 +48,11 @@
           <div class="blob blob-b"></div>
           <div class="blob blob-c"></div>
           <div class="hero-carousel" aria-live="polite">
-            <img class="hero-slide is-active" src="images/Yaya_Collection_print_v2.png" alt="Yaya collection character visual">
-            <img class="hero-slide" src="images/Michael_print_Collection.png" alt="Michael collection character visual">
-            <img class="hero-slide" src="images/Iris.png" alt="Iris character visual">
-            <img class="hero-slide" src="images/ca2_suit_tb_01.png" alt="Suit character visual">
-            <img class="hero-slide" src="images/ca2_suit_tb_05.png" alt="Suit character visual 05">
+            <img class="hero-slide is-active" src="../images/Yaya_Collection_print_v2.png" alt="Yaya collection character visual">
+            <img class="hero-slide" src="../images/Michael_print_Collection.png" alt="Michael collection character visual">
+            <img class="hero-slide" src="../images/Iris.png" alt="Iris character visual">
+            <img class="hero-slide" src="../images/ca2_suit_tb_01.png" alt="Suit character visual">
+            <img class="hero-slide" src="../images/ca2_suit_tb_05.png" alt="Suit character visual 05">
           </div>
         </section>
       </section>
@@ -86,10 +86,10 @@
       const container = document.getElementById('container');
       const canvasElement = document.getElementById('game-canvas');
       const versionBadge = document.getElementById('player-version');
-      const unityLoaderUrl = 'Build/AC_v2.1.87_WebGL.loader.js';
-      const unityFrameworkUrl = 'Build/AC_v2.1.87_WebGL.framework.js.unityweb';
-      const unityCodeUrl = 'Build/AC_v2.1.87_WebGL.wasm.unityweb';
-      const unityDataUrl = 'Build/AC_v2.1.87_WebGL.data.unityweb';
+      const unityLoaderUrl = '../Build/AC_v2.1.87_WebGL.loader.js';
+      const unityFrameworkUrl = '../Build/AC_v2.1.87_WebGL.framework.js.unityweb';
+      const unityCodeUrl = '../Build/AC_v2.1.87_WebGL.wasm.unityweb';
+      const unityDataUrl = '../Build/AC_v2.1.87_WebGL.data.unityweb';
 
       let canvas = canvasElement;
       let unityReady = false;
@@ -373,3 +373,5 @@
   </script>
 </body>
 </html>
+
+
