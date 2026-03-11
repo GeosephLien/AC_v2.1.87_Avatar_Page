@@ -596,6 +596,9 @@ body::after {
 
 .avatar-button {
   position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   flex: 0 0 auto;
   width: 64px;
   height: 64px;
@@ -739,6 +742,8 @@ body::after {
 
 .avatar-button img {
   width: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
   height: 100%;
   display: block;
   object-fit: cover;
