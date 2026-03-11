@@ -1101,7 +1101,7 @@ body::after {
     right: auto;
     left: 0;
     top: auto;
-    bottom: calc(100% + 0.75rem);
+    bottom: calc(100% + 0.3rem);
     transform: none;
   }
 
