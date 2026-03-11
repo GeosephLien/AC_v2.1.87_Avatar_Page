@@ -181,6 +181,7 @@
     const creatorCloseButton = creatorOverlay.querySelector('[data-creator-close]');
     const creatorFrame = creatorOverlay.querySelector('.creator-panel-frame');
     const scene = new THREE.Scene();
+    const rootStyle = document.documentElement;
     scene.background = null;
 
     const renderer = new THREE.WebGLRenderer({
@@ -630,9 +631,9 @@
 
     const cameraState = {
       yaw: 0,
-      pitch: THREE.MathUtils.degToRad(5),
+      pitch: 0,
       targetYaw: 0,
-      targetPitch: THREE.MathUtils.degToRad(5),
+      targetPitch: 0,
       distance: 2.35,
       targetDistance: 2.35,
       zoomIndex: 0,
@@ -876,11 +877,21 @@
       cameraState.targetPivot.copy(getZoomPivot(cameraState.zoomIndex));
     }
 
+    function updateBackgroundZoom() {
+      const zoomOutDistance = zoomConfig[0].distance;
+      const zoomInDistance = zoomConfig[zoomConfig.length - 1].distance;
+      const zoomRange = Math.max(zoomOutDistance - zoomInDistance, 0.001);
+      const zoomProgress = THREE.MathUtils.clamp((zoomOutDistance - cameraState.distance) / zoomRange, 0, 1);
+      const backgroundScale = 1 + zoomProgress * 0.12;
+      rootStyle.style.setProperty('--bg-scale', backgroundScale.toFixed(4));
+    }
+
     function updateCamera(dt) {
       cameraState.yaw = damp(cameraState.yaw, cameraState.targetYaw, cameraState.yawBrake, dt);
       cameraState.pitch = damp(cameraState.pitch, cameraState.targetPitch, cameraState.pitchBrake, dt);
       cameraState.distance = damp(cameraState.distance, cameraState.targetDistance, cameraState.zoomBrake, dt);
       cameraState.currentPivot.lerp(cameraState.targetPivot, 1 - Math.exp(-cameraState.pivotBrake * dt));
+      updateBackgroundZoom();
 
       const cosPitch = Math.cos(cameraState.pitch);
       const sinPitch = Math.sin(cameraState.pitch);
@@ -907,6 +918,7 @@
       cameraState.targetDistance = zoomConfig[0].distance;
       cameraState.currentPivot.copy(center);
       cameraState.targetPivot.copy(center);
+      updateBackgroundZoom();
       camera.near = 0.01;
       camera.far = Math.max(maxSize * 10, 20);
       camera.updateProjectionMatrix();
@@ -916,7 +928,7 @@
       canvas.addEventListener('pointerdown', (event) => {
         dragState.active = true;
         dragState.lastX = event.clientX;
-        dragState.lastY = event.clientY;
+
         canvas.setPointerCapture(event.pointerId);
       });
 
@@ -926,16 +938,10 @@
         }
 
         const deltaX = event.clientX - dragState.lastX;
-        const deltaY = event.clientY - dragState.lastY;
         dragState.lastX = event.clientX;
-        dragState.lastY = event.clientY;
+
 
         cameraState.targetYaw -= deltaX * cameraState.yawSpeed;
-        cameraState.targetPitch = THREE.MathUtils.clamp(
-          cameraState.targetPitch + deltaY * cameraState.pitchSpeed,
-          cameraState.pitchMin,
-          cameraState.pitchMax
-        );
       });
 
       function releasePointer(event) {

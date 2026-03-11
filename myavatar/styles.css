@@ -16,6 +16,7 @@
   --creator-panel-width: 1280;
   --creator-panel-height: 780;
   --controls-stack-width: min(640px, calc(100vw - 5rem));
+  --bg-scale: 1;
 }
 
 * {
@@ -35,10 +36,21 @@ body {
   overflow: hidden;
   font-family: "Roboto", sans-serif;
   color: var(--text);
-  background:
-    radial-gradient(40vw 40vw at 76% 44%, rgba(255, 130, 80, 0.18), transparent 64%),
-    radial-gradient(54vw 54vw at 98% 12%, rgba(200, 92, 255, 0.24), transparent 72%),
-    linear-gradient(95deg, var(--bg-left) 0%, var(--bg-mid) 42%, var(--bg-right) 100%);
+  background: #060d36;
+  isolation: isolate;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  background: #060d36 url("./images/bg3.png") center center / cover no-repeat;
+  transform: scale(var(--bg-scale));
+  transform-origin: center top;
+  transition: transform 0.18s linear;
+  will-change: transform;
 }
 
 body::after {
@@ -46,6 +58,7 @@ body::after {
   position: fixed;
   inset: 0;
   pointer-events: none;
+  z-index: -1;
   background:
     radial-gradient(120% 90% at 50% 50%, transparent 48%, rgba(0, 0, 0, 0.56) 100%),
     linear-gradient(to right, rgba(0, 0, 0, 0.28) 0%, transparent 12%, transparent 88%, rgba(0, 0, 0, 0.28) 100%),
