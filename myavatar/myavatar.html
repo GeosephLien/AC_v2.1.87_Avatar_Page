@@ -273,6 +273,18 @@
     let openAvatarMenuEntry = null;
     let uploadedAvatarSequence = 0;
 
+    const preloadedAvatars = [
+      {
+        label: 'Iris',
+        vrmUrl: './vrms/Iris_rbmo.vrm',
+        downloadName: 'Iris_rbmo.vrm'
+      },
+      {
+        label: 'Miko',
+        vrmUrl: './vrms/Miko_bazh.vrm',
+        downloadName: 'Miko_bazh.vrm'
+      }
+    ];
     const uploadedAvatarStore = new Map();
     const thumbnailGradientStops = [
       ['#4a8dff', '#9d6bff', '#ff8a63'],
@@ -587,6 +599,23 @@
       await loadAvatar(uploadedAvatar.objectUrl);
     }
 
+    async function addPreloadedAvatars() {
+      for (const avatar of preloadedAvatars) {
+        const thumbnailUrl = await createAvatarThumbnail(avatar.vrmUrl);
+        const entry = createAvatarEntryElement({
+          label: avatar.label,
+          imageSrc: thumbnailUrl,
+          vrmUrl: avatar.vrmUrl,
+          avatarId: `builtin-${toDownloadSlug(avatar.downloadName)}`,
+          downloadName: avatar.downloadName,
+          thumbnailName: `${toDownloadSlug(avatar.downloadName)}-thumb.png`
+        });
+ 
+        avatarSelector.append(entry);
+      }
+ 
+      updateAvatarScrollbar();
+    }
     function getAvatarButtons() {
       return [...document.querySelectorAll('[data-avatar-button]')];
     }
@@ -1313,22 +1342,40 @@
       clock.start();
       animate();
     }
-    resizeRenderer();
-    window.addEventListener('resize', resizeRenderer);
-    bindPointerControls();
-    bindAvatarSelectorScroll();
-    bindAvatarButtons();
-    bindDeleteConfirm();
-    bindCreatorPanel();
+    async function initializePage() {
+      resizeRenderer();
+      window.addEventListener('resize', resizeRenderer);
+      bindPointerControls();
+      bindAvatarSelectorScroll();
+      bindAvatarButtons();
+      bindDeleteConfirm();
+      bindCreatorPanel();
 
-    if (!hasVisibleAvatarButtons()) {
-      openCreatorPanel();
+      try {
+        await addPreloadedAvatars();
+      } catch (error) {
+        console.error(error);
+        showError(`Preloaded avatar setup failed: ${error.message}`);
+      }
+
+      const firstAvatarButton = getVisibleAvatarButtons()[0] || null;
+      if (firstAvatarButton?.dataset.vrm) {
+        setActiveAvatarButton(firstAvatarButton.dataset.vrm);
+        await loadAvatar(firstAvatarButton.dataset.vrm);
+      } else {
+        openCreatorPanel();
+      }
+
+      animate();
     }
 
-    animate();
+    initializePage();
   </script>
 </body>
 </html>
+
+
+
 
 
 
