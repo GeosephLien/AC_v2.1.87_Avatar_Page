@@ -391,9 +391,23 @@ body::after {
   max-width: var(--controls-stack-width);
 }
 
+.controls-shortcuts {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 360px;
+  max-width: 100%;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
 .control-panel {
   position: relative;
-  width: fit-content;
+  width: 100%;
   min-width: 360px;
   display: flex;
   flex-direction: column;
@@ -417,16 +431,11 @@ body::after {
   max-width: 100%;
 }
 
-.creator-button {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
 .worlds-button,
 .creator-button {
+  position: relative;
+  align-self: auto;
   isolation: isolate;
-  align-self: flex-end;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -441,8 +450,12 @@ body::after {
   cursor: pointer;
 }
 
+.creator-button {
+  order: 0;
+}
+
 .worlds-button {
-  position: relative;
+  order: 1;
 }
 
 .worlds-button::before,
@@ -497,6 +510,7 @@ body::after {
   inset: 8%;
   opacity: 1;
 }
+
 .worlds-button-icon {
   position: relative;
   z-index: 1;
@@ -514,7 +528,27 @@ body::after {
   display: block;
   object-fit: contain;
 }
+.creator-button:focus-visible::after {
+  inset: 8%;
+  opacity: 1;
+}
+.worlds-button-icon {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
 
+.creator-button-icon {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
 .avatar-selector-viewport.is-dragging {
   cursor: grabbing;
 }
@@ -1076,16 +1110,22 @@ body::after {
     --controls-stack-width: min(calc(100vw - 1.5rem), 28rem);
   }
 
-  .page-shell {
+  .controls-shortcuts {
+    min-width: 0;
+    width: 100%;
     padding: 0;
   }
-
   .control-panel {
     justify-content: center;
     gap: 0.75rem;
     width: 100%;
     max-width: min(calc(100vw - 1.5rem), 32rem);
     padding: 0.75rem 0.75rem 0;
+  }
+
+  .controls-shortcuts {
+    align-self: flex-start;
+    padding: 0.3rem 0.45rem;
   }
 
   .avatar-selector-viewport {
@@ -1102,25 +1142,10 @@ body::after {
     gap: 0.75rem;
   }
 
+  .worlds-button,
   .creator-button {
-    right: auto;
-    left: 0;
-    top: auto;
-    bottom: calc(100% + 0.3rem);
-    transform: none;
+    width: 40px;
   }
-
-  .creator-button:hover {
-    box-shadow:
-      0 10px 28px rgba(101, 103, 236, 0.34),
-      0 0 18px rgba(95, 108, 245, 0.4),
-      0 0 30px rgba(181, 102, 216, 0.3);
-  }
-
-  .worlds-button {
-    align-self: flex-end;
-  }
-
   .controls-stack {
     width: var(--controls-stack-width);
   }
@@ -1187,4 +1212,5 @@ body::after {
     opacity: 0.6;
   }
 }
+
 

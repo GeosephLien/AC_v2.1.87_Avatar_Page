@@ -100,13 +100,14 @@
 
     <main class="page-shell">
       <div class="controls-stack">
-        <a
-          class="worlds-button"
-          href="https://worlds.viverse.com/?_gl=1*irql39*_gcl_au*MTUyODIxNjg5Mi4xNzY4OTg5Mjg1LjQzOTM2NTE3NS4xNzcxOTUxNDA3LjE3NzE5NTE0MDY.*_ga*MTc2MDg1NDkzMC4xNzUxNDc4NDQ0*_ga_DGG9JZZMCG*czE3NzMwNzM3MzEkbzI0NyRnMCR0MTc3MzA3MzczMiRqNTkkbDAkaDA."
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Explore Worlds"
-        ><img class="worlds-button-icon" src="./images/explore.svg" alt="" aria-hidden="true"></a>
+        <div class="controls-shortcuts" aria-label="Quick actions">
+          <a
+            class="worlds-button"
+            href="https://worlds.viverse.com/?_gl=1*irql39*_gcl_au*MTUyODIxNjg5Mi4xNzY4OTg5Mjg1LjQzOTM2NTE3NS4xNzcxOTUxNDA3LjE3NzE5NTE0MDY.*_ga*MTc2MDg1NDkzMC4xNzUxNDc4NDQ0*_ga_DGG9JZZMCG*czE3NzMwNzM3MzEkbzI0NyRnMCR0MTc3MzA3MzczMiRqNTkkbDAkaDA."
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Explore Worlds"
+          ><img class="worlds-button-icon" src="./images/explore.svg" alt="" aria-hidden="true"></a>
           <button
             class="creator-button"
             type="button"
@@ -116,16 +117,16 @@
             aria-expanded="false"
             aria-controls="creator-panel-overlay"
           ><img class="creator-button-icon" src="./images/add.svg" alt="" aria-hidden="true"></button>
-          <aside class="control-panel" aria-label="Avatar controls">
-            <div class="avatar-selector-viewport" data-avatar-scroll>
-              <div class="avatar-selector" aria-label="Avatar selector">
-              </div>
-            </div>
-            <div class="avatar-scrollbar" data-avatar-scrollbar aria-hidden="true">
-              <div class="avatar-scrollbar-thumb" data-avatar-scrollbar-thumb></div>
-            </div>
-          </aside>
         </div>
+        <aside class="control-panel" aria-label="Avatar controls">
+          <div class="avatar-selector-viewport" data-avatar-scroll>
+            <div class="avatar-selector" aria-label="Avatar selector">
+            </div>
+          </div>
+          <div class="avatar-scrollbar" data-avatar-scrollbar aria-hidden="true">
+            <div class="avatar-scrollbar-thumb" data-avatar-scrollbar-thumb></div>
+          </div>
+        </aside>
       </div>
       <section class="viewer-stage">
         <canvas id="avatar-canvas" aria-label="VRM avatar preview"></canvas>
