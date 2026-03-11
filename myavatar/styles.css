@@ -519,6 +519,37 @@ body::after {
   cursor: grabbing;
 }
 
+.avatar-selector-viewport {
+  position: relative;
+  width: min(100%, 1000px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+  touch-action: pan-x;
+  --avatar-fade-left: 0px;
+  --avatar-fade-right: 0px;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--avatar-fade-left),
+    #000 calc(100% - var(--avatar-fade-right)),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--avatar-fade-left),
+    #000 calc(100% - var(--avatar-fade-right)),
+    transparent 100%
+  );
+}
+
+.avatar-selector-viewport::-webkit-scrollbar {
+  display: none;
+}
+
 .avatar-selector {
   display: flex;
   align-items: center;
@@ -1151,10 +1182,4 @@ body::after {
     opacity: 0.6;
   }
 }
-
-
-
-
-
-
 
