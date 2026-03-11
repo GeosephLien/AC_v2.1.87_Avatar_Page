@@ -21,6 +21,10 @@
   </script>
   </head>
   <body>
+    <div class="scene-background" aria-hidden="true">
+      <div class="bg-layer bg-layer-back"></div>
+      <div class="bg-layer bg-layer-front"></div>
+    </div>
     <div class="top-strip">
       <svg class="htc-mark" viewBox="0 0 111.1 36.8" aria-label="HTC" role="img">
         <g>
@@ -882,8 +886,10 @@
       const zoomInDistance = zoomConfig[zoomConfig.length - 1].distance;
       const zoomRange = Math.max(zoomOutDistance - zoomInDistance, 0.001);
       const zoomProgress = THREE.MathUtils.clamp((zoomOutDistance - cameraState.distance) / zoomRange, 0, 1);
-      const backgroundScale = 1 + zoomProgress * 0.12;
-      rootStyle.style.setProperty('--bg-scale', backgroundScale.toFixed(4));
+      const backgroundBackScale = 1 + zoomProgress * 0.12;
+      const backgroundFrontScale = 1 + zoomProgress * 0.3;
+      rootStyle.style.setProperty('--bg-back-scale', backgroundBackScale.toFixed(4));
+      rootStyle.style.setProperty('--bg-front-scale', backgroundFrontScale.toFixed(4));
     }
 
     function updateCamera(dt) {

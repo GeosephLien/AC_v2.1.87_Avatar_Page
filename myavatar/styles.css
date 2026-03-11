@@ -16,7 +16,8 @@
   --creator-panel-width: 1280;
   --creator-panel-height: 780;
   --controls-stack-width: min(640px, calc(100vw - 5rem));
-  --bg-scale: 1;
+  --bg-back-scale: 1;
+  --bg-front-scale: 1;
 }
 
 * {
@@ -40,17 +41,35 @@ body {
   isolation: isolate;
 }
 
-body::before {
-  content: "";
+.scene-background {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: -2;
-  background: #060d36 url("./images/bg3.png") center center / cover no-repeat;
-  transform: scale(var(--bg-scale));
-  transform-origin: center top;
+}
+
+.bg-layer {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
   transition: transform 0.18s linear;
   will-change: transform;
+}
+
+.bg-layer-back {
+  background-color: #060d36;
+  background-image: url("./images/bg3.png");
+  background-position: center center;
+  transform: scale(var(--bg-back-scale));
+  transform-origin: center top;
+}
+
+.bg-layer-front {
+  background-image: url("./images/bg4.png");
+  background-position: center bottom;
+  transform: scale(var(--bg-front-scale));
+  transform-origin: center bottom;
 }
 
 body::after {
