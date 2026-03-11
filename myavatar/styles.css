@@ -69,7 +69,7 @@ body {
   background-image: url("./images/bg4.png");
   background-position: center bottom;
   transform: scale(var(--bg-front-scale));
-  transform-origin: center bottom;
+  transform-origin: center top;
 }
 
 body::after {
@@ -374,63 +374,12 @@ body::after {
 
 .creator-button {
   position: absolute;
-  top: auto;
-  right: auto;
   left: 0;
   bottom: calc(100% + 0.75rem);
-  margin-right: 0;
-  transform: none;
-  isolation: isolate;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 38px;
-  padding: 0.5rem 1.35rem;
-  border-radius: 999px;
-  border: 0;
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.92rem;
-  font-weight: 700;
-  line-height: 1;
-  white-space: nowrap;
-  background: linear-gradient(102deg, var(--accent-blue), var(--accent-violet) 50%, var(--accent-pink));
-  box-shadow:
-    0 10px 28px rgba(101, 103, 236, 0.34),
-    0 0 18px rgba(95, 108, 245, 0.22),
-    0 0 30px rgba(181, 102, 216, 0.18);
-  transition: box-shadow 0.25s ease, filter 0.25s ease;
-  cursor: pointer;
 }
 
-
-.creator-button::before {
-  content: "";
-  position: absolute;
-  inset: -8px;
-  z-index: -1;
-  border-radius: inherit;
-  background: linear-gradient(102deg, rgba(87, 110, 255, 0.7), rgba(181, 102, 216, 0.72), rgba(255, 111, 180, 0.68));
-  filter: blur(18px);
-  opacity: 0.72;
-  animation: start-button-glow 6s ease-in-out infinite;
-}
-
-.creator-button:hover {
-  filter: brightness(1.06);
-  box-shadow:
-    0 10px 28px rgba(101, 103, 236, 0.34),
-    0 0 18px rgba(95, 108, 245, 0.4),
-    0 0 30px rgba(181, 102, 216, 0.3);
-}
-
-.creator-button:hover::before {
-  opacity: 0.96;
-  filter: blur(22px);
-}
-
-.worlds-button {
-  position: relative;
+.worlds-button,
+.creator-button {
   isolation: isolate;
   align-self: flex-end;
   display: inline-flex;
@@ -444,10 +393,17 @@ body::after {
   background: transparent;
   box-shadow: none;
   transition: transform 0.24s ease, filter 0.24s ease;
+  cursor: pointer;
+}
+
+.worlds-button {
+  position: relative;
 }
 
 .worlds-button::before,
-.worlds-button::after {
+.worlds-button::after,
+.creator-button::before,
+.creator-button::after {
   content: "";
   position: absolute;
   inset: 50%;
@@ -457,13 +413,15 @@ body::after {
   transition: inset 0.24s ease, opacity 0.24s ease, box-shadow 0.24s ease;
 }
 
-.worlds-button::before {
+.worlds-button::before,
+.creator-button::before {
   z-index: -1;
   background: radial-gradient(circle, rgba(126, 175, 255, 0.28) 0%, rgba(148, 112, 255, 0.16) 48%, rgba(148, 112, 255, 0) 76%);
   filter: blur(12px);
 }
 
-.worlds-button::after {
+.worlds-button::after,
+.creator-button::after {
   border: 1.5px solid rgba(207, 228, 255, 0.82);
   box-shadow:
     0 0 0 1px rgba(112, 170, 255, 0.18),
@@ -472,7 +430,9 @@ body::after {
 }
 
 .worlds-button:hover,
-.worlds-button:focus-visible {
+.worlds-button:focus-visible,
+.creator-button:hover,
+.creator-button:focus-visible {
   transform: translateY(-1px) scale(1.03);
   filter:
     drop-shadow(0 0 10px rgba(163, 210, 255, 0.9))
@@ -484,12 +444,24 @@ body::after {
 .worlds-button:hover::before,
 .worlds-button:hover::after,
 .worlds-button:focus-visible::before,
-.worlds-button:focus-visible::after {
+.worlds-button:focus-visible::after,
+.creator-button:hover::before,
+.creator-button:hover::after,
+.creator-button:focus-visible::before,
+.creator-button:focus-visible::after {
   inset: 8%;
   opacity: 1;
 }
-
 .worlds-button-icon {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.creator-button-icon {
   position: relative;
   z-index: 1;
   width: 100%;
@@ -1106,4 +1078,6 @@ body::after {
     opacity: 0.6;
   }
 }
+
+
 
