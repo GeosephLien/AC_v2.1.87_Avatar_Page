@@ -23,6 +23,7 @@
   <body>
     <div class="scene-background" aria-hidden="true">
       <div class="bg-layer bg-layer-back"></div>
+      <div class="bg-layer bg-layer-dust"></div>
       <div class="bg-layer bg-layer-front"></div>
     </div>
     <div class="top-strip">
@@ -888,8 +889,12 @@
       const zoomProgress = THREE.MathUtils.clamp((zoomOutDistance - cameraState.distance) / zoomRange, 0, 1);
       const backgroundBackScale = 1 + zoomProgress * 0.12;
       const backgroundFrontScale = 1 + zoomProgress * 0.3;
+      const dustScale = (backgroundBackScale + backgroundFrontScale) * 0.5;
+      const dustCenterY = (50 + 100) * 0.5;
       rootStyle.style.setProperty('--bg-back-scale', backgroundBackScale.toFixed(4));
       rootStyle.style.setProperty('--bg-front-scale', backgroundFrontScale.toFixed(4));
+      rootStyle.style.setProperty('--bg-dust-scale', dustScale.toFixed(4));
+      rootStyle.style.setProperty('--bg-dust-center-y', dustCenterY.toFixed(1) + '%');
     }
 
     function updateCamera(dt) {
@@ -1385,11 +1390,4 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
 

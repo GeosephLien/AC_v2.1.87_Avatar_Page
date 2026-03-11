@@ -18,6 +18,8 @@
   --controls-stack-width: min(640px, calc(100vw - 5rem));
   --bg-back-scale: 1;
   --bg-front-scale: 1;
+  --bg-dust-scale: 1;
+  --bg-dust-center-y: 75%;
 }
 
 * {
@@ -70,6 +72,49 @@ body {
   background-position: center bottom;
   transform: scale(var(--bg-front-scale));
   transform-origin: center top;
+}
+
+.bg-layer-dust {
+  inset: -8%;
+  overflow: hidden;
+  opacity: 0.72;
+  mix-blend-mode: screen;
+  transform: scale(var(--bg-dust-scale));
+  transform-origin: center var(--bg-dust-center-y);
+  filter: blur(0.2px);
+}
+
+.bg-layer-dust::before,
+.bg-layer-dust::after {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  background-repeat: repeat;
+  mask-image: radial-gradient(circle at 50% var(--bg-dust-center-y), rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.82) 34%, rgba(255, 255, 255, 0.28) 58%, transparent 82%);
+  -webkit-mask-image: radial-gradient(circle at 50% var(--bg-dust-center-y), rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.82) 34%, rgba(255, 255, 255, 0.28) 58%, transparent 82%);
+}
+
+.bg-layer-dust::before {
+  background-size: 320px 320px;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.26) 0 1.2px, transparent 2px),
+    radial-gradient(circle at 34% 42%, rgba(214, 226, 255, 0.22) 0 1.6px, transparent 2.4px),
+    radial-gradient(circle at 68% 26%, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 84% 62%, rgba(189, 212, 255, 0.2) 0 1.8px, transparent 2.8px),
+    radial-gradient(circle at 58% 84%, rgba(255, 255, 255, 0.16) 0 1.1px, transparent 2px);
+  animation: dust-drift 28s linear infinite;
+}
+
+.bg-layer-dust::after {
+  background-size: 260px 260px;
+  background-image:
+    radial-gradient(circle at 18% 74%, rgba(255, 255, 255, 0.18) 0 1.3px, transparent 2.1px),
+    radial-gradient(circle at 52% 16%, rgba(223, 233, 255, 0.16) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 76% 48%, rgba(255, 255, 255, 0.24) 0 1.5px, transparent 2.2px),
+    radial-gradient(circle at 30% 30%, rgba(193, 218, 255, 0.18) 0 1.1px, transparent 1.9px),
+    radial-gradient(circle at 88% 88%, rgba(255, 255, 255, 0.14) 0 0.9px, transparent 1.6px);
+  animation: dust-drift-reverse 34s linear infinite;
+  opacity: 0.8;
 }
 
 body::after {
@@ -1067,6 +1112,34 @@ body::after {
   }
 }
 
+@keyframes dust-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-1.5%, -2.5%, 0) scale(1.04);
+  }
+
+  100% {
+    transform: translate3d(-3%, -5%, 0) scale(1.08);
+  }
+}
+
+@keyframes dust-drift-reverse {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(1.8%, -1.8%, 0) scale(1.03);
+  }
+
+  100% {
+    transform: translate3d(3.4%, -3.6%, 0) scale(1.06);
+  }
+}
+
 @keyframes start-button-glow {
   0%,
   100% {
@@ -1078,7 +1151,4 @@ body::after {
     opacity: 0.6;
   }
 }
-
-
-
 
