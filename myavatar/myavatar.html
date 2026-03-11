@@ -111,7 +111,6 @@
             class="creator-button"
             type="button"
             aria-label="Create Avatar"
-            title="Create Avatar"
             data-creator-open
             aria-haspopup="dialog"
             aria-expanded="false"
@@ -339,7 +338,6 @@
       menuButton.dataset.avatarMenu = '';
       menuButton.setAttribute('aria-label', `${label} actions`);
       menuButton.setAttribute('aria-expanded', 'false');
-      menuButton.title = 'Avatar actions';
 
       menuButton.append(document.createElement('span'), document.createElement('span'));
 
@@ -353,7 +351,6 @@
       downloadButton.type = 'button';
       downloadButton.dataset.avatarDownload = '';
       downloadButton.setAttribute('aria-label', `Download ${label}`);
-      downloadButton.title = 'Download avatar';
       downloadButton.innerHTML = `
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 4v10"></path>
@@ -367,7 +364,6 @@
       deleteButton.type = 'button';
       deleteButton.dataset.avatarDelete = '';
       deleteButton.setAttribute('aria-label', `Remove ${label}`);
-      deleteButton.title = 'Remove avatar';
       deleteButton.innerHTML = `
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M6 6 18 18"></path>
@@ -414,9 +410,9 @@
       button.dataset.avatarId = avatarId;
       button.dataset.downloadName = downloadName;
       button.dataset.thumbnailName = thumbnailName;
+      button.dataset.avatarLabel = label;
       button.setAttribute('aria-label', `Load ${label} avatar`);
       button.setAttribute('aria-pressed', 'false');
-      button.title = label;
 
       const image = document.createElement('img');
       image.src = imageSrc;
@@ -495,7 +491,7 @@
       const thumbnailHref = thumbnailImage?.currentSrc || thumbnailImage?.src || '';
       const thumbnailName = avatarButton.dataset.thumbnailName
         || thumbnailHref.split('/').pop()
-        || `${toDownloadSlug(avatarButton.title || downloadName)}-thumb.png`;
+        || `${toDownloadSlug(avatarButton.dataset.avatarLabel || downloadName)}-thumb.png`;
 
       triggerDownload(downloadHref, downloadName);
 
@@ -1419,4 +1415,6 @@
   </script>
 </body>
 </html>
+
+
 
