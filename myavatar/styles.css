@@ -1052,12 +1052,12 @@ body::after {
     position: absolute;
     top: 100%;
     left: 20px;
-    right: 20px;
+    width: min(248px, calc(100vw - 40px));
     z-index: 30;
     display: flex;
     flex-direction: column;
     gap: 2px;
-    padding: 12px;
+    padding: 10px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     background: linear-gradient(180deg, rgba(16, 28, 43, 0.98), rgba(11, 20, 32, 0.98));
@@ -1070,12 +1070,11 @@ body::after {
 
   .mobile-nav-panel a {
     display: block;
-    padding: 12px 14px;
+    padding: 10px 12px;
     border-radius: 10px;
     color: #dce6f2;
     font-size: 15px;
   }
-
   .mobile-nav-panel a:hover,
   .mobile-nav-panel a:focus-visible {
     background: rgba(255, 255, 255, 0.08);
@@ -1212,5 +1211,6 @@ body::after {
     opacity: 0.6;
   }
 }
+
 
 
