@@ -645,7 +645,7 @@
       pitchSpeed: 0.0085,
       yawBrake: 8,
       pitchBrake: 8,
-      zoomBrake: 10,
+      zoomBrake: 6,
       pivotBrake: 10
     };
 
@@ -890,7 +890,7 @@
       cameraState.yaw = damp(cameraState.yaw, cameraState.targetYaw, cameraState.yawBrake, dt);
       cameraState.pitch = damp(cameraState.pitch, cameraState.targetPitch, cameraState.pitchBrake, dt);
       cameraState.distance = damp(cameraState.distance, cameraState.targetDistance, cameraState.zoomBrake, dt);
-      cameraState.currentPivot.lerp(cameraState.targetPivot, 1 - Math.exp(-cameraState.pivotBrake * dt));
+      cameraState.currentPivot.lerp(cameraState.targetPivot, 1 - Math.exp(-cameraState.zoomBrake * dt));
       updateBackgroundZoom();
 
       const cosPitch = Math.cos(cameraState.pitch);
