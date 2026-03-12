@@ -440,13 +440,21 @@ body::after {
   align-items: center;
   justify-content: center;
   width: clamp(36px, 4vw, 44px);
-  aspect-ratio: 1;
+  height: clamp(36px, 4vw, 44px);
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: transparent;
+  background: rgba(20, 30, 67, 0.68);
   box-shadow: none;
-  transition: transform 0.24s ease, filter 0.24s ease;
+  overflow: hidden;
+  gap: 0;
+  transition:
+    width 0.24s ease,
+    border-radius 0.24s ease,
+    padding 0.24s ease,
+    transform 0.24s ease,
+    filter 0.24s ease,
+    background-color 0.24s ease;
   cursor: pointer;
 }
 
@@ -511,44 +519,89 @@ body::after {
   opacity: 1;
 }
 
-.worlds-button-icon {
+.worlds-button-icon,
+.creator-button-icon {
   position: relative;
   z-index: 1;
-  width: 100%;
-  height: 100%;
+  width: clamp(36px, 4vw, 44px);
+  height: clamp(36px, 4vw, 44px);
+  flex: 0 0 clamp(36px, 4vw, 44px);
   display: block;
   object-fit: contain;
 }
 
-.creator-button-icon {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: contain;
+.worlds-button-icon {
+  order: 2;
 }
-.creator-button:focus-visible::after {
-  inset: 8%;
+
+.shortcut-hover-label {
+  display: inline-flex;
+  align-items: center;
+  color: #eaf4ff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  max-width: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition: opacity 0.22s ease, max-width 0.24s ease, margin 0.24s ease;
+}
+
+.shortcut-hover-label-creator {
+  margin-left: 0;
+  text-align: left;
+}
+
+.shortcut-hover-label-world {
+  order: 1;
+  margin-right: 0;
+  text-align: right;
+}
+
+.creator-button:hover,
+.creator-button:focus-visible,
+.creator-button:active {
+  width: min(58vw, 232px);
+  border-radius: 999px;
+  padding: 0 12px 0 4px;
+  justify-content: flex-start;
+}
+
+.worlds-button:hover,
+.worlds-button:focus-visible,
+.worlds-button:active {
+  width: min(58vw, 232px);
+  border-radius: 999px;
+  padding: 0 4px 0 12px;
+  justify-content: flex-end;
+}
+
+.creator-button:hover .shortcut-hover-label-creator,
+.creator-button:focus-visible .shortcut-hover-label-creator,
+.creator-button:active .shortcut-hover-label-creator,
+.worlds-button:hover .shortcut-hover-label-world,
+.worlds-button:focus-visible .shortcut-hover-label-world,
+.worlds-button:active .shortcut-hover-label-world {
   opacity: 1;
-}
-.worlds-button-icon {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: contain;
+  max-width: 180px;
 }
 
-.creator-button-icon {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: contain;
+.creator-button:hover .shortcut-hover-label-creator,
+.creator-button:focus-visible .shortcut-hover-label-creator,
+.creator-button:active .shortcut-hover-label-creator {
+  margin-left: 0.25rem;
 }
+
+.worlds-button:hover .shortcut-hover-label-world,
+.worlds-button:focus-visible .shortcut-hover-label-world,
+.worlds-button:active .shortcut-hover-label-world {
+  margin-right: 0.25rem;
+}
+
+
 .avatar-selector-viewport.is-dragging {
   cursor: grabbing;
 }
@@ -1104,12 +1157,100 @@ body::after {
   }
 }
 
+
+.controls-shortcuts .creator-button {
+  width: 56px !important;
+  height: 56px !important;
+  border: 3px solid rgba(255, 255, 255, 0.96);
+  border-radius: 999px;
+  background: rgba(154, 164, 230, 0.18);
+  padding: 0;
+  justify-content: center;
+  overflow: hidden;
+  gap: 0;
+  transition: width 0.42s ease, padding 0.42s ease, border-radius 0.42s ease, background-color 0.42s ease, transform 0.34s ease, filter 0.34s ease;
+}
+
+.controls-shortcuts .creator-button::before,
+.controls-shortcuts .creator-button::after {
+  display: none;
+}
+
+.controls-shortcuts .creator-button .creator-button-icon {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  opacity: 1;
+  transition: opacity 0.32s ease, flex-basis 0.42s ease, width 0.42s ease;
+}
+
+.controls-shortcuts .creator-button .shortcut-hover-label-creator {
+  margin: 0;
+  padding: 0 0.1rem;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  text-align: center;
+  font-size: clamp(1.08rem, 1.8vw, 1.22rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  transition: opacity 0.34s ease, max-width 0.42s ease;
+}
+
+.controls-shortcuts .creator-button:hover,
+.controls-shortcuts .creator-button:focus-visible,
+.controls-shortcuts .creator-button:active {
+  width: min(34vw, 320px) !important;
+  border-radius: 999px;
+  justify-content: center;
+  padding: 0 0.6rem;
+  background: rgba(154, 164, 230, 0.22);
+}
+
+.controls-shortcuts .creator-button:hover .creator-button-icon,
+.controls-shortcuts .creator-button:focus-visible .creator-button-icon,
+.controls-shortcuts .creator-button:active .creator-button-icon {
+  opacity: 0;
+  width: 0;
+  flex-basis: 0;
+}
+
+.controls-shortcuts .creator-button:hover .shortcut-hover-label-creator,
+.controls-shortcuts .creator-button:focus-visible .shortcut-hover-label-creator,
+.controls-shortcuts .creator-button:active .shortcut-hover-label-creator {
+  opacity: 1;
+  max-width: 18rem;
+  margin: 0;
+}
 @media (max-width: 768px) {
   :root {
     --controls-stack-width: min(calc(100vw - 1.5rem), 28rem);
   }
 
-  .controls-shortcuts {
+  .controls-shortcuts .creator-button {
+    width: 48px !important;
+    height: 48px !important;
+    border-width: 4px;
+  }
+
+  .controls-shortcuts .creator-button:hover,
+  .controls-shortcuts .creator-button:focus-visible,
+  .controls-shortcuts .creator-button:active {
+    width: min(64vw, 280px) !important;
+    padding: 0 0.5rem;
+  }
+
+  .controls-shortcuts .creator-button .creator-button-icon {
+    width: 22px;
+    height: 22px;
+    flex-basis: 22px;
+  }
+
+  .controls-shortcuts .creator-button .shortcut-hover-label-creator {
+    font-size: clamp(0.9rem, 3.8vw, 1.08rem);
+  }
+
+.controls-shortcuts {
     min-width: 0;
     width: 100%;
     padding: 0;
@@ -1211,6 +1352,19 @@ body::after {
     opacity: 0.6;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
