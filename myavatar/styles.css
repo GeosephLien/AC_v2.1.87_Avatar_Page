@@ -1163,8 +1163,8 @@ body::after {
 
 
 .controls-shortcuts .creator-button {
-  width: 56px !important;
-  height: 56px !important;
+  width: 40px !important;
+  height: 40px !important;
   border: 3px solid rgba(255, 255, 255, 0.96);
   border-radius: 999px;
   background: rgba(154, 164, 230, 0.18);
@@ -1181,10 +1181,11 @@ body::after {
 }
 
 .controls-shortcuts .creator-button .creator-button-icon {
-  width: 26px;
-  height: 26px;
-  flex: 0 0 26px;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
   opacity: 1;
+  transform: translate(1.8px, 0.5px);
   transition: opacity 0.32s ease, flex-basis 0.42s ease, width 0.42s ease;
 }
 
@@ -1195,7 +1196,7 @@ body::after {
   opacity: 0;
   overflow: hidden;
   text-align: center;
-  font-size: clamp(1.08rem, 1.8vw, 1.22rem);
+  font-size: clamp(1.08rem, 2vw, 1.28rem);
   font-weight: 700;
   letter-spacing: 0.01em;
   transition: opacity 0.34s ease, max-width 0.42s ease;
@@ -1204,7 +1205,7 @@ body::after {
 .controls-shortcuts .creator-button:hover,
 .controls-shortcuts .creator-button:focus-visible,
 .controls-shortcuts .creator-button:active {
-  width: min(34vw, 320px) !important;
+  width: min(28vw, 260px) !important;
   border-radius: 999px;
   justify-content: center;
   padding: 0 0.6rem;
@@ -1227,8 +1228,8 @@ body::after {
   margin: 0;
 }
 .controls-shortcuts .worlds-button {
-  width: 56px !important;
-  height: 56px !important;
+  width: 40px !important;
+  height: 40px !important;
   border: 3px solid rgba(255, 255, 255, 0.96);
   border-radius: 999px;
   background: rgba(154, 164, 230, 0.18);
@@ -1245,10 +1246,11 @@ body::after {
 }
 
 .controls-shortcuts .worlds-button .worlds-button-icon {
-  width: 26px;
-  height: 26px;
-  flex: 0 0 26px;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
   opacity: 1;
+  transform: translate(-1.2px, 0.5px);
   transition: opacity 0.32s ease, flex-basis 0.42s ease, width 0.42s ease;
 }
 
@@ -1259,7 +1261,7 @@ body::after {
   opacity: 0;
   overflow: hidden;
   text-align: center;
-  font-size: clamp(1.08rem, 1.8vw, 1.22rem);
+  font-size: clamp(1.08rem, 2vw, 1.28rem);
   font-weight: 700;
   letter-spacing: 0.01em;
   transition: opacity 0.34s ease, max-width 0.42s ease;
@@ -1268,7 +1270,7 @@ body::after {
 .controls-shortcuts .worlds-button:hover,
 .controls-shortcuts .worlds-button:focus-visible,
 .controls-shortcuts .worlds-button:active {
-  width: min(34vw, 320px) !important;
+  width: min(28vw, 260px) !important;
   border-radius: 999px;
   justify-content: center;
   padding: 0 0.6rem;
@@ -1290,54 +1292,71 @@ body::after {
   max-width: 18rem;
   margin: 0;
 }
+
+.controls-shortcuts .creator-button:hover,
+.controls-shortcuts .creator-button:focus-visible,
+.controls-shortcuts .creator-button:active,
+.controls-shortcuts .worlds-button:hover,
+.controls-shortcuts .worlds-button:focus-visible,
+.controls-shortcuts .worlds-button:active {
+  transform: none !important;
+}
 @media (max-width: 768px) {
   :root {
     --controls-stack-width: min(calc(100vw - 1.5rem), 28rem);
   }
 
   .controls-shortcuts .creator-button {
-    width: 48px !important;
-    height: 48px !important;
-    border-width: 4px;
+    width: 34px !important;
+    height: 34px !important;
+    border-width: 3px;
   }
 
   .controls-shortcuts .creator-button:hover,
   .controls-shortcuts .creator-button:focus-visible,
   .controls-shortcuts .creator-button:active {
-    width: min(64vw, 280px) !important;
+    width: min(56vw, 230px) !important;
     padding: 0 0.5rem;
   }
 
   .controls-shortcuts .creator-button .creator-button-icon {
-    width: 22px;
-    height: 22px;
-    flex-basis: 22px;
+    width: 24px;
+    height: 24px;
+    flex-basis: 24px;
+  }
+
+  .controls-shortcuts .creator-button .creator-button-icon {
+    transform: translate(1.4px, 0.4px);
   }
 
   .controls-shortcuts .creator-button .shortcut-hover-label-creator {
-    font-size: clamp(0.9rem, 3.8vw, 1.08rem);
+    font-size: clamp(0.94rem, 3.9vw, 1.06rem);
   }
   .controls-shortcuts .worlds-button {
-    width: 48px !important;
-    height: 48px !important;
-    border-width: 4px;
+    width: 34px !important;
+    height: 34px !important;
+    border-width: 3px;
   }
 
   .controls-shortcuts .worlds-button:hover,
   .controls-shortcuts .worlds-button:focus-visible,
   .controls-shortcuts .worlds-button:active {
-    width: min(64vw, 280px) !important;
+    width: min(56vw, 230px) !important;
     padding: 0 0.5rem;
   }
 
   .controls-shortcuts .worlds-button .worlds-button-icon {
-    width: 22px;
-    height: 22px;
-    flex-basis: 22px;
+    width: 24px;
+    height: 24px;
+    flex-basis: 24px;
+  }
+
+  .controls-shortcuts .worlds-button .worlds-button-icon {
+    transform: translate(-0.8px, 0.4px);
   }
 
   .controls-shortcuts .worlds-button .shortcut-hover-label-world {
-    font-size: clamp(0.9rem, 3.8vw, 1.08rem);
+    font-size: clamp(0.94rem, 3.9vw, 1.06rem);
   }
 
 .controls-shortcuts {
@@ -1442,6 +1461,16 @@ body::after {
     opacity: 0.6;
   }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
