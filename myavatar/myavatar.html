@@ -671,6 +671,66 @@
       pivotBrake: 10
     };
 
+    const backgroundIntroState = {
+      active: false,
+      startTime: 0,
+      durationMs: 1600,
+      rafId: null
+    };
+
+    function easeOutCubic(value) {
+      return 1 - ((1 - value) ** 3);
+    }
+
+    function getCurrentZoomProgress() {
+      const zoomOutDistance = zoomConfig[0].distance;
+      const zoomInDistance = zoomConfig[zoomConfig.length - 1].distance;
+      const zoomRange = Math.max(zoomOutDistance - zoomInDistance, 0.001);
+      return THREE.MathUtils.clamp((zoomOutDistance - cameraState.distance) / zoomRange, 0, 1);
+    }
+
+    function applyBackgroundZoomProgress(zoomProgress) {
+      const backgroundBackScale = 1 + zoomProgress * 0.12;
+      const backgroundFrontScale = 1 + zoomProgress * 0.3;
+      const dustScale = 1 + (((backgroundBackScale + backgroundFrontScale) * 0.5) - 1) * 0.5;
+      rootStyle.style.setProperty('--bg-back-scale', backgroundBackScale.toFixed(4));
+      rootStyle.style.setProperty('--bg-front-scale', backgroundFrontScale.toFixed(4));
+      rootStyle.style.setProperty('--bg-dust-scale', dustScale.toFixed(4));
+      rootStyle.style.setProperty('--bg-dust-center-y', '50%');
+    }
+
+    function startBackgroundIntro() {
+      return new Promise((resolve) => {
+        if (backgroundIntroState.rafId !== null) {
+          cancelAnimationFrame(backgroundIntroState.rafId);
+          backgroundIntroState.rafId = null;
+        }
+
+        backgroundIntroState.active = true;
+        backgroundIntroState.startTime = performance.now();
+        applyBackgroundZoomProgress(1);
+
+        const step = () => {
+          const elapsed = performance.now() - backgroundIntroState.startTime;
+          const t = THREE.MathUtils.clamp(elapsed / backgroundIntroState.durationMs, 0, 1);
+          const eased = easeOutCubic(t);
+          const introZoomProgress = THREE.MathUtils.lerp(1, 0, eased);
+          applyBackgroundZoomProgress(introZoomProgress);
+
+          if (t < 1) {
+            backgroundIntroState.rafId = requestAnimationFrame(step);
+            return;
+          }
+
+          backgroundIntroState.active = false;
+          backgroundIntroState.rafId = null;
+          applyBackgroundZoomProgress(0);
+          resolve();
+        };
+
+        backgroundIntroState.rafId = requestAnimationFrame(step);
+      });
+    }
     if (menuButton && mobileNav && header) {
       const closeMenu = () => {
         menuButton.setAttribute('aria-expanded', 'false');
@@ -900,17 +960,11 @@
     }
 
     function updateBackgroundZoom() {
-      const zoomOutDistance = zoomConfig[0].distance;
-      const zoomInDistance = zoomConfig[zoomConfig.length - 1].distance;
-      const zoomRange = Math.max(zoomOutDistance - zoomInDistance, 0.001);
-      const zoomProgress = THREE.MathUtils.clamp((zoomOutDistance - cameraState.distance) / zoomRange, 0, 1);
-      const backgroundBackScale = 1 + zoomProgress * 0.12;
-      const backgroundFrontScale = 1 + zoomProgress * 0.3;
-      const dustScale = 1 + (((backgroundBackScale + backgroundFrontScale) * 0.5) - 1) * 0.5;
-      rootStyle.style.setProperty('--bg-back-scale', backgroundBackScale.toFixed(4));
-      rootStyle.style.setProperty('--bg-front-scale', backgroundFrontScale.toFixed(4));
-      rootStyle.style.setProperty('--bg-dust-scale', dustScale.toFixed(4));
-      rootStyle.style.setProperty('--bg-dust-center-y', '50%');
+      if (backgroundIntroState.active) {
+        return;
+      }
+
+      applyBackgroundZoomProgress(getCurrentZoomProgress());
     }
 
     function updateCamera(dt) {
@@ -1383,6 +1437,7 @@
       bindAvatarButtons();
       bindDeleteConfirm();
       bindCreatorPanel();
+      await startBackgroundIntro();
 
       try {
         await addPreloadedAvatars();
@@ -1398,7 +1453,6 @@
       } else {
         openCreatorPanel();
       }
-
       animate();
     }
 
@@ -1406,11 +1460,5 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
 
 
