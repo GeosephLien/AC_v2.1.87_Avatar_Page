@@ -322,6 +322,7 @@
 
     const dragState = {
       active: false,
+      pointerId: null,
       lastX: 0,
       lastY: 0
     };
@@ -1089,27 +1090,89 @@
     }
 
     function bindPointerControls() {
+      const activeTouchPoints = new Map();
+      let pinchDistance = null;
+      const pinchThreshold = 20;
+
+      canvas.style.touchAction = 'none';
+
+      function getTouchDistance() {
+        if (activeTouchPoints.size < 2) {
+          return null;
+        }
+
+        const iterator = activeTouchPoints.values();
+        const pointA = iterator.next().value;
+        const pointB = iterator.next().value;
+
+        if (!pointA || !pointB) {
+          return null;
+        }
+
+        return Math.hypot(pointA.x - pointB.x, pointA.y - pointB.y);
+      }
+
       canvas.addEventListener('pointerdown', (event) => {
+        if (event.pointerType === 'touch') {
+          activeTouchPoints.set(event.pointerId, { x: event.clientX, y: event.clientY });
+          pinchDistance = getTouchDistance();
+        }
+
         dragState.active = true;
+        dragState.pointerId = event.pointerId;
         dragState.lastX = event.clientX;
 
         canvas.setPointerCapture(event.pointerId);
       });
 
       canvas.addEventListener('pointermove', (event) => {
+        if (event.pointerType === 'touch' && activeTouchPoints.has(event.pointerId)) {
+          activeTouchPoints.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+          const nextDistance = getTouchDistance();
+          if (nextDistance !== null && pinchDistance !== null) {
+            const delta = nextDistance - pinchDistance;
+            if (delta > pinchThreshold) {
+              setZoomIndex(cameraState.zoomIndex + 1);
+              pinchDistance = nextDistance;
+            } else if (delta < -pinchThreshold) {
+              setZoomIndex(cameraState.zoomIndex - 1);
+              pinchDistance = nextDistance;
+            }
+          } else {
+            pinchDistance = nextDistance;
+          }
+        }
+
         if (!dragState.active) {
+          return;
+        }
+
+        if (event.pointerId !== dragState.pointerId) {
+          return;
+        }
+
+        if (event.pointerType === 'touch' && activeTouchPoints.size > 1) {
           return;
         }
 
         const deltaX = event.clientX - dragState.lastX;
         dragState.lastX = event.clientX;
 
-
         cameraState.targetYaw -= deltaX * cameraState.yawSpeed;
       });
 
       function releasePointer(event) {
-        dragState.active = false;
+        if (event.pointerType === 'touch') {
+          activeTouchPoints.delete(event.pointerId);
+          pinchDistance = getTouchDistance();
+        }
+
+        if (event.pointerId === dragState.pointerId) {
+          dragState.active = false;
+          dragState.pointerId = null;
+        }
+
         if (canvas.hasPointerCapture(event.pointerId)) {
           canvas.releasePointerCapture(event.pointerId);
         }
@@ -1126,7 +1189,6 @@
         }
       }, { passive: false });
     }
-
     function bindAvatarSelectorScroll() {
       if (!avatarSelectorViewport || !avatarScrollbar || !avatarScrollbarThumb) {
         return;
