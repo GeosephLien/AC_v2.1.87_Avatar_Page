@@ -27,21 +27,21 @@
       display: inline-flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.75rem;
-      padding: 0.9rem 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 14px;
-      background: rgba(8, 16, 46, 0.58);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      gap: 0.5rem;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
 
     .viewer-loading-spinner {
-      width: 34px;
-      height: 34px;
-      border: 3px solid rgba(255, 255, 255, 0.22);
+      width: 24px;
+      height: 24px;
+      border: 4px solid rgba(255, 255, 255, 0.22);
       border-top-color: rgba(255, 255, 255, 0.95);
       border-radius: 50%;
+      box-shadow: 0 0 10px rgba(180, 208, 255, 0.28);
       animation: viewer-loading-spin 0.85s linear infinite;
     }
 
@@ -188,7 +188,7 @@
         <div class="viewer-loading" id="viewer-loading" hidden>
           <div class="viewer-loading-content" role="status" aria-live="polite">
             <div class="viewer-loading-spinner" aria-hidden="true"></div>
-            <span class="viewer-loading-text">Loading avatar...</span>
+            <span class="viewer-loading-text">Loading</span>
           </div>
         </div>
         <div class="viewer-error" id="viewer-error" hidden></div>
