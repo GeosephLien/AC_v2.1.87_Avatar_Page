@@ -43,7 +43,7 @@
           <p class="desc">
             Customize style, colors, and details - no two avatars look the same.
           </p>
-          <button id="start-creating" class="btn btn-primary" type="button">Start Creating!</button>
+          <button id="cta" class="btn btn-primary" type="button">Create Now!</button>
         </section>
 
         <section class="hero-visual" aria-label="Creative hero visual">
@@ -80,7 +80,7 @@
 
   <script>
     (() => {
-      const startButton = document.getElementById('start-creating');
+      const startButton = document.getElementById('cta');
       const uploadVrmTrigger = document.querySelector('[data-upload-vrm-trigger]');
       const uploadVrmInput = document.getElementById('upload-vrm-input');
       const loadingOverlay = document.getElementById('loading-overlay');
@@ -93,6 +93,8 @@
       const unityFrameworkUrl = './Build/AC_v2.1.87_WebGL.framework.js.unityweb';
       const unityCodeUrl = './Build/AC_v2.1.87_WebGL.wasm.unityweb';
       const unityDataUrl = './Build/AC_v2.1.87_WebGL.data.unityweb';
+      const START_BUTTON_TEXT = 'Create Now!';
+      const LOADING_BUTTON_TEXT = 'Loading...';
 
       let canvas = canvasElement;
       let unityReady = false;
@@ -133,11 +135,17 @@
       function showLoadingOverlay() {
         document.body.classList.add('show-loading-overlay');
         loadingOverlay.setAttribute('aria-hidden', 'false');
+        if (startButton) {
+          startButton.textContent = LOADING_BUTTON_TEXT;
+        }
       }
 
       function hideLoadingOverlay() {
         document.body.classList.remove('show-loading-overlay');
         loadingOverlay.setAttribute('aria-hidden', 'true');
+        if (startButton) {
+          startButton.textContent = START_BUTTON_TEXT;
+        }
       }
 
       function resetToLanding() {
@@ -376,4 +384,5 @@
   </script>
 </body>
 </html>
+
 

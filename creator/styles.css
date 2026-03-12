@@ -222,12 +222,12 @@ body::after {
     0 0 30px rgba(181, 102, 216, 0.3);
 }
 
-#start-creating {
+#cta {
   position: relative;
   isolation: isolate;
 }
 
-#start-creating::before {
+#cta::before {
   content: "";
   position: absolute;
   inset: -8px;
@@ -239,7 +239,7 @@ body::after {
   animation: start-button-glow 6s ease-in-out infinite;
 }
 
-#start-creating:hover::before {
+#cta:hover::before {
   opacity: 0.96;
   filter: blur(22px);
 }
