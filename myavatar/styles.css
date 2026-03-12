@@ -104,7 +104,7 @@ body {
     radial-gradient(circle at 58% 84%, rgba(255, 255, 255, 0.52) 0 1px, transparent 2px),
     radial-gradient(circle at 22% 64%, rgba(255, 255, 255, 0.5) 0 1.2px, transparent 2.1px),
     radial-gradient(circle at 74% 78%, rgba(253, 253, 255, 0.48) 0 0.9px, transparent 1.7px);
-  animation: dust-drift 28s linear infinite alternate;
+  animation: dust-drift 16s linear infinite alternate;
 }
 
 .bg-layer-dust::after {
@@ -118,7 +118,7 @@ body {
     radial-gradient(circle at 14% 44%, rgba(255, 255, 255, 0.47) 0 1.05px, transparent 1.9px),
     radial-gradient(circle at 64% 68%, rgba(252, 253, 255, 0.44) 0 0.92px, transparent 1.75px),
     radial-gradient(circle at 42% 86%, rgba(255, 255, 255, 0.42) 0 0.8px, transparent 1.5px);
-  animation: dust-drift-reverse 34s linear infinite alternate;
+  animation: dust-drift-reverse 20s linear infinite alternate;
   opacity: 0.98;
 }
 
@@ -1466,6 +1466,8 @@ body::after {
     opacity: 0.6;
   }
 }
+
+
 
 
 
