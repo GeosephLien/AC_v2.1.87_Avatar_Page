@@ -136,6 +136,18 @@
     const header = document.querySelector(".site-header");
     const heroFigureImages = Array.from(document.querySelectorAll(".hero-figure img"));
 
+    document.addEventListener("selectstart", (event) => {
+      event.preventDefault();
+    });
+
+    document.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+    });
+
+    document.addEventListener("dragstart", (event) => {
+      event.preventDefault();
+    });
+
     const waitForImageReady = (image) => {
       if (image.complete && image.naturalWidth > 0) {
         if (typeof image.decode === "function") {
@@ -209,6 +221,7 @@
   </script>
 </body>
 </html>
+
 
 
 

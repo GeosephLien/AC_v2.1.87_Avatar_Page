@@ -261,6 +261,18 @@
     const rootStyle = document.documentElement;
     scene.background = null;
 
+    document.addEventListener("selectstart", (event) => {
+      event.preventDefault();
+    });
+
+    document.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+    });
+
+    document.addEventListener("dragstart", (event) => {
+      event.preventDefault();
+    });
+
     const renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
@@ -1643,4 +1655,5 @@
   </script>
 </body>
 </html>
+
 
