@@ -136,6 +136,7 @@
 
     <div class="creator-overlay" id="creator-panel-overlay" hidden>
       <div class="creator-panel-wrap">
+        <button class="creator-panel-back" type="button" data-creator-back aria-label="Back to creator landing" hidden></button>
         <button class="creator-panel-close" type="button" data-creator-close aria-label="Close Avatar Creator panel"></button>
         <div class="creator-panel" role="dialog" aria-modal="true" aria-label="Avatar Creator panel">
           <iframe
@@ -184,6 +185,7 @@
     const creatorOpenButton = document.querySelector('[data-creator-open]');
     const creatorOverlay = document.getElementById('creator-panel-overlay');
     const creatorCloseButton = creatorOverlay.querySelector('[data-creator-close]');
+    const creatorBackButton = creatorOverlay.querySelector('[data-creator-back]');
     const creatorFrame = creatorOverlay.querySelector('.creator-panel-frame');
     const scene = new THREE.Scene();
     const rootStyle = document.documentElement;
@@ -840,11 +842,17 @@
       pauseRenderLoop();
       creatorOverlay.hidden = false;
       creatorOpenButton.setAttribute('aria-expanded', 'true');
+      if (creatorBackButton) {
+        creatorBackButton.hidden = true;
+      }
     }
 
     function closeCreatorPanel() {
       creatorOverlay.hidden = true;
       creatorOpenButton.setAttribute('aria-expanded', 'false');
+      if (creatorBackButton) {
+        creatorBackButton.hidden = true;
+      }
       creatorFrame
         ?.contentWindow
         ?.postMessage({ type: 'avatar-creator-reset' }, '*');
@@ -1354,6 +1362,13 @@
         openCreatorPanel();
       });
 
+      creatorBackButton?.addEventListener('click', () => {
+        creatorFrame
+          ?.contentWindow
+          ?.postMessage({ type: 'avatar-creator-reset' }, '*');
+        creatorBackButton.hidden = true;
+      });
+
       creatorCloseButton.addEventListener('click', () => {
         closeCreatorPanel();
       });
@@ -1371,6 +1386,20 @@
       });
 
       window.addEventListener('message', async (event) => {
+        if (event.data?.type === 'avatar-creator-unity-started') {
+          if (creatorBackButton) {
+            creatorBackButton.hidden = false;
+          }
+          return;
+        }
+
+        if (event.data?.type === 'avatar-creator-landing') {
+          if (creatorBackButton) {
+            creatorBackButton.hidden = true;
+          }
+          return;
+        }
+
         if (event.data?.type === 'avatar-upload-error') {
           showError(event.data.message || 'VRM upload failed.');
           return;
@@ -1460,5 +1489,4 @@
   </script>
 </body>
 </html>
-
 

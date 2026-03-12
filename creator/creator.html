@@ -70,7 +70,7 @@
     </div>
   </div>
 
-  <div id="player-version">v2.1.87</div>
+  <div id="player-version">v2.1.871</div>
 
   <div id="container" aria-hidden="true">
     <canvas id="game-canvas" data-pixel-art=""></canvas>
@@ -89,10 +89,10 @@
       const container = document.getElementById('container');
       const canvasElement = document.getElementById('game-canvas');
       const versionBadge = document.getElementById('player-version');
-      const unityLoaderUrl = './Build/AC_v2.1.87_WebGL.loader.js';
-      const unityFrameworkUrl = './Build/AC_v2.1.87_WebGL.framework.js.unityweb';
-      const unityCodeUrl = './Build/AC_v2.1.87_WebGL.wasm.unityweb';
-      const unityDataUrl = './Build/AC_v2.1.87_WebGL.data.unityweb';
+      const unityLoaderUrl = './Build/AC_v2.1.871_WebGL.loader.js';
+      const unityFrameworkUrl = './Build/AC_v2.1.871_WebGL.framework.js.unityweb';
+      const unityCodeUrl = './Build/AC_v2.1.871_WebGL.wasm.unityweb';
+      const unityDataUrl = './Build/AC_v2.1.871_WebGL.data.unityweb';
       const START_BUTTON_TEXT = 'Create Now!';
       const LOADING_BUTTON_TEXT = 'Loading...';
 
@@ -163,12 +163,14 @@
         landingShell.setAttribute('aria-hidden', 'false');
         container.setAttribute('aria-hidden', 'true');
         loadingBar.style.width = '0%';
+        notifyParent({ type: 'avatar-creator-landing' });
       }
 
       function enterUnity() {
         if (!unityReady || hasEnteredUnity) return;
         hasEnteredUnity = true;
         hideLoadingOverlay();
+        notifyParent({ type: 'avatar-creator-unity-started' });
         document.body.classList.add('enter-unity');
         container.setAttribute('aria-hidden', 'false');
         if (revealFinalizeTimerId !== null) {
@@ -384,5 +386,4 @@
   </script>
 </body>
 </html>
-
 
