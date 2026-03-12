@@ -200,13 +200,13 @@
     const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
     camera.position.set(0, 1.45, 2.8);
 
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x3c3455, 1.8));
+    scene.add(new THREE.HemisphereLight(0xffffff, 0xbcabe0, 3.6));
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.6);
-    keyLight.position.set(1.2, 2.4, 2.2);
+    const keyLight = new THREE.DirectionalLight(0xb700ff, 3,6);
+    keyLight.position.set(1.2, 2.4, -2.2);
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x9db3ff, 1.2);
+    const rimLight = new THREE.DirectionalLight(0x0073ff, 3,6);
     rimLight.position.set(-1.5, 1.8, -1.6);
     scene.add(rimLight);
 
