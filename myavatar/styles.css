@@ -1113,7 +1113,7 @@ body::after {
   box-shadow: 0 10px 24px rgba(201, 72, 108, 0.28);
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 768px) {
   .site-header {
     position: absolute;
   }
@@ -1198,6 +1198,10 @@ body::after {
   .header-actions .icon-button svg {
     width: 26px;
     height: 26px;
+  }
+
+  .header-actions .icon-button svg .bell-fill {
+    display: none;
   }
 
   .avatar-gradient {

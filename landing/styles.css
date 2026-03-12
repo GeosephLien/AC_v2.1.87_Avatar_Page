@@ -750,6 +750,10 @@ body.hero-assets-ready .hero-figure-right img {
     height: 26px;
   }
 
+  .header-actions .icon-button svg .bell-fill {
+    display: none;
+  }
+
   .avatar-gradient {
     width: 32px;
     height: 32px;

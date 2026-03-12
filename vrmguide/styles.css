@@ -423,6 +423,10 @@ textarea {
     height: 26px;
   }
 
+  .header-actions .icon-button svg .bell-fill {
+    display: none;
+  }
+
   .avatar-gradient {
     width: 32px;
     height: 32px;
