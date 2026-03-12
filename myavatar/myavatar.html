@@ -9,6 +9,61 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
+  <style>
+    .viewer-loading {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+    }
+
+    .viewer-loading[hidden] {
+      display: none;
+    }
+
+    .viewer-loading-content {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      background: rgba(8, 16, 46, 0.58);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .viewer-loading-spinner {
+      width: 34px;
+      height: 34px;
+      border: 3px solid rgba(255, 255, 255, 0.22);
+      border-top-color: rgba(255, 255, 255, 0.95);
+      border-radius: 50%;
+      animation: viewer-loading-spin 0.85s linear infinite;
+    }
+
+    .viewer-loading-text {
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      color: rgba(243, 247, 255, 0.9);
+    }
+
+    @keyframes viewer-loading-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .viewer-loading-spinner {
+        animation-duration: 2.4s;
+      }
+    }
+  </style>
   <script type="importmap">
     {
       "imports": {
@@ -130,6 +185,12 @@
       </div>
       <section class="viewer-stage">
         <canvas id="avatar-canvas" aria-label="VRM avatar preview"></canvas>
+        <div class="viewer-loading" id="viewer-loading" hidden>
+          <div class="viewer-loading-content" role="status" aria-live="polite">
+            <div class="viewer-loading-spinner" aria-hidden="true"></div>
+            <span class="viewer-loading-text">Loading avatar...</span>
+          </div>
+        </div>
         <div class="viewer-error" id="viewer-error" hidden></div>
       </section>
     </main>
@@ -174,6 +235,7 @@
     const mobileNav = document.getElementById('mobile-nav');
     const header = document.querySelector('.site-header');
     const canvas = document.getElementById('avatar-canvas');
+    const loadingOverlay = document.getElementById('viewer-loading');
     const errorPanel = document.getElementById('viewer-error');
     const avatarSelector = document.querySelector('.avatar-selector');
     const avatarSelectorViewport = document.querySelector('[data-avatar-scroll]');
@@ -251,6 +313,7 @@
     let activeAvatarUrl = null;
     let animationFrameId = null;
     let isRenderPaused = false;
+    let loadingOverlayCount = 0;
 
     const zoomConfig = [
       { bone: 'hips', offset: new THREE.Vector3(0, -0.08, 0), distance: 4.1, pivot: null },
@@ -466,6 +529,23 @@
       document.body.append(link);
       link.click();
       link.remove();
+    }
+
+    function setLoadingVisible(visible) {
+      if (!loadingOverlay) {
+        return;
+      }
+
+      if (visible) {
+        loadingOverlayCount += 1;
+        loadingOverlay.hidden = false;
+        return;
+      }
+
+      loadingOverlayCount = Math.max(loadingOverlayCount - 1, 0);
+      if (loadingOverlayCount === 0) {
+        loadingOverlay.hidden = true;
+      }
     }
 
     function downloadAvatarEntry(entry) {
@@ -1227,6 +1307,8 @@
         return;
       }
 
+      setLoadingVisible(true);
+
       try {
         clearError();
         disposeCurrentAvatar();
@@ -1265,6 +1347,8 @@
         activeAvatarUrl = null;
         console.error(error);
         showError(`VRM load failed: ${error.message}`);
+      } finally {
+        setLoadingVisible(false);
       }
     }
 
@@ -1459,6 +1543,7 @@
       animate();
     }
     async function initializePage() {
+      setLoadingVisible(true);
       resizeRenderer();
       window.addEventListener('resize', resizeRenderer);
       bindPointerControls();
@@ -1466,21 +1551,25 @@
       bindAvatarButtons();
       bindDeleteConfirm();
       bindCreatorPanel();
-      await startBackgroundIntro();
-
       try {
-        await addPreloadedAvatars();
-      } catch (error) {
-        console.error(error);
-        showError(`Preloaded avatar setup failed: ${error.message}`);
-      }
+        await startBackgroundIntro();
 
-      const firstAvatarButton = getVisibleAvatarButtons()[0] || null;
-      if (firstAvatarButton?.dataset.vrm) {
-        setActiveAvatarButton(firstAvatarButton.dataset.vrm);
-        await loadAvatar(firstAvatarButton.dataset.vrm);
-      } else {
-        openCreatorPanel();
+        try {
+          await addPreloadedAvatars();
+        } catch (error) {
+          console.error(error);
+          showError(`Preloaded avatar setup failed: ${error.message}`);
+        }
+
+        const firstAvatarButton = getVisibleAvatarButtons()[0] || null;
+        if (firstAvatarButton?.dataset.vrm) {
+          setActiveAvatarButton(firstAvatarButton.dataset.vrm);
+          await loadAvatar(firstAvatarButton.dataset.vrm);
+        } else {
+          openCreatorPanel();
+        }
+      } finally {
+        setLoadingVisible(false);
       }
       animate();
     }
