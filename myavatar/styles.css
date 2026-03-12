@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --bg-left: #060d36;
   --bg-mid: #150d3a;
   --bg-right: #3c1556;
@@ -922,8 +922,8 @@ body::after {
 
 .creator-panel-back {
   position: absolute;
-  top: 0;
-  right: calc(100% + 20px);
+  top: -15px;
+  right: 100%;
   z-index: 2;
   display: inline-flex;
   align-items: center;
@@ -940,22 +940,21 @@ body::after {
 .creator-panel-back::after {
   content: "";
   position: absolute;
-  left: 13px;
-  width: 34px;
-  height: 10px;
+  top: 50%;
+  left: 14px;
+  width: 16px;
+  height: 3px;
   border-radius: 999px;
   background: #fff;
-  transform-origin: left center;
+  transform-origin: 6px center;
 }
 
 .creator-panel-back::before {
-  top: 14px;
-  transform: rotate(-45deg);
+  transform: translateY(calc(-50% + 3px)) rotate(45deg);
 }
 
 .creator-panel-back::after {
-  top: 37px;
-  transform: rotate(45deg);
+  transform: translateY(calc(-50% - 4px)) rotate(-45deg);
 }
 
 .creator-panel-back[hidden] {
@@ -1461,8 +1460,8 @@ body::after {
   }
 
   .creator-panel-back {
-    top: 0;
-    right: calc(100% + 20px);
+    top: -15px;
+    right: 100%;
   }
   .creator-panel-close {
     top: 0;
@@ -1509,4 +1508,16 @@ body::after {
     opacity: 0.6;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
