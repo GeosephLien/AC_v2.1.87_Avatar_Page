@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -437,10 +437,10 @@
       menuIcon.setAttribute('aria-hidden', 'true');
       menuButton.append(menuIcon);
 
-      const actionPanel = document.createElement('div');
-      actionPanel.className = 'avatar-action-panel';
-      actionPanel.dataset.avatarActions = '';
-      actionPanel.hidden = true;
+      const menuActiveOverlay = document.createElement('div');
+      menuActiveOverlay.className = 'avatar-action-panel';
+      menuActiveOverlay.dataset.avatarActions = '';
+      menuActiveOverlay.hidden = true;
 
       if (canDownload) {
         const downloadButton = document.createElement('button');
@@ -451,7 +451,7 @@
         downloadButton.innerHTML = `
           <img src="./images/Icon_download.svg" alt="" aria-hidden="true">
         `;
-        actionPanel.append(downloadButton);
+        menuActiveOverlay.append(downloadButton);
       }
 
       if (canDelete) {
@@ -463,14 +463,14 @@
         deleteButton.innerHTML = `
           <img src="./images/Icon_close.svg" alt="" aria-hidden="true">
         `;
-        actionPanel.append(deleteButton);
+        menuActiveOverlay.append(deleteButton);
       }
 
-      if (actionPanel.childElementCount === 1) {
-        actionPanel.classList.add('is-single-action');
+      if (menuActiveOverlay.childElementCount === 1) {
+        menuActiveOverlay.classList.add('is-single-action');
       }
 
-      fragment.append(menuButton, actionPanel);
+      fragment.append(menuButton, menuActiveOverlay);
       return fragment;
     }
 
@@ -933,9 +933,9 @@
 
       entry.classList.remove('menu-open', 'mobile-longpress-open');
       entry.querySelector('[data-avatar-menu]')?.setAttribute('aria-expanded', 'false');
-      const actionPanel = entry.querySelector('[data-avatar-actions]');
-      if (actionPanel) {
-        actionPanel.hidden = true;
+      const menuActiveOverlay = entry.querySelector('[data-avatar-actions]');
+      if (menuActiveOverlay) {
+        menuActiveOverlay.hidden = true;
       }
 
       if (openAvatarMenuEntry === entry) {
@@ -953,9 +953,9 @@
       entry.classList.add('menu-open');
       entry.classList.toggle('mobile-longpress-open', mobileLongPress);
       entry.querySelector('[data-avatar-menu]')?.setAttribute('aria-expanded', 'true');
-      const actionPanel = entry.querySelector('[data-avatar-actions]');
-      if (actionPanel) {
-        actionPanel.hidden = false;
+      const menuActiveOverlay = entry.querySelector('[data-avatar-actions]');
+      if (menuActiveOverlay) {
+        menuActiveOverlay.hidden = false;
       }
       openAvatarMenuEntry = entry;
     }
@@ -1857,4 +1857,5 @@
   </script>
 </body>
 </html>
+
 

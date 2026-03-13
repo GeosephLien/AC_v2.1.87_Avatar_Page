@@ -659,6 +659,8 @@ body::after {
 .avatar-entry {
   position: relative;
   flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
 }
 
 .avatar-entry[hidden] {
@@ -711,6 +713,8 @@ body::after {
 .avatar-entry {
   position: relative;
   flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
 }
 
 .avatar-menu-button {
@@ -751,15 +755,17 @@ body::after {
 
 .is-mobile-avatar-device .avatar-entry.mobile-longpress-open .avatar-action-panel {
   position: absolute;
-  inset: 0;
+  inset: 1px;
   z-index: 3;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   align-items: center;
   justify-items: center;
   padding: 0 8px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.8);
+  border-radius: 50%;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: transparent;
   -webkit-
 }
 
@@ -794,23 +800,24 @@ body::after {
 
 .avatar-download-btn:hover,
 .avatar-delete-btn:hover {
-  filter:
-    drop-shadow(0 0 8px rgba(255, 255, 255, 0.95))
-    drop-shadow(0 0 18px rgba(102, 182, 255, 0.95))
-    drop-shadow(0 0 28px rgba(95, 161, 255, 0.75));
+  border-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 1);
+  filter: none;
 }
 
 .avatar-action-panel {
   position: absolute;
-  inset: 0;
+  inset: 1px;
   z-index: 3;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   align-items: center;
   justify-items: center;
   padding: 0 8px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.8);
+  border-radius: 50%;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: transparent;
   -webkit-
 }
 
@@ -836,7 +843,7 @@ body::after {
   justify-content: center;
   cursor: pointer;
 
-  transition: filter 0.18s ease;
+  transition: filter 0.18s ease, border-color 0.18s ease;
 }
 
 .avatar-download-btn img,
@@ -852,6 +859,13 @@ body::after {
   height: 18px;
 }
 
+.avatar-entry.menu-open .avatar-button[data-avatar-label="Howard"] + .avatar-action-panel .avatar-download-btn,
+.avatar-entry.menu-open .avatar-button[data-avatar-label="Howard"] + .avatar-action-panel .avatar-delete-btn,
+.is-mobile-avatar-device .avatar-entry.mobile-longpress-open .avatar-button[data-avatar-label="Howard"] + .avatar-action-panel .avatar-download-btn,
+.is-mobile-avatar-device .avatar-entry.mobile-longpress-open .avatar-button[data-avatar-label="Howard"] + .avatar-action-panel .avatar-delete-btn {
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+}
 .avatar-download-btn:focus-visible,
 .avatar-delete-btn:focus-visible,
 .avatar-button:focus-visible,
@@ -882,6 +896,12 @@ body::after {
   display: block;
   object-fit: cover;
   pointer-events: none;
+  transition: filter 0.18s ease;
+}
+
+.avatar-entry.menu-open .avatar-button img,
+.is-mobile-avatar-device .avatar-entry.mobile-longpress-open .avatar-button img {
+  filter: brightness(0.42);
 }
 
 .viewer-stage {
@@ -1524,6 +1544,12 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
+
+
+
+
+
+
 
 
 
