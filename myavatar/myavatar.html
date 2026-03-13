@@ -294,41 +294,6 @@
 
     scene.add(new THREE.HemisphereLight(0xffffff, 0xbcabe0, 3.6));
 
-    const keyLight = new THREE.DirectionalLight(0xb700ff, 3,6);
-    keyLight.position.set(1.2, 2.4, -2.2);
-    scene.add(keyLight);
-
-    const rimLight = new THREE.DirectionalLight(0x0073ff, 3,6);
-    rimLight.position.set(-1.5, 1.8, -1.6);
-    scene.add(rimLight);
-
-    const floorTextureCanvas = document.createElement('canvas');
-    floorTextureCanvas.width = 512;
-    floorTextureCanvas.height = 512;
-    const floorTextureContext = floorTextureCanvas.getContext('2d');
-    const floorGradient = floorTextureContext.createRadialGradient(256, 256, 30, 256, 256, 256);
-    floorGradient.addColorStop(0, 'rgba(255, 255, 255, 0.34)');
-    floorGradient.addColorStop(0.38, 'rgba(203, 220, 255, 0.2)');
-    floorGradient.addColorStop(0.68, 'rgba(130, 160, 255, 0.1)');
-    floorGradient.addColorStop(1, 'rgba(130, 160, 255, 0)');
-    floorTextureContext.fillStyle = floorGradient;
-    floorTextureContext.fillRect(0, 0, 512, 512);
-
-    const floorTexture = new THREE.CanvasTexture(floorTextureCanvas);
-    floorTexture.colorSpace = THREE.SRGBColorSpace;
-
-    const floor = new THREE.Mesh(
-      new THREE.CircleGeometry(1.08, 64),
-      new THREE.MeshBasicMaterial({
-        map: floorTexture,
-        transparent: true,
-        depthWrite: false
-      })
-    );
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -0.02;
-    scene.add(floor);
-
     const clock = new THREE.Clock();
     const loader = new GLTFLoader();
     loader.crossOrigin = 'anonymous';
@@ -646,20 +611,8 @@
         if (!vrm) {
           throw new Error('VRM data was not found in the uploaded file.');
         }
+        thumbnailScene.add(new THREE.HemisphereLight(0xffffff, 0xbcabe0, 3.6));
 
-        thumbnailScene.add(new THREE.HemisphereLight(0xffffff, 0x2b355a, 1.9));
-
-        const keyLight = new THREE.DirectionalLight(0xffffff, 1.55);
-        keyLight.position.set(1.4, 2.8, 2.2);
-        thumbnailScene.add(keyLight);
-
-        const fillLight = new THREE.DirectionalLight(0x8ec5ff, 1.05);
-        fillLight.position.set(-1.6, 1.4, 1.8);
-        thumbnailScene.add(fillLight);
-
-        const rimLight = new THREE.DirectionalLight(0xffb38a, 0.7);
-        rimLight.position.set(0.8, 1.8, -2);
-        thumbnailScene.add(rimLight);
 
         VRMUtils.removeUnnecessaryVertices(avatarGltf.scene);
         VRMUtils.removeUnnecessaryJoints(avatarGltf.scene);
@@ -1857,5 +1810,9 @@
   </script>
 </body>
 </html>
+
+
+
+
 
 
