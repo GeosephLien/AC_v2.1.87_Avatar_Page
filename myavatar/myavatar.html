@@ -287,7 +287,7 @@
       alpha: true
     });
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(1.35);
 
     const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
     camera.position.set(0, 1.45, 2.8);
@@ -598,7 +598,7 @@
         preserveDrawingBuffer: true
       });
       renderer.outputColorSpace = THREE.SRGBColorSpace;
-      renderer.setPixelRatio(1);
+      renderer.setPixelRatio(1.35);
       renderer.setSize(thumbnailSize, thumbnailSize, false);
 
       const thumbnailScene = new THREE.Scene();
@@ -1810,6 +1810,14 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
 
 
 
