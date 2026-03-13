@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --bg-left: #060d36;
   --bg-mid: #150d3a;
   --bg-right: #3c1556;
@@ -1505,6 +1505,74 @@ body.camera-drag-active * {
   }
 }
 
+@media (max-width: 932px) and (orientation: landscape) and (hover: none) and (pointer: coarse) {
+  .top-strip {
+    height: 12px;
+    padding: 0 10px;
+  }
+
+  .htc-mark {
+    width: 25px;
+    height: 7px;
+  }
+
+  .site-header {
+    top: 12px;
+  }
+
+  .header-inner {
+    min-height: 31px;
+    gap: 7px;
+    padding: 4px 10px;
+  }
+
+  .site-header .brand {
+    gap: 5px;
+  }
+
+  .site-header .brand-logo {
+    width: 88px;
+    height: 32px;
+    flex-basis: 88px;
+  }
+
+  .mobile-menu-button {
+    width: 14px;
+    height: 14px;
+  }
+
+  .mobile-menu-button span {
+    width: 9px;
+    height: 1px;
+    margin-top: 2px;
+  }
+
+  .header-actions {
+    gap: 7px;
+  }
+
+  .header-actions .icon-button,
+  .header-avatar-button {
+    width: 18px;
+    height: 18px;
+  }
+
+  .header-actions .icon-button svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .avatar-gradient {
+    width: 16px;
+    height: 16px;
+  }
+
+  .controls-stack {
+    bottom: 2px;
+    transform: translateX(-50%) scale(0.5);
+    transform-origin: bottom center;
+  }
+}
 @keyframes dust-drift {
   0% {
     transform: translate3d(0, 0, 0) scale(1);
@@ -1544,6 +1612,8 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
+
+
 
 
 
