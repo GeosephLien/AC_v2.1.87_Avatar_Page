@@ -715,14 +715,14 @@ body::after {
 
 .avatar-menu-button {
   position: absolute;
-  top: -2px;
-  right: -2px;
+  top: 0;
+  right: 0;
   z-index: 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -743,6 +743,21 @@ body::after {
   pointer-events: none;
 }
 
+.is-mobile-avatar-device .avatar-menu-button {
+  display: none;
+}
+
+.is-mobile-avatar-device .avatar-entry.mobile-longpress-open .avatar-action-panel {
+  inset: auto;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  grid-template-columns: 1fr;
+  transform: translateX(-50%);
+}
+
 .avatar-menu-button span {
   position: absolute;
   width: 10px;
@@ -759,10 +774,20 @@ body::after {
   transform: translateY(2px);
 }
 
-.avatar-menu-button:hover {
+.avatar-menu-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  pointer-events: none;
+}
+
+.avatar-menu-button:hover,
+.avatar-download-btn:hover,
+.avatar-delete-btn:hover {
   filter:
-    drop-shadow(0 0 4px rgba(255, 255, 255, 0.85))
-    drop-shadow(0 0 10px rgba(102, 182, 255, 0.8));
+    drop-shadow(0 0 8px rgba(255, 255, 255, 0.95))
+    drop-shadow(0 0 18px rgba(102, 182, 255, 0.95))
+    drop-shadow(0 0 28px rgba(95, 161, 255, 0.75));
 }
 
 .avatar-action-panel {
@@ -783,7 +808,13 @@ body::after {
   display: none;
 }
 
-.avatar-action-button {
+.avatar-action-panel.is-single-action {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
+.avatar-download-btn,
+.avatar-delete-btn {
   width: 24px;
   height: 24px;
   padding: 0;
@@ -794,27 +825,25 @@ body::after {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  transition: filter 0.18s ease;
 }
 
-.avatar-action-button svg {
+.avatar-download-btn img,
+.avatar-delete-btn img {
   width: 20px;
   height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  display: block;
+  pointer-events: none;
 }
 
-.avatar-action-button-delete svg {
-  stroke-width: 2.1;
+.avatar-delete-btn img {
+  width: 18px;
+  height: 18px;
 }
 
-.avatar-action-button:hover {
-  color: #fff;
-}
-
-.avatar-action-button:focus-visible,
+.avatar-download-btn:focus-visible,
+.avatar-delete-btn:focus-visible,
 .avatar-button:focus-visible,
 .btn:focus-visible {
   outline: 2px solid rgba(165, 204, 255, 0.95);

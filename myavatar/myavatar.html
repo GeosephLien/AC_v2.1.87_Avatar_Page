@@ -259,7 +259,15 @@
     const creatorFrame = creatorOverlay.querySelector('.creator-panel-frame');
     const scene = new THREE.Scene();
     const rootStyle = document.documentElement;
+    const isMobileAvatarActions = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+      || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    const mobileLongPressDelayMs = 420;
+    const mobileLongPressMoveTolerance = 10;
     scene.background = null;
+
+    if (isMobileAvatarActions) {
+      document.body.classList.add('is-mobile-avatar-device');
+    }
 
     document.addEventListener("selectstart", (event) => {
       event.preventDefault();
@@ -364,6 +372,17 @@
     let pendingDeleteButton = null;
     let openAvatarMenuEntry = null;
     let uploadedAvatarSequence = 0;
+    let suppressNextAvatarSelection = false;
+    let avatarSelectionSuppressTimeout = null;
+
+    const avatarLongPressState = {
+      pointerId: null,
+      entry: null,
+      startX: 0,
+      startY: 0,
+      timer: null,
+      triggered: false
+    };
 
     const preloadedAvatars = [
       {
@@ -401,7 +420,7 @@
       ['#f25f8b', '#f59a58', '#ffd166']
     ];
 
-    function buildAvatarActionControls(label) {
+    function buildAvatarActionControls(label, { canDownload = true, canDelete = true } = {}) {
       const fragment = document.createDocumentFragment();
 
       const menuButton = document.createElement('button');
@@ -411,39 +430,46 @@
       menuButton.setAttribute('aria-label', `${label} actions`);
       menuButton.setAttribute('aria-expanded', 'false');
 
-      menuButton.append(document.createElement('span'), document.createElement('span'));
+      const menuIcon = document.createElement('img');
+      menuIcon.className = 'avatar-menu-icon';
+      menuIcon.src = './images/Icon_menu_tb.svg';
+      menuIcon.alt = '';
+      menuIcon.setAttribute('aria-hidden', 'true');
+      menuButton.append(menuIcon);
 
       const actionPanel = document.createElement('div');
       actionPanel.className = 'avatar-action-panel';
       actionPanel.dataset.avatarActions = '';
       actionPanel.hidden = true;
 
-      const downloadButton = document.createElement('button');
-      downloadButton.className = 'avatar-action-button';
-      downloadButton.type = 'button';
-      downloadButton.dataset.avatarDownload = '';
-      downloadButton.setAttribute('aria-label', `Download ${label}`);
-      downloadButton.innerHTML = `
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 4v10"></path>
-          <path d="m8 10 4 4 4-4"></path>
-          <path d="M6 18h12"></path>
-        </svg>
-      `;
+      if (canDownload) {
+        const downloadButton = document.createElement('button');
+        downloadButton.className = 'avatar-download-btn';
+        downloadButton.type = 'button';
+        downloadButton.dataset.avatarDownload = '';
+        downloadButton.setAttribute('aria-label', `Download ${label}`);
+        downloadButton.innerHTML = `
+          <img src="./images/Icon_download.svg" alt="" aria-hidden="true">
+        `;
+        actionPanel.append(downloadButton);
+      }
 
-      const deleteButton = document.createElement('button');
-      deleteButton.className = 'avatar-action-button avatar-action-button-delete';
-      deleteButton.type = 'button';
-      deleteButton.dataset.avatarDelete = '';
-      deleteButton.setAttribute('aria-label', `Remove ${label}`);
-      deleteButton.innerHTML = `
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 6 18 18"></path>
-          <path d="M18 6 6 18"></path>
-        </svg>
-      `;
+      if (canDelete) {
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'avatar-delete-btn';
+        deleteButton.type = 'button';
+        deleteButton.dataset.avatarDelete = '';
+        deleteButton.setAttribute('aria-label', `Remove ${label}`);
+        deleteButton.innerHTML = `
+          <img src="./images/Icon_close.svg" alt="" aria-hidden="true">
+        `;
+        actionPanel.append(deleteButton);
+      }
 
-      actionPanel.append(downloadButton, deleteButton);
+      if (actionPanel.childElementCount === 1) {
+        actionPanel.classList.add('is-single-action');
+      }
+
       fragment.append(menuButton, actionPanel);
       return fragment;
     }
@@ -469,7 +495,7 @@
       return gradient;
     }
 
-    function createAvatarEntryElement({ label, imageSrc, vrmUrl, avatarId, downloadName, thumbnailName }) {
+    function createAvatarEntryElement({ label, imageSrc, vrmUrl, avatarId, downloadName, thumbnailName, canDownload = true, canDelete = true }) {
       const entry = document.createElement('div');
       entry.className = 'avatar-entry';
       entry.dataset.avatarEntry = '';
@@ -493,7 +519,7 @@
 
       button.append(image);
       entry.append(button);
-      entry.append(buildAvatarActionControls(label));
+      entry.append(buildAvatarActionControls(label, { canDownload, canDelete }));
       return entry;
     }
 
@@ -710,7 +736,9 @@
         vrmUrl: uploadedAvatar.objectUrl,
         avatarId: uploadedAvatar.avatarId,
         downloadName: uploadedAvatar.downloadName,
-        thumbnailName: uploadedAvatar.thumbnailName
+        thumbnailName: uploadedAvatar.thumbnailName,
+        canDownload: !isMobileAvatarActions,
+        canDelete: true
       });
 
       avatarSelector.append(entry);
@@ -729,7 +757,9 @@
           vrmUrl: avatar.vrmUrl,
           avatarId: `builtin-${toDownloadSlug(avatar.downloadName)}`,
           downloadName: avatar.downloadName,
-          thumbnailName: `${toDownloadSlug(avatar.downloadName)}-thumb.png`
+          thumbnailName: `${toDownloadSlug(avatar.downloadName)}-thumb.png`,
+          canDownload: !isMobileAvatarActions,
+          canDelete: true
         });
  
         avatarSelector.append(entry);
@@ -901,7 +931,7 @@
         return;
       }
 
-      entry.classList.remove('menu-open');
+      entry.classList.remove('menu-open', 'mobile-longpress-open');
       entry.querySelector('[data-avatar-menu]')?.setAttribute('aria-expanded', 'false');
       const actionPanel = entry.querySelector('[data-avatar-actions]');
       if (actionPanel) {
@@ -911,6 +941,23 @@
       if (openAvatarMenuEntry === entry) {
         openAvatarMenuEntry = null;
       }
+    }
+
+    function openAvatarActionMenu(entry, { mobileLongPress = false } = {}) {
+      if (!entry) {
+        return;
+      }
+
+      closeAvatarActionMenu();
+
+      entry.classList.add('menu-open');
+      entry.classList.toggle('mobile-longpress-open', mobileLongPress);
+      entry.querySelector('[data-avatar-menu]')?.setAttribute('aria-expanded', 'true');
+      const actionPanel = entry.querySelector('[data-avatar-actions]');
+      if (actionPanel) {
+        actionPanel.hidden = false;
+      }
+      openAvatarMenuEntry = entry;
     }
 
     function toggleAvatarActionMenu(entry) {
@@ -925,13 +972,7 @@
         return;
       }
 
-      entry.classList.add('menu-open');
-      entry.querySelector('[data-avatar-menu]')?.setAttribute('aria-expanded', 'true');
-      const actionPanel = entry.querySelector('[data-avatar-actions]');
-      if (actionPanel) {
-        actionPanel.hidden = false;
-      }
-      openAvatarMenuEntry = entry;
+      openAvatarActionMenu(entry);
     }
 
     function openCreatorPanel() {
@@ -1499,12 +1540,95 @@
     }
 
     function bindAvatarButtons() {
+      function resetAvatarLongPress() {
+        if (avatarLongPressState.timer !== null) {
+          window.clearTimeout(avatarLongPressState.timer);
+          avatarLongPressState.timer = null;
+        }
+
+        avatarLongPressState.pointerId = null;
+        avatarLongPressState.entry = null;
+        avatarLongPressState.startX = 0;
+        avatarLongPressState.startY = 0;
+        avatarLongPressState.triggered = false;
+      }
+
+      function armAvatarSelectionSuppression() {
+        suppressNextAvatarSelection = true;
+        if (avatarSelectionSuppressTimeout !== null) {
+          window.clearTimeout(avatarSelectionSuppressTimeout);
+        }
+        avatarSelectionSuppressTimeout = window.setTimeout(() => {
+          suppressNextAvatarSelection = false;
+          avatarSelectionSuppressTimeout = null;
+        }, 520);
+      }
+
+      if (isMobileAvatarActions) {
+        avatarSelector.addEventListener('pointerdown', (event) => {
+          if (event.pointerType !== 'touch') {
+            return;
+          }
+
+          const avatarButton = event.target.closest('.avatar-button');
+          if (!avatarButton || !avatarButton.hasAttribute('data-avatar-button')) {
+            return;
+          }
+
+          const entry = avatarButton.closest('[data-avatar-entry]');
+          if (!entry || entry.hidden) {
+            return;
+          }
+
+          resetAvatarLongPress();
+          avatarLongPressState.pointerId = event.pointerId;
+          avatarLongPressState.entry = entry;
+          avatarLongPressState.startX = event.clientX;
+          avatarLongPressState.startY = event.clientY;
+          avatarLongPressState.timer = window.setTimeout(() => {
+            avatarLongPressState.triggered = true;
+            armAvatarSelectionSuppression();
+            openAvatarActionMenu(entry, { mobileLongPress: true });
+          }, mobileLongPressDelayMs);
+        });
+
+        avatarSelector.addEventListener('pointermove', (event) => {
+          if (event.pointerId !== avatarLongPressState.pointerId || avatarLongPressState.pointerId === null) {
+            return;
+          }
+
+          const moveX = Math.abs(event.clientX - avatarLongPressState.startX);
+          const moveY = Math.abs(event.clientY - avatarLongPressState.startY);
+          if (moveX > mobileLongPressMoveTolerance || moveY > mobileLongPressMoveTolerance) {
+            resetAvatarLongPress();
+          }
+        });
+
+        const releaseLongPress = (event) => {
+          if (event.pointerId !== avatarLongPressState.pointerId) {
+            return;
+          }
+
+          if (avatarLongPressState.triggered) {
+            armAvatarSelectionSuppression();
+          }
+
+          resetAvatarLongPress();
+        };
+
+        avatarSelector.addEventListener('pointerup', releaseLongPress);
+        avatarSelector.addEventListener('pointercancel', releaseLongPress);
+        avatarSelector.addEventListener('pointerleave', releaseLongPress);
+      }
+
       avatarSelector.addEventListener('click', async (event) => {
         const menuButton = event.target.closest('[data-avatar-menu]');
         if (menuButton) {
           event.preventDefault();
           event.stopPropagation();
-          toggleAvatarActionMenu(menuButton.closest('[data-avatar-entry]'));
+          if (!isMobileAvatarActions) {
+            toggleAvatarActionMenu(menuButton.closest('[data-avatar-entry]'));
+          }
           return;
         }
 
@@ -1537,6 +1661,15 @@
         }
 
         if (!button.hasAttribute('data-avatar-button')) {
+          return;
+        }
+
+        if (suppressNextAvatarSelection) {
+          suppressNextAvatarSelection = false;
+          if (avatarSelectionSuppressTimeout !== null) {
+            window.clearTimeout(avatarSelectionSuppressTimeout);
+            avatarSelectionSuppressTimeout = null;
+          }
           return;
         }
 
