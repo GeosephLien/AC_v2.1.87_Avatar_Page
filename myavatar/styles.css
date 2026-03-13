@@ -867,6 +867,14 @@ body::after {
   cursor: grabbing;
 }
 
+body.camera-drag-ready {
+  cursor: grab;
+}
+
+body.camera-drag-active,
+body.camera-drag-active * {
+  cursor: grabbing !important;
+}
 .viewer-error {
   position: absolute;
   left: 50%;
@@ -1204,6 +1212,7 @@ body::after {
   height: 32px;
   flex: 0 0 32px;
   opacity: 1;
+  transform: translateX(0.5px);
   transition: opacity 0.32s ease, flex-basis 0.42s ease, width 0.42s ease;
 }
 
@@ -1340,6 +1349,7 @@ body::after {
     width: 32px;
     height: 32px;
     flex-basis: 32px;
+    transform: translateX(0.5px);
   }
 
   .controls-shortcuts .creator-button .shortcut-hover-label-creator {
