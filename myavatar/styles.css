@@ -1290,7 +1290,7 @@ body.camera-drag-active * {
 .controls-shortcuts .creator-button:hover,
 .controls-shortcuts .creator-button:focus-visible,
 .controls-shortcuts .creator-button:active {
-  width: min(28vw, 260px) !important;
+  width: min(24vw, 220px) !important;
   border-radius: 999px;
   justify-content: center;
   padding: 0 0rem;
@@ -1354,7 +1354,7 @@ body.camera-drag-active * {
 .controls-shortcuts .worlds-button:hover,
 .controls-shortcuts .worlds-button:focus-visible,
 .controls-shortcuts .worlds-button:active {
-  width: min(28vw, 260px) !important;
+  width: min(24vw, 220px) !important;
   border-radius: 999px;
   justify-content: center;
   padding: 0 0rem;
@@ -1399,7 +1399,7 @@ body.camera-drag-active * {
   .controls-shortcuts .creator-button:hover,
   .controls-shortcuts .creator-button:focus-visible,
   .controls-shortcuts .creator-button:active {
-    width: min(56vw, 230px) !important;
+    width: min(52vw, 200px) !important;
     padding: 0 0rem;
   }
 
@@ -1423,7 +1423,7 @@ body.camera-drag-active * {
   .controls-shortcuts .worlds-button:hover,
   .controls-shortcuts .worlds-button:focus-visible,
   .controls-shortcuts .worlds-button:active {
-    width: min(56vw, 230px) !important;
+    width: min(52vw, 200px) !important;
     padding: 0 0rem;
   }
 
