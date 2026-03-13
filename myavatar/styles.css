@@ -1149,7 +1149,7 @@ body.camera-drag-active * {
   box-shadow: 0 10px 24px rgba(201, 72, 108, 0.28);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   .site-header {
     position: absolute;
   }
@@ -1385,7 +1385,7 @@ body.camera-drag-active * {
 .controls-shortcuts .worlds-button:active {
   transform: none !important;
 }
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   :root {
     --controls-stack-width: min(calc(100vw - 1.5rem), 28rem);
   }
