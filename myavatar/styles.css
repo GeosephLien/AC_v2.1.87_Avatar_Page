@@ -1182,9 +1182,9 @@ body::after {
 
 
 .controls-shortcuts .creator-button {
-  width: 40px !important;
-  height: 40px !important;
-  border: 3px solid rgba(255, 255, 255, 0.96);
+  width: 36px !important;
+  height: 36px !important;
+  border: 2.2px solid rgba(255, 255, 255, 0.96);
   border-radius: 999px;
   background: rgba(154, 164, 230, 0.18);
   padding: 0;
@@ -1200,11 +1200,10 @@ body::after {
 }
 
 .controls-shortcuts .creator-button .creator-button-icon {
-  width: 30px;
-  height: 30px;
-  flex: 0 0 30px;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
   opacity: 1;
-  transform: translate(1.8px, 0.5px);
   transition: opacity 0.32s ease, flex-basis 0.42s ease, width 0.42s ease;
 }
 
@@ -1215,7 +1214,7 @@ body::after {
   opacity: 0;
   overflow: hidden;
   text-align: center;
-  font-size: clamp(1.08rem, 2vw, 1.28rem);
+  font-size: clamp(0.98rem, 1.8vw, 1.16rem);
   font-weight: 700;
   letter-spacing: 0.01em;
   transition: opacity 0.34s ease, max-width 0.42s ease;
@@ -1227,7 +1226,7 @@ body::after {
   width: min(28vw, 260px) !important;
   border-radius: 999px;
   justify-content: center;
-  padding: 0 0.6rem;
+  padding: 0 0rem;
   background: rgba(154, 164, 230, 0.22);
 }
 
@@ -1326,31 +1325,28 @@ body::after {
   }
 
   .controls-shortcuts .creator-button {
-    width: 34px !important;
-    height: 34px !important;
-    border-width: 3px;
+    width: 36px !important;
+    height: 36px !important;
+    border-width: 2.2px;
   }
 
   .controls-shortcuts .creator-button:hover,
   .controls-shortcuts .creator-button:focus-visible,
   .controls-shortcuts .creator-button:active {
     width: min(56vw, 230px) !important;
-    padding: 0 0.5rem;
+    padding: 0 0rem;
   }
 
   .controls-shortcuts .creator-button .creator-button-icon {
-    width: 24px;
-    height: 24px;
-    flex-basis: 24px;
-  }
-
-  .controls-shortcuts .creator-button .creator-button-icon {
-    transform: translate(1.4px, 0.4px);
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
   }
 
   .controls-shortcuts .creator-button .shortcut-hover-label-creator {
-    font-size: clamp(0.94rem, 3.9vw, 1.06rem);
+    font-size: clamp(0.86rem, 3.5vw, 0.98rem);
   }
+
   .controls-shortcuts .worlds-button {
     width: 34px !important;
     height: 34px !important;
@@ -1378,11 +1374,12 @@ body::after {
     font-size: clamp(0.94rem, 3.9vw, 1.06rem);
   }
 
-.controls-shortcuts {
+  .controls-shortcuts {
     min-width: 0;
     width: 100%;
     padding: 0;
   }
+
   .control-panel {
     justify-content: center;
     gap: 0.75rem;
@@ -1414,6 +1411,7 @@ body::after {
   .creator-button {
     width: 40px;
   }
+
   .controls-stack {
     width: var(--controls-stack-width);
   }
@@ -1437,6 +1435,7 @@ body::after {
     top: 15px;
     left: 15px;
   }
+
   .creator-panel-close {
     top: 15px;
     right: 15px;
