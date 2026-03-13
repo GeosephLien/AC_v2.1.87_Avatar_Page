@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --bg-left: #060d36;
   --bg-mid: #150d3a;
   --bg-right: #3c1556;
@@ -77,11 +77,11 @@ body {
 .bg-layer-dust {
   inset: -8%;
   overflow: hidden;
-  opacity: 0.97;
-  mix-blend-mode: screen;
+  opacity: 1;
+  mix-blend-mode: normal;
   transform: scale(var(--bg-dust-scale));
   transform-origin: 50% 0%;
-  filter: blur(0.2px);
+  filter: none;
 }
 
 .bg-layer-dust::before,
@@ -95,7 +95,7 @@ body {
 }
 
 .bg-layer-dust::before {
-  background-size: 320px 320px;
+  background-size: 240px 240px;
   background-image:
     radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.68) 0 1.05px, transparent 2px),
     radial-gradient(circle at 34% 42%, rgba(252, 253, 255, 0.58) 0 1.4px, transparent 2.4px),
@@ -108,7 +108,7 @@ body {
 }
 
 .bg-layer-dust::after {
-  background-size: 260px 260px;
+  background-size: 195px 195px;
   background-image:
     radial-gradient(circle at 18% 74%, rgba(255, 255, 255, 0.58) 0 1.15px, transparent 2.1px),
     radial-gradient(circle at 52% 16%, rgba(253, 253, 255, 0.5) 0 0.95px, transparent 1.8px),
@@ -1515,5 +1515,9 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
+
+
+
+
 
 
