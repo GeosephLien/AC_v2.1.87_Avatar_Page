@@ -832,8 +832,8 @@ body::after {
 
 .avatar-download-btn,
 .avatar-delete-btn {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -849,17 +849,16 @@ body::after {
 
 .avatar-download-btn img,
 .avatar-delete-btn img {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   display: block;
   pointer-events: none;
 }
 
 .avatar-delete-btn img {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
-
 .avatar-entry.menu-open .avatar-button[data-avatar-label="Howard"] + .avatar-action-panel .avatar-download-btn,
 .avatar-entry.menu-open .avatar-button[data-avatar-label="Howard"] + .avatar-action-panel .avatar-delete-btn,
 .is-mobile-avatar-device .avatar-entry.mobile-longpress-open .avatar-button[data-avatar-label="Howard"] + .avatar-action-panel .avatar-download-btn,
@@ -1545,6 +1544,7 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
+
 
 
 
