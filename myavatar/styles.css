@@ -859,10 +859,9 @@ body::after {
 }
 
 .avatar-button.is-active {
-  border-color: rgb(171, 193, 255);
-  box-shadow:
-    0 0 6px 3px rgba(79, 135, 255, 0.815),
-    0 22px 38px rgba(0, 94, 255, 0.32);
+  border-color: rgba(255, 255, 255, 0.98);
+  border-width: 2px;
+  box-shadow: none;
 }
 
 .avatar-button img {
@@ -1515,6 +1514,8 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
+
+
 
 
 
