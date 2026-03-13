@@ -61,14 +61,14 @@ body {
 
 .bg-layer-back {
   background-color: #060d36;
-  background-image: url("./images/bg3.png");
+  background-image: url("./images/bg_back.png");
   background-position: center center;
   transform: scale(var(--bg-back-scale));
   transform-origin: center top;
 }
 
 .bg-layer-front {
-  background-image: url("./images/bg4.png");
+  background-image: url("./images/bg_front.png");
   background-position: center bottom;
   transform: scale(var(--bg-front-scale));
   transform-origin: center top;
