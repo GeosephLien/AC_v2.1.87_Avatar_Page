@@ -642,6 +642,12 @@ body::after {
   );
 }
 
+.avatar-selector-viewport.is-scroll-locked {
+  overflow-x: hidden;
+  touch-action: none;
+  cursor: default;
+}
+
 .avatar-selector-viewport::-webkit-scrollbar {
   display: none;
 }
@@ -861,7 +867,7 @@ body::after {
 .avatar-delete-float {
   position: absolute;
   left: 50%;
-  top: -14px;
+  top: -22px;
   z-index: 4;
   width: 34px;
   height: 34px;

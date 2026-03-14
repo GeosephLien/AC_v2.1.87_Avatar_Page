@@ -889,6 +889,10 @@
       deleteConfirm.hidden = true;
     }
 
+    function setAvatarSelectorScrollLock(locked) {
+      avatarSelectorViewport?.classList.toggle('is-scroll-locked', Boolean(locked));
+    }
+
     function closeAvatarActionMenu(entry = openAvatarMenuEntry) {
       if (!entry) {
         return;
@@ -905,6 +909,8 @@
         floatingDeleteButton.hidden = true;
         floatingDeleteButton.classList.remove('is-hover-target');
       }
+
+      setAvatarSelectorScrollLock(false);
 
       if (openAvatarMenuEntry === entry) {
         openAvatarMenuEntry = null;
@@ -930,6 +936,7 @@
         floatingDeleteButton.hidden = !mobileLongPress;
         floatingDeleteButton.classList.remove('is-hover-target');
       }
+      setAvatarSelectorScrollLock(mobileLongPress);
       openAvatarMenuEntry = entry;
     }
 
@@ -1312,6 +1319,9 @@
       window.addEventListener('wheel', handleWheelZoom, { passive: false });
     }
     function bindAvatarSelectorScroll() {
+      function isAvatarSelectorScrollLocked() {
+        return avatarSelectorViewport.classList.contains('is-scroll-locked');
+      }
       if (!avatarSelectorViewport || !avatarScrollbar || !avatarScrollbarThumb) {
         return;
       }
@@ -1368,6 +1378,12 @@
         const brake = 0.965;
 
         function step() {
+          if (isAvatarSelectorScrollLocked()) {
+            state.velocity = 0;
+            state.inertiaFrame = null;
+            return;
+          }
+
           state.velocity *= brake;
           avatarSelectorViewport.scrollLeft -= state.velocity;
           updateScrollbar();
@@ -1390,6 +1406,10 @@
       }
 
       avatarSelectorViewport.addEventListener('pointerdown', (event) => {
+        if (isAvatarSelectorScrollLocked()) {
+          return;
+        }
+
         if (event.button !== 0) {
           return;
         }
@@ -1407,6 +1427,10 @@
       });
 
       avatarSelectorViewport.addEventListener('pointermove', (event) => {
+        if (isAvatarSelectorScrollLocked()) {
+          return;
+        }
+
         if (!state.isPointerDown || event.pointerId !== state.pointerId) {
           return;
         }
