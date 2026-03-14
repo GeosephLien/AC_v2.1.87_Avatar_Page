@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>My Avatar</title>
   <link rel="icon" type="image/png" href="../images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -262,8 +262,14 @@
     const controlPanelToggle = document.querySelector('.control-panel-toggle');
     const scene = new THREE.Scene();
     const rootStyle = document.documentElement;
+    const userAgent = navigator.userAgent || '';
     const isMobileAvatarActions = window.matchMedia('(hover: none) and (pointer: coarse)').matches
-      || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      || /Android|iPhone|iPad|iPod|Mobile/i.test(userAgent);
+    const isIOSDevice = /iP(ad|hone|od)/i.test(userAgent)
+      || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isSafariBrowser = /Safari/i.test(userAgent)
+      && !/CriOS|FxiOS|EdgiOS|OPiOS|YaBrowser|DuckDuckGo/i.test(userAgent);
+    const isIOSSafari = isIOSDevice && isSafariBrowser;
     const mobileLongPressDelayMs = 240;
     const mobileLongPressMoveTolerance = 10;
     scene.background = null;
@@ -272,6 +278,9 @@
       document.body.classList.add('is-mobile-avatar-device');
     } else {
       document.body.classList.add('is-desktop-avatar-device');
+    }
+    if (isIOSSafari) {
+      document.body.classList.add('is-ios-safari');
     }
 
     document.addEventListener("selectstart", (event) => {
@@ -1910,7 +1919,9 @@
         controlPanelToggle?.addEventListener('click', () => {
           setMobileCollapsed(false);
         });
-
+        if (isIOSSafari) {
+          return;
+        }
         window.addEventListener('pointerdown', (event) => {
           if (document.body.classList.contains('is-mobile-controls-collapsed')) {
             return;
