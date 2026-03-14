@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --bg-left: #060d36;
   --bg-mid: #150d3a;
   --bg-right: #3c1556;
@@ -420,7 +420,7 @@ body::after {
   gap: 0;
   justify-content: center;
   flex-wrap: nowrap;
-  padding: 0.3rem 1rem 0;
+  padding: 0 1rem 0;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 28px;
   background: rgba(7, 10, 34, 0.42);
@@ -1448,7 +1448,7 @@ body.camera-drag-active * {
     gap: 0.75rem;
     width: 100%;
     max-width: min(calc(100vw - 1.5rem), 32rem);
-    padding: 0.75rem 0.75rem 0;
+    padding: 0 0.75rem 0;
   }
 
   .controls-shortcuts {
@@ -1544,6 +1544,7 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
+
 
 
 
