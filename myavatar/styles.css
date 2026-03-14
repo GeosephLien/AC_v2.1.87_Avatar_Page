@@ -646,6 +646,8 @@ body::after {
   overflow-x: hidden;
   touch-action: none;
   cursor: default;
+  mask-image: none;
+  -webkit-mask-image: none;
 }
 
 .avatar-selector-viewport::-webkit-scrollbar {
