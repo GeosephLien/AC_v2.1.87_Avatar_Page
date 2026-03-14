@@ -646,8 +646,6 @@ body::after {
   overflow-x: hidden;
   touch-action: none;
   cursor: default;
-  mask-image: none;
-  -webkit-mask-image: none;
 }
 
 .avatar-selector-viewport::-webkit-scrollbar {
@@ -867,10 +865,10 @@ body::after {
 }
 
 .avatar-delete-float {
-  position: absolute;
-  left: 50%;
-  top: -44px;
-  z-index: 4;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 45;
   width: 34px;
   height: 34px;
   padding: 0;
@@ -883,14 +881,13 @@ body::after {
   justify-content: center;
   cursor: default;
   pointer-events: none;
-  opacity: 0;
-  transform: translate(-50%, -6px) scale(0.96);
-  transition: opacity 0.14s ease, transform 0.14s ease, background-color 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
+  opacity: 1;
+  transform: translate(-50%, -100%) scale(1);
+  transition: border-color 0.14s ease, box-shadow 0.14s ease;
 }
 
-.avatar-entry.mobile-longpress-open .avatar-delete-float {
-  opacity: 1;
-  transform: translate(-50%, 0) scale(1);
+.avatar-delete-float[hidden] {
+  display: none;
 }
 
 .avatar-delete-float.is-hover-target {

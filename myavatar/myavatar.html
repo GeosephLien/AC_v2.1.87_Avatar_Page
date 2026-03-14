@@ -336,6 +336,7 @@
     let uploadedAvatarSequence = 0;
     let suppressNextAvatarSelection = false;
     let avatarSelectionSuppressTimeout = null;
+    let mobileFloatingDeleteButton = null;
 
     const avatarLongPressState = {
       pointerId: null,
@@ -385,7 +386,6 @@
 
     function buildAvatarActionControls(label, { canDownload = true, canDelete = true } = {}) {
       const fragment = document.createDocumentFragment();
-      let floatingDeleteButton = null;
 
       const menuButton = document.createElement('button');
       menuButton.className = 'avatar-menu-button';
@@ -418,24 +418,16 @@
         menuActiveOverlay.append(downloadButton);
       }
 
-      if (canDelete) {
+      if (canDelete && !isMobileAvatarActions) {
         const deleteButton = document.createElement('button');
         deleteButton.className = 'avatar-delete-btn';
         deleteButton.type = 'button';
+        deleteButton.dataset.avatarDelete = '';
         deleteButton.setAttribute('aria-label', `Remove ${label}`);
         deleteButton.innerHTML = `
           <img src="./images/Icon_close.svg" alt="" aria-hidden="true">
         `;
-
-        if (isMobileAvatarActions) {
-          deleteButton.classList.add('avatar-delete-float');
-          deleteButton.dataset.avatarDeleteFloating = '';
-          deleteButton.hidden = true;
-          floatingDeleteButton = deleteButton;
-        } else {
-          deleteButton.dataset.avatarDelete = '';
-          menuActiveOverlay.append(deleteButton);
-        }
+        menuActiveOverlay.append(deleteButton);
       }
 
       if (menuActiveOverlay.childElementCount === 1) {
@@ -443,12 +435,8 @@
       }
 
       fragment.append(menuButton, menuActiveOverlay);
-      if (floatingDeleteButton) {
-        fragment.append(floatingDeleteButton);
-      }
       return fragment;
     }
-
     function sanitizeAvatarLabel(name) {
       const stem = name.replace(/\.[^.]+$/, '').trim();
       return stem || 'Uploaded avatar';
@@ -893,6 +881,53 @@
       avatarSelectorViewport?.classList.toggle('is-scroll-locked', Boolean(locked));
     }
 
+    function getMobileFloatingDeleteButton() {
+      if (!isMobileAvatarActions) {
+        return null;
+      }
+
+      if (mobileFloatingDeleteButton && mobileFloatingDeleteButton.isConnected) {
+        return mobileFloatingDeleteButton;
+      }
+
+      const button = document.createElement('button');
+      button.className = 'avatar-delete-float avatar-delete-float-global';
+      button.type = 'button';
+      button.dataset.avatarDeleteFloating = '';
+      button.hidden = true;
+      button.setAttribute('aria-hidden', 'true');
+      button.innerHTML = `
+        <img src="./images/Icon_close.svg" alt="" aria-hidden="true">
+      `;
+
+      document.body.append(button);
+      mobileFloatingDeleteButton = button;
+      return button;
+    }
+
+    function hideMobileFloatingDeleteButton() {
+      const button = mobileFloatingDeleteButton;
+      if (!button) {
+        return;
+      }
+      button.hidden = true;
+      button.classList.remove('is-hover-target');
+    }
+
+    function showMobileFloatingDeleteButton(entry) {
+      const button = getMobileFloatingDeleteButton();
+      const avatarButton = entry?.querySelector('[data-avatar-button]');
+      if (!button || !avatarButton) {
+        return;
+      }
+
+      const rect = avatarButton.getBoundingClientRect();
+      button.style.left = `${rect.left + (rect.width / 2)}px`;
+      button.style.top = `${rect.top - 6}px`;
+      button.hidden = false;
+      button.classList.remove('is-hover-target');
+    }
+
     function closeAvatarActionMenu(entry = openAvatarMenuEntry) {
       if (!entry) {
         return;
@@ -904,19 +939,14 @@
       if (menuActiveOverlay) {
         menuActiveOverlay.hidden = true;
       }
-      const floatingDeleteButton = entry.querySelector('[data-avatar-delete-floating]');
-      if (floatingDeleteButton) {
-        floatingDeleteButton.hidden = true;
-        floatingDeleteButton.classList.remove('is-hover-target');
-      }
 
+      hideMobileFloatingDeleteButton();
       setAvatarSelectorScrollLock(false);
 
       if (openAvatarMenuEntry === entry) {
         openAvatarMenuEntry = null;
       }
     }
-
     function openAvatarActionMenu(entry, { mobileLongPress = false } = {}) {
       if (!entry) {
         return;
@@ -931,21 +961,22 @@
       if (menuActiveOverlay) {
         menuActiveOverlay.hidden = false;
       }
-      const floatingDeleteButton = entry.querySelector('[data-avatar-delete-floating]');
-      if (floatingDeleteButton) {
-        floatingDeleteButton.hidden = !mobileLongPress;
-        floatingDeleteButton.classList.remove('is-hover-target');
+
+      if (mobileLongPress) {
+        showMobileFloatingDeleteButton(entry);
+      } else {
+        hideMobileFloatingDeleteButton();
       }
+
       setAvatarSelectorScrollLock(mobileLongPress);
       openAvatarMenuEntry = entry;
     }
-
     function updateMobileDeleteHoverState(entry, clientX, clientY) {
       if (!entry) {
         return false;
       }
 
-      const floatingDeleteButton = entry.querySelector('[data-avatar-delete-floating]');
+      const floatingDeleteButton = mobileFloatingDeleteButton;
       if (!floatingDeleteButton || floatingDeleteButton.hidden) {
         return false;
       }
@@ -958,7 +989,6 @@
       floatingDeleteButton.classList.toggle('is-hover-target', isOverDeleteTarget);
       return isOverDeleteTarget;
     }
-
     function toggleAvatarActionMenu(entry) {
       if (!entry) {
         return;
@@ -1564,7 +1594,7 @@
 
         const activeEntry = avatarLongPressState.entry;
         if (activeEntry) {
-          activeEntry.querySelector('[data-avatar-delete-floating]')?.classList.remove('is-hover-target');
+          hideMobileFloatingDeleteButton();
         }
 
         avatarLongPressState.pointerId = null;
