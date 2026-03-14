@@ -17,6 +17,8 @@
   --creator-panel-height: 780;
   --controls-stack-width: min(640px, calc(100vw - 5rem));
   --control-panel-transition-duration: 0.5s;
+  --control-panel-sequence-delay: calc(var(--control-panel-transition-duration) * 0.5);
+  --control-panel-open-delay: calc(var(--control-panel-transition-duration) * 0.25);
   --bg-back-scale: 1;
   --bg-front-scale: 1;
   --bg-dust-scale: 1;
@@ -323,7 +325,7 @@ body::after {
 
 .avatar-gradient {
   width: 30px;
-  height: 30px;
+  height: 24px;
   border-radius: 50%;
   display: block;
   background: #1a2d4f;
@@ -436,13 +438,13 @@ body.is-desktop-avatar-device .control-panel {
   max-height: 180px;
   overflow: hidden;
   transition:
-    max-height var(--control-panel-transition-duration) ease,
-    opacity var(--control-panel-transition-duration) ease,
-    transform var(--control-panel-transition-duration) ease,
-    padding var(--control-panel-transition-duration) ease,
-    border-color var(--control-panel-transition-duration) ease;
+    max-height var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90),
+    opacity var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90),
+    transform var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90),
+    padding var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90),
+    border-color var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90);
+  transition-delay: var(--control-panel-open-delay);
 }
-
 body.is-desktop-avatar-device.is-desktop-controls-collapsed .control-panel {
   max-height: 0;
   opacity: 0;
@@ -451,6 +453,7 @@ body.is-desktop-avatar-device.is-desktop-controls-collapsed .control-panel {
   padding-bottom: 0;
   border-color: transparent;
   pointer-events: none;
+  transition-delay: 0s;
 }
 
 .control-panel-toggle {
@@ -458,37 +461,43 @@ body.is-desktop-avatar-device.is-desktop-controls-collapsed .control-panel {
   left: 50%;
   bottom: 10px;
   z-index: 4;
-  width: 44px;
-  height: 44px;
+  width: 120px;
+  min-width: 0;
+  max-width: 100%;
+  height: 24px;
   display: none;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 999px;
-  background: rgba(9, 14, 45, 0.78);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  gap: 0.4rem;
+  padding: 0 0.3rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(7, 10, 34, 0.42);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   transform: translateX(-50%);
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--control-panel-transition-duration) ease, transform var(--control-panel-transition-duration) ease;
+  transition: opacity var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90), transform var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90);
 }
 
 .control-panel-toggle img {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   display: block;
+  filter: drop-shadow(0 0 8px rgba(136, 185, 255, 0.45));
 }
 
 body.is-mobile-avatar-device .controls-stack {
-  transition: transform var(--control-panel-transition-duration) ease, opacity var(--control-panel-transition-duration) ease;
+  transition: transform var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90), opacity var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90);
+  transition-delay: var(--control-panel-open-delay);
 }
-
 body.is-mobile-avatar-device.is-mobile-controls-collapsed .controls-stack {
   transform: translate(-50%, calc(100% + 32px));
   opacity: 0;
   pointer-events: none;
+  transition-delay: 0s;
 }
 
 body.is-desktop-avatar-device .control-panel-toggle {
@@ -496,15 +505,22 @@ body.is-desktop-avatar-device .control-panel-toggle {
 }
 
 body.is-desktop-avatar-device.is-desktop-controls-collapsed .control-panel-toggle {
+  min-width: 0;
+  width: 120px;
+  height: 24px;
+  padding: 0 0.3rem;
+  border-radius: 12px;
   opacity: 1;
   pointer-events: auto;
   transform: translate(-50%, 0);
+  transition-delay: var(--control-panel-sequence-delay);
 }
 
 body.is-desktop-avatar-device:not(.is-desktop-controls-collapsed) .control-panel-toggle {
   opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, 16px);
+  transform: translate(-50%, -16px);
+  transition-delay: 0s;
 }
 
 body.is-mobile-avatar-device .control-panel-toggle {
@@ -512,15 +528,22 @@ body.is-mobile-avatar-device .control-panel-toggle {
 }
 
 body.is-mobile-avatar-device.is-mobile-controls-collapsed .control-panel-toggle {
+  min-width: 0;
+  width: 120px;
+  height: 24px;
+  padding: 0 0.3rem;
+  border-radius: 12px;
   opacity: 1;
   pointer-events: auto;
   transform: translate(-50%, 0);
+  transition-delay: var(--control-panel-sequence-delay);
 }
 
 body.is-mobile-avatar-device:not(.is-mobile-controls-collapsed) .control-panel-toggle {
   opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, 16px);
+  transform: translate(-50%, -16px);
+  transition-delay: 0s;
 }
 
 .control-panel-wrap {
@@ -824,8 +847,8 @@ body.is-mobile-avatar-device:not(.is-mobile-controls-collapsed) .control-panel-t
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -884,8 +907,8 @@ body.is-mobile-avatar-device:not(.is-mobile-controls-collapsed) .control-panel-t
 }
 
 .avatar-menu-icon {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   display: block;
   pointer-events: none;
 }
@@ -929,8 +952,8 @@ body.is-mobile-avatar-device:not(.is-mobile-controls-collapsed) .control-panel-t
 
 .avatar-download-btn,
 .avatar-delete-btn {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -990,8 +1013,8 @@ body.is-mobile-avatar-device:not(.is-mobile-controls-collapsed) .control-panel-t
 }
 
 .avatar-delete-float img {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   display: block;
   pointer-events: none;
 }
@@ -1591,6 +1614,13 @@ body.camera-drag-active * {
     padding: 0 0.75rem 0;
   }
 
+  .control-panel-toggle {
+    min-width: 0;
+    width: 120px;
+    height: 24px;
+    padding: 0 0.3rem;
+  }
+
   .controls-shortcuts {
     align-self: flex-start;
     padding: 0.3rem 0.45rem;
@@ -1684,4 +1714,5 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
+
 
