@@ -175,7 +175,7 @@
             aria-controls="creator-panel-overlay"
           ><img class="creator-button-icon" src="./images/Icon_add.svg" alt="" aria-hidden="true"><span class="shortcut-hover-label shortcut-hover-label-creator" aria-hidden="true">Create New Avatar</span></button>
         </div>
-        <aside class="control-panel" aria-label="Avatar controls">
+        <aside class="control-panel" id="avatar-controls" aria-label="Avatar controls">
           <div class="avatar-selector-viewport" data-avatar-scroll>
             <div class="avatar-selector" aria-label="Avatar selector">
             </div>
@@ -185,6 +185,12 @@
           </div>
         </aside>
       </div>
+      <button
+        class="control-panel-mobile-toggle"
+        type="button"
+        aria-label="Show control panel"
+        aria-controls="avatar-controls"
+      ><img src="./images/Icon_arrow_up.svg" alt="" aria-hidden="true"></button>
       <section class="viewer-stage">
         <canvas id="avatar-canvas" aria-label="VRM avatar preview"></canvas>
         <div class="viewer-loading" id="viewer-loading" hidden>
@@ -251,6 +257,9 @@
     const creatorCloseButton = creatorOverlay.querySelector('[data-creator-close]');
     const creatorBackButton = creatorOverlay.querySelector('[data-creator-back]');
     const creatorFrame = creatorOverlay.querySelector('.creator-panel-frame');
+    const controlsStack = document.querySelector('.controls-stack');
+    const controlPanel = document.querySelector('.control-panel');
+    const controlPanelMobileToggle = document.querySelector('.control-panel-mobile-toggle');
     const scene = new THREE.Scene();
     const rootStyle = document.documentElement;
     const isMobileAvatarActions = window.matchMedia('(hover: none) and (pointer: coarse)').matches
@@ -261,6 +270,8 @@
 
     if (isMobileAvatarActions) {
       document.body.classList.add('is-mobile-avatar-device');
+    } else {
+      document.body.classList.add('is-desktop-avatar-device');
     }
 
     document.addEventListener("selectstart", (event) => {
@@ -1859,6 +1870,68 @@
       });
     }
 
+    function bindControlPanelBehavior() {
+      if (!controlsStack || !controlPanel) {
+        return;
+      }
+
+      function setDesktopCollapsed(collapsed) {
+        document.body.classList.toggle('is-desktop-controls-collapsed', Boolean(collapsed));
+      }
+
+      function setMobileCollapsed(collapsed) {
+        const isCollapsed = Boolean(collapsed);
+        document.body.classList.toggle('is-mobile-controls-collapsed', isCollapsed);
+        if (controlPanelMobileToggle) {
+          controlPanelMobileToggle.setAttribute('aria-expanded', String(!isCollapsed));
+        }
+      }
+
+      if (isMobileAvatarActions) {
+        setMobileCollapsed(false);
+
+        controlPanelMobileToggle?.addEventListener('click', () => {
+          setMobileCollapsed(false);
+        });
+
+        window.addEventListener('pointerdown', (event) => {
+          if (document.body.classList.contains('is-mobile-controls-collapsed')) {
+            return;
+          }
+
+          const target = event.target;
+          if (!(target instanceof Element)) {
+            return;
+          }
+
+          if (target.closest('.controls-stack, .control-panel-mobile-toggle')) {
+            return;
+          }
+
+          setMobileCollapsed(true);
+        }, true);
+        return;
+      }
+
+      setDesktopCollapsed(false);
+      controlsStack.addEventListener('pointerenter', () => {
+        setDesktopCollapsed(false);
+      });
+      controlsStack.addEventListener('pointerleave', () => {
+        setDesktopCollapsed(true);
+      });
+      controlsStack.addEventListener('focusin', () => {
+        setDesktopCollapsed(false);
+      });
+      controlsStack.addEventListener('focusout', (event) => {
+        const nextTarget = event.relatedTarget;
+        if (nextTarget instanceof Element && controlsStack.contains(nextTarget)) {
+          return;
+        }
+        setDesktopCollapsed(true);
+      });
+    }
+
     function animate(timestamp = 0) {
       animationFrameId = requestAnimationFrame(animate);
 
@@ -1917,6 +1990,7 @@
       resizeRenderer();
       window.addEventListener('resize', resizeRenderer);
       bindPointerControls();
+      bindControlPanelBehavior();
       bindAvatarSelectorScroll();
       bindAvatarButtons();
       bindDeleteConfirm();
@@ -1948,3 +2022,4 @@
   </script>
 </body>
 </html>
+
