@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #fff;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+        stroke-width: 10px;
+      }
+    </style>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.7.1, SVG Export Plug-In . SVG Version: 1.2.0 Build 142)  -->
+  <g>
+    <g id="Layer_1">
+      <g id="menu_x5F_three_x5F_line">
+        <line class="cls-1" x1="91.2" y1="39.3" x2="36.8" y2="39.3"/>
+        <line class="cls-1" x1="91.2" y1="88.7" x2="36.8" y2="88.7"/>
+        <line class="cls-1" x1="91.2" y1="64" x2="36.8" y2="64"/>
+      </g>
+    </g>
+  </g>
+</svg>

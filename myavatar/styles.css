@@ -1665,12 +1665,16 @@ body.camera-drag-active * {
     border-radius: 0;
   }
 
+  .creator-overlay {
+    padding: 32px 0;
+  }
+
   .creator-panel {
     border-radius: 22px;
   }
 
   .creator-panel-wrap {
-    width: min(calc(var(--creator-panel-width) * 1px), calc(100vw - 64px));
+    width: min(calc(var(--creator-panel-width) * 1px), 100vw);
     height: min(calc(var(--creator-panel-height) * 1px), calc(100vh - 64px));
   }
 
@@ -1724,6 +1728,9 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
+
+
+
 
 
 
