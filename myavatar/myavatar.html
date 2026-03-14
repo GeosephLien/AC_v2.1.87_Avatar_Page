@@ -859,7 +859,21 @@
       errorPanel.hidden = true;
       errorPanel.textContent = '';
     }
-
+    function updateViewportMetrics() {
+      const viewport = window.visualViewport;
+      const visualHeight = viewport ? viewport.height : window.innerHeight;
+      const viewportHeight = Math.max(0, Math.round(visualHeight));
+      rootStyle.style.setProperty('--viewport-height', viewportHeight + 'px');
+      let browserUiInset = 0;
+      if (viewport) {
+        browserUiInset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+      }
+      rootStyle.style.setProperty('--mobile-browser-ui-inset', Math.round(browserUiInset) + 'px');
+    }
+    function handleViewportChange() {
+      updateViewportMetrics();
+      resizeRenderer();
+    }
     function resizeRenderer() {
       const frame = canvas.parentElement;
       const width = frame.clientWidth;
@@ -868,7 +882,6 @@
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
     }
-
     async function loadGLTF(url) {
       return await new Promise((resolve, reject) => {
         loader.load(url, resolve, undefined, reject);
@@ -2000,8 +2013,13 @@
     }
     async function initializePage() {
       setLoadingVisible(true);
+      updateViewportMetrics();
       resizeRenderer();
-      window.addEventListener('resize', resizeRenderer);
+      window.addEventListener('resize', handleViewportChange);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleViewportChange);
+        window.visualViewport.addEventListener('scroll', handleViewportChange);
+      }
       bindPointerControls();
       bindControlPanelBehavior();
       bindAvatarSelectorScroll();

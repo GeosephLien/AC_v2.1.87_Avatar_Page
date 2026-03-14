@@ -23,6 +23,10 @@
   --bg-front-scale: 1;
   --bg-dust-scale: 1;
   --bg-dust-center-y: 50%;
+  --viewport-height: 100vh;
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --mobile-browser-ui-inset: 0px;
+  --bottom-clearance: calc(10px + var(--safe-area-bottom) + var(--mobile-browser-ui-inset));
 }
 
 * {
@@ -38,7 +42,7 @@ body {
 
 body {
   position: relative;
-  min-height: 100vh;
+  min-height: var(--viewport-height);
   overflow: hidden;
   font-family: "Roboto", sans-serif;
   color: var(--text);
@@ -362,7 +366,7 @@ body::after {
 .page-shell {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  min-height: var(--viewport-height);
   display: grid;
   place-items: center;
   padding: 0;
@@ -389,7 +393,7 @@ body::after {
   position: fixed;
   z-index: 3;
   left: 50%;
-  bottom: 10px;
+  bottom: var(--bottom-clearance);
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
@@ -465,7 +469,7 @@ body.is-desktop-avatar-device.is-desktop-controls-collapsed .controls-shortcuts 
 .control-panel-toggle {
   position: fixed;
   left: 50%;
-  bottom: 10px;
+  bottom: var(--bottom-clearance);
   z-index: 4;
   width: 120px;
   min-width: 0;
@@ -1077,8 +1081,8 @@ body.is-mobile-avatar-device:not(.is-mobile-controls-collapsed) .control-panel-t
   position: relative;
   width: min(768px, 100vw);
   max-width: 768px;
-  height: min(768px, 100vh);
-  max-height: 100vh;
+  height: min(768px, var(--viewport-height));
+  max-height: var(--viewport-height);
   display: grid;
   place-items: center;
 }
@@ -1661,7 +1665,7 @@ body.camera-drag-active * {
 
   .viewer-stage {
     width: 100vw;
-    height: 100vh;
+    height: var(--viewport-height);
     border-radius: 0;
   }
 
@@ -1728,11 +1732,4 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
-
-
-
-
-
-
-
 
