@@ -1876,7 +1876,11 @@
       }
 
       function setDesktopCollapsed(collapsed) {
-        document.body.classList.toggle('is-desktop-controls-collapsed', Boolean(collapsed));
+        const isCollapsed = Boolean(collapsed);
+        document.body.classList.toggle('is-desktop-controls-collapsed', isCollapsed);
+        if (controlPanelMobileToggle) {
+          controlPanelMobileToggle.setAttribute('aria-expanded', String(!isCollapsed));
+        }
       }
 
       function setMobileCollapsed(collapsed) {
@@ -1914,15 +1918,24 @@
       }
 
       setDesktopCollapsed(false);
-      controlsStack.addEventListener('pointerenter', () => {
+      controlPanelMobileToggle?.addEventListener('pointerenter', () => {
         setDesktopCollapsed(false);
       });
-      controlsStack.addEventListener('pointerleave', () => {
+      controlPanelMobileToggle?.addEventListener('focusin', () => {
+        setDesktopCollapsed(false);
+      });
+      window.addEventListener('pointerdown', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) {
+          return;
+        }
+
+        if (target.closest('.controls-stack, .control-panel-mobile-toggle')) {
+          return;
+        }
+
         setDesktopCollapsed(true);
-      });
-      controlsStack.addEventListener('focusin', () => {
-        setDesktopCollapsed(false);
-      });
+      }, true);
       controlsStack.addEventListener('focusout', (event) => {
         const nextTarget = event.relatedTarget;
         if (nextTarget instanceof Element && controlsStack.contains(nextTarget)) {

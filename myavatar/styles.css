@@ -16,6 +16,7 @@
   --creator-panel-width: 1280;
   --creator-panel-height: 780;
   --controls-stack-width: min(640px, calc(100vw - 5rem));
+  --control-panel-transition-duration: 0.5s;
   --bg-back-scale: 1;
   --bg-front-scale: 1;
   --bg-dust-scale: 1;
@@ -435,11 +436,11 @@ body.is-desktop-avatar-device .control-panel {
   max-height: 180px;
   overflow: hidden;
   transition:
-    max-height 0.22s ease,
-    opacity 0.22s ease,
-    transform 0.22s ease,
-    padding 0.22s ease,
-    border-color 0.22s ease;
+    max-height var(--control-panel-transition-duration) ease,
+    opacity var(--control-panel-transition-duration) ease,
+    transform var(--control-panel-transition-duration) ease,
+    padding var(--control-panel-transition-duration) ease,
+    border-color var(--control-panel-transition-duration) ease;
 }
 
 body.is-desktop-avatar-device.is-desktop-controls-collapsed .control-panel {
@@ -471,7 +472,7 @@ body.is-desktop-avatar-device.is-desktop-controls-collapsed .control-panel {
   transform: translateX(-50%);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity var(--control-panel-transition-duration) ease, transform var(--control-panel-transition-duration) ease;
 }
 
 .control-panel-mobile-toggle img {
@@ -481,13 +482,29 @@ body.is-desktop-avatar-device.is-desktop-controls-collapsed .control-panel {
 }
 
 body.is-mobile-avatar-device .controls-stack {
-  transition: transform 0.24s ease, opacity 0.24s ease;
+  transition: transform var(--control-panel-transition-duration) ease, opacity var(--control-panel-transition-duration) ease;
 }
 
 body.is-mobile-avatar-device.is-mobile-controls-collapsed .controls-stack {
   transform: translate(-50%, calc(100% + 32px));
   opacity: 0;
   pointer-events: none;
+}
+
+body.is-desktop-avatar-device .control-panel-mobile-toggle {
+  display: inline-flex;
+}
+
+body.is-desktop-avatar-device.is-desktop-controls-collapsed .control-panel-mobile-toggle {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+body.is-desktop-avatar-device:not(.is-desktop-controls-collapsed) .control-panel-mobile-toggle {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 16px);
 }
 
 body.is-mobile-avatar-device .control-panel-mobile-toggle {
