@@ -479,6 +479,10 @@
         .replace(/^-+|-+$/g, '') || 'avatar';
     }
 
+    function getAvatarFacingRotation(vrm) {
+      const metaVersion = String(vrm?.meta?.metaVersion ?? '').trim();
+      return metaVersion.startsWith('1') ? 0 : Math.PI;
+    }
     function createRandomThumbnailGradient(context, size) {
       const colors = thumbnailGradientStops[Math.floor(Math.random() * thumbnailGradientStops.length)];
       const gradient = context.createLinearGradient(0, 0, size, size);
@@ -644,7 +648,7 @@
 
         VRMUtils.removeUnnecessaryVertices(avatarGltf.scene);
         VRMUtils.removeUnnecessaryJoints(avatarGltf.scene);
-        vrm.scene.rotation.y = Math.PI;
+        vrm.scene.rotation.y = getAvatarFacingRotation(vrm);
         thumbnailScene.add(vrm.scene);
         vrm.update(0);
         vrm.scene.updateMatrixWorld(true);
@@ -1601,7 +1605,7 @@
 
         VRMUtils.removeUnnecessaryVertices(avatarGltf.scene);
         VRMUtils.removeUnnecessaryJoints(avatarGltf.scene);
-        vrm.scene.rotation.y = Math.PI;
+        vrm.scene.rotation.y = getAvatarFacingRotation(vrm);
         scene.add(vrm.scene);
         vrm.update(0);
         cacheZoomPivots();
@@ -2070,6 +2074,7 @@
   </script>
 </body>
 </html>
+
 
 
 
