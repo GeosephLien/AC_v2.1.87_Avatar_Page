@@ -186,7 +186,7 @@
         </aside>
       </div>
       <button
-        class="control-panel-mobile-toggle"
+        class="control-panel-toggle"
         type="button"
         aria-label="Show control panel"
         aria-controls="avatar-controls"
@@ -259,7 +259,7 @@
     const creatorFrame = creatorOverlay.querySelector('.creator-panel-frame');
     const controlsStack = document.querySelector('.controls-stack');
     const controlPanel = document.querySelector('.control-panel');
-    const controlPanelMobileToggle = document.querySelector('.control-panel-mobile-toggle');
+    const controlPanelToggle = document.querySelector('.control-panel-toggle');
     const scene = new THREE.Scene();
     const rootStyle = document.documentElement;
     const isMobileAvatarActions = window.matchMedia('(hover: none) and (pointer: coarse)').matches
@@ -1878,23 +1878,23 @@
       function setDesktopCollapsed(collapsed) {
         const isCollapsed = Boolean(collapsed);
         document.body.classList.toggle('is-desktop-controls-collapsed', isCollapsed);
-        if (controlPanelMobileToggle) {
-          controlPanelMobileToggle.setAttribute('aria-expanded', String(!isCollapsed));
+        if (controlPanelToggle) {
+          controlPanelToggle.setAttribute('aria-expanded', String(!isCollapsed));
         }
       }
 
       function setMobileCollapsed(collapsed) {
         const isCollapsed = Boolean(collapsed);
         document.body.classList.toggle('is-mobile-controls-collapsed', isCollapsed);
-        if (controlPanelMobileToggle) {
-          controlPanelMobileToggle.setAttribute('aria-expanded', String(!isCollapsed));
+        if (controlPanelToggle) {
+          controlPanelToggle.setAttribute('aria-expanded', String(!isCollapsed));
         }
       }
 
       if (isMobileAvatarActions) {
         setMobileCollapsed(false);
 
-        controlPanelMobileToggle?.addEventListener('click', () => {
+        controlPanelToggle?.addEventListener('click', () => {
           setMobileCollapsed(false);
         });
 
@@ -1908,7 +1908,7 @@
             return;
           }
 
-          if (target.closest('.controls-stack, .control-panel-mobile-toggle')) {
+          if (target.closest('.controls-stack, .control-panel-toggle')) {
             return;
           }
 
@@ -1918,10 +1918,10 @@
       }
 
       setDesktopCollapsed(false);
-      controlPanelMobileToggle?.addEventListener('pointerenter', () => {
+      controlPanelToggle?.addEventListener('pointerenter', () => {
         setDesktopCollapsed(false);
       });
-      controlPanelMobileToggle?.addEventListener('focusin', () => {
+      controlPanelToggle?.addEventListener('focusin', () => {
         setDesktopCollapsed(false);
       });
       window.addEventListener('pointerdown', (event) => {
@@ -1930,7 +1930,7 @@
           return;
         }
 
-        if (target.closest('.controls-stack, .control-panel-mobile-toggle')) {
+        if (target.closest('.controls-stack, .control-panel-toggle')) {
           return;
         }
 

@@ -453,7 +453,7 @@ body.is-desktop-avatar-device.is-desktop-controls-collapsed .control-panel {
   pointer-events: none;
 }
 
-.control-panel-mobile-toggle {
+.control-panel-toggle {
   position: fixed;
   left: 50%;
   bottom: 10px;
@@ -475,7 +475,7 @@ body.is-desktop-avatar-device.is-desktop-controls-collapsed .control-panel {
   transition: opacity var(--control-panel-transition-duration) ease, transform var(--control-panel-transition-duration) ease;
 }
 
-.control-panel-mobile-toggle img {
+.control-panel-toggle img {
   width: 22px;
   height: 22px;
   display: block;
@@ -491,33 +491,33 @@ body.is-mobile-avatar-device.is-mobile-controls-collapsed .controls-stack {
   pointer-events: none;
 }
 
-body.is-desktop-avatar-device .control-panel-mobile-toggle {
+body.is-desktop-avatar-device .control-panel-toggle {
   display: inline-flex;
 }
 
-body.is-desktop-avatar-device.is-desktop-controls-collapsed .control-panel-mobile-toggle {
+body.is-desktop-avatar-device.is-desktop-controls-collapsed .control-panel-toggle {
   opacity: 1;
   pointer-events: auto;
   transform: translate(-50%, 0);
 }
 
-body.is-desktop-avatar-device:not(.is-desktop-controls-collapsed) .control-panel-mobile-toggle {
+body.is-desktop-avatar-device:not(.is-desktop-controls-collapsed) .control-panel-toggle {
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, 16px);
 }
 
-body.is-mobile-avatar-device .control-panel-mobile-toggle {
+body.is-mobile-avatar-device .control-panel-toggle {
   display: inline-flex;
 }
 
-body.is-mobile-avatar-device.is-mobile-controls-collapsed .control-panel-mobile-toggle {
+body.is-mobile-avatar-device.is-mobile-controls-collapsed .control-panel-toggle {
   opacity: 1;
   pointer-events: auto;
   transform: translate(-50%, 0);
 }
 
-body.is-mobile-avatar-device:not(.is-mobile-controls-collapsed) .control-panel-mobile-toggle {
+body.is-mobile-avatar-device:not(.is-mobile-controls-collapsed) .control-panel-toggle {
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, 16px);
