@@ -905,7 +905,7 @@ body::after {
 }
 
 .is-mobile-avatar-device .avatar-selector {
-  padding-top: 0.95rem;
+  padding-top: 3rem;
 }
 .avatar-entry.menu-open .avatar-button[data-avatar-label="Howard"] + .avatar-action-panel .avatar-download-btn,
 .avatar-entry.menu-open .avatar-button[data-avatar-label="Howard"] + .avatar-action-panel .avatar-delete-btn,
