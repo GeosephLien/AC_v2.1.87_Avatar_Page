@@ -18,7 +18,7 @@
   --controls-stack-width: min(640px, calc(100vw - 5rem));
   --control-panel-transition-duration: 0.5s;
   --control-panel-sequence-delay: calc(var(--control-panel-transition-duration) * 0.5);
-  --control-panel-open-delay: 0.25s;
+  --control-panel-open-delay: 0s;
   --bg-back-scale: 1;
   --bg-front-scale: 1;
   --bg-dust-scale: 1;
@@ -1728,6 +1728,7 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
+
 
 
 
