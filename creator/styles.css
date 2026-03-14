@@ -74,12 +74,14 @@ body::after {
 }
 
 .top-actions {
-  position: relative;
+  position: fixed;
   z-index: 60;
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  margin-top: 0.2rem;
+  left: 15px;
+  top: 15px;
+  margin-top: 0;
 }
 
 .brand {
@@ -269,12 +271,17 @@ body::after {
 }
 
 .hamburger-btn {
-  width: 52px;
-  height: 52px;
+  width: 36px;
+  height: 36px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  background: transparent;
+  padding: 0;
+  background-color: transparent;
+  background-image: url("./images/Icons_menu_creator.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 32px 32px;
   border: 0;
   border-radius: 0;
   cursor: pointer;
@@ -285,12 +292,7 @@ body::after {
 }
 
 .hamburger-btn span {
-  position: absolute;
-  width: 18px;
-  height: 3px;
-  border-radius: 2px;
-  background: #ffffff;
-  transition: none;
+  display: none;
 }
 
 .hamburger-btn span:nth-child(1) {
@@ -709,10 +711,10 @@ body.unity-visible #container {
   }
 
   .top-actions {
-    position: absolute;
-    left: 0;
+    position: fixed;
+    left: 15px;
     right: auto;
-    top: 0;
+    top: 15px;
     transform: none;
     width: auto;
     margin-left: 0;
@@ -771,4 +773,8 @@ body.unity-visible #container {
     width: 100%;
   }
 }
+
+
+
+
 
