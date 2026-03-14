@@ -619,7 +619,7 @@ body::after {
   position: relative;
   width: min(100%, 1000px);
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: visible;
   scrollbar-width: none;
   -ms-overflow-style: none;
   cursor: grab;
@@ -867,7 +867,7 @@ body::after {
 .avatar-delete-float {
   position: absolute;
   left: 50%;
-  top: -22px;
+  top: -44px;
   z-index: 4;
   width: 34px;
   height: 34px;
