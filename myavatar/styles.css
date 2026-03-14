@@ -18,7 +18,7 @@
   --controls-stack-width: min(640px, calc(100vw - 5rem));
   --control-panel-transition-duration: 0.5s;
   --control-panel-sequence-delay: calc(var(--control-panel-transition-duration) * 0.5);
-  --control-panel-open-delay: calc(var(--control-panel-transition-duration) * 0.25);
+  --control-panel-open-delay: 0.25s;
   --bg-back-scale: 1;
   --bg-front-scale: 1;
   --bg-dust-scale: 1;
@@ -325,7 +325,7 @@ body::after {
 
 .avatar-gradient {
   width: 30px;
-  height: 24px;
+  height: 30px;
   border-radius: 50%;
   display: block;
   background: #1a2d4f;
@@ -411,6 +411,8 @@ body::after {
   background: transparent;
   border: 0;
   box-shadow: none;
+  transform: translateY(0);
+  transition: transform var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90);
 }
 
 .control-panel {
@@ -454,6 +456,10 @@ body.is-desktop-avatar-device.is-desktop-controls-collapsed .control-panel {
   border-color: transparent;
   pointer-events: none;
   transition-delay: 0s;
+}
+
+body.is-desktop-avatar-device.is-desktop-controls-collapsed .controls-shortcuts {
+  transform: translateY(-14px);
 }
 
 .control-panel-toggle {
@@ -1411,7 +1417,8 @@ body.camera-drag-active * {
 
 
 .controls-shortcuts .creator-button {
-  width: 36px !important;
+  width: auto !important;
+  min-width: 36px;
   height: 36px !important;
   border: 2.2px solid rgba(255, 255, 255, 0.96);
   border-radius: 999px;
@@ -1439,7 +1446,7 @@ body.camera-drag-active * {
 
 .controls-shortcuts .creator-button .shortcut-hover-label-creator {
   margin: 0;
-  padding: 0 0.1rem;
+  padding: 0;
   max-width: 0;
   opacity: 0;
   overflow: hidden;
@@ -1453,10 +1460,10 @@ body.camera-drag-active * {
 .controls-shortcuts .creator-button:hover,
 .controls-shortcuts .creator-button:focus-visible,
 .controls-shortcuts .creator-button:active {
-  width: min(24vw, 220px) !important;
+  width: auto !important;
   border-radius: 999px;
   justify-content: center;
-  padding: 0 0rem;
+  padding: 0 18px;
   background: rgba(154, 164, 230, 0.22);
 }
 
@@ -1476,7 +1483,8 @@ body.camera-drag-active * {
   margin: 0;
 }
 .controls-shortcuts .worlds-button {
-  width: 36px !important;
+  width: auto !important;
+  min-width: 36px;
   height: 36px !important;
   border: 2.2px solid rgba(255, 255, 255, 0.96);
   border-radius: 999px;
@@ -1503,7 +1511,7 @@ body.camera-drag-active * {
 
 .controls-shortcuts .worlds-button .shortcut-hover-label-world {
   margin: 0;
-  padding: 0 0.1rem;
+  padding: 0;
   max-width: 0;
   opacity: 0;
   overflow: hidden;
@@ -1517,10 +1525,10 @@ body.camera-drag-active * {
 .controls-shortcuts .worlds-button:hover,
 .controls-shortcuts .worlds-button:focus-visible,
 .controls-shortcuts .worlds-button:active {
-  width: min(24vw, 220px) !important;
+  width: auto !important;
   border-radius: 999px;
   justify-content: center;
-  padding: 0 0rem;
+  padding: 0 18px;
   background: rgba(154, 164, 230, 0.22);
 }
 
@@ -1554,7 +1562,8 @@ body.camera-drag-active * {
   }
 
   .controls-shortcuts .creator-button {
-    width: 36px !important;
+    width: auto !important;
+  min-width: 36px;
     height: 36px !important;
     border-width: 2.2px;
   }
@@ -1562,8 +1571,8 @@ body.camera-drag-active * {
   .controls-shortcuts .creator-button:hover,
   .controls-shortcuts .creator-button:focus-visible,
   .controls-shortcuts .creator-button:active {
-    width: min(52vw, 200px) !important;
-    padding: 0 0rem;
+    width: auto !important;
+    padding: 0 18px;
   }
 
   .controls-shortcuts .creator-button .creator-button-icon {
@@ -1574,11 +1583,12 @@ body.camera-drag-active * {
   }
 
   .controls-shortcuts .creator-button .shortcut-hover-label-creator {
-    font-size: clamp(0.86rem, 3.5vw, 0.98rem);
+    font-size: clamp(1.19rem, 4.83vw, 1.35rem);
   }
 
   .controls-shortcuts .worlds-button {
-    width: 36px !important;
+    width: auto !important;
+  min-width: 36px;
     height: 36px !important;
     border-width: 2.2px;
   }
@@ -1586,8 +1596,8 @@ body.camera-drag-active * {
   .controls-shortcuts .worlds-button:hover,
   .controls-shortcuts .worlds-button:focus-visible,
   .controls-shortcuts .worlds-button:active {
-    width: min(52vw, 200px) !important;
-    padding: 0 0rem;
+    width: auto !important;
+    padding: 0 18px;
   }
 
   .controls-shortcuts .worlds-button .worlds-button-icon {
@@ -1597,7 +1607,7 @@ body.camera-drag-active * {
   }
 
   .controls-shortcuts .worlds-button .shortcut-hover-label-world {
-    font-size: clamp(0.86rem, 3.5vw, 0.98rem);
+    font-size: clamp(1.19rem, 4.83vw, 1.35rem);
   }
 
   .controls-shortcuts {
@@ -1714,5 +1724,7 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
+
+
 
 

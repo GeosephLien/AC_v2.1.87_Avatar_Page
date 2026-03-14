@@ -656,7 +656,7 @@ body.hero-assets-ready .hero-figure-right img {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   .site-header {
     position: absolute;
   }

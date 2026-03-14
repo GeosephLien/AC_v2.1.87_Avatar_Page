@@ -176,7 +176,7 @@
     };
 
     const startHeroEntryWhenReady = () => {
-      if (window.innerWidth <= 768 || heroFigureImages.length === 0) {
+      if (window.innerWidth <= 960 || heroFigureImages.length === 0) {
         document.body.classList.add("hero-assets-ready");
         return;
       }
@@ -211,7 +211,7 @@
       });
 
       window.addEventListener("resize", () => {
-        if (window.innerWidth > 880) {
+        if (window.innerWidth > 960) {
           closeMenu();
         }
       });
