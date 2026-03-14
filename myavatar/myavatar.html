@@ -343,7 +343,8 @@
       startX: 0,
       startY: 0,
       timer: null,
-      triggered: false
+      triggered: false,
+      deleteTargetActive: false
     };
 
     const preloadedAvatars = [
@@ -384,6 +385,7 @@
 
     function buildAvatarActionControls(label, { canDownload = true, canDelete = true } = {}) {
       const fragment = document.createDocumentFragment();
+      let floatingDeleteButton = null;
 
       const menuButton = document.createElement('button');
       menuButton.className = 'avatar-menu-button';
@@ -420,12 +422,20 @@
         const deleteButton = document.createElement('button');
         deleteButton.className = 'avatar-delete-btn';
         deleteButton.type = 'button';
-        deleteButton.dataset.avatarDelete = '';
         deleteButton.setAttribute('aria-label', `Remove ${label}`);
         deleteButton.innerHTML = `
           <img src="./images/Icon_close.svg" alt="" aria-hidden="true">
         `;
-        menuActiveOverlay.append(deleteButton);
+
+        if (isMobileAvatarActions) {
+          deleteButton.classList.add('avatar-delete-float');
+          deleteButton.dataset.avatarDeleteFloating = '';
+          deleteButton.hidden = true;
+          floatingDeleteButton = deleteButton;
+        } else {
+          deleteButton.dataset.avatarDelete = '';
+          menuActiveOverlay.append(deleteButton);
+        }
       }
 
       if (menuActiveOverlay.childElementCount === 1) {
@@ -433,6 +443,9 @@
       }
 
       fragment.append(menuButton, menuActiveOverlay);
+      if (floatingDeleteButton) {
+        fragment.append(floatingDeleteButton);
+      }
       return fragment;
     }
 
@@ -887,6 +900,11 @@
       if (menuActiveOverlay) {
         menuActiveOverlay.hidden = true;
       }
+      const floatingDeleteButton = entry.querySelector('[data-avatar-delete-floating]');
+      if (floatingDeleteButton) {
+        floatingDeleteButton.hidden = true;
+        floatingDeleteButton.classList.remove('is-hover-target');
+      }
 
       if (openAvatarMenuEntry === entry) {
         openAvatarMenuEntry = null;
@@ -907,7 +925,31 @@
       if (menuActiveOverlay) {
         menuActiveOverlay.hidden = false;
       }
+      const floatingDeleteButton = entry.querySelector('[data-avatar-delete-floating]');
+      if (floatingDeleteButton) {
+        floatingDeleteButton.hidden = !mobileLongPress;
+        floatingDeleteButton.classList.remove('is-hover-target');
+      }
       openAvatarMenuEntry = entry;
+    }
+
+    function updateMobileDeleteHoverState(entry, clientX, clientY) {
+      if (!entry) {
+        return false;
+      }
+
+      const floatingDeleteButton = entry.querySelector('[data-avatar-delete-floating]');
+      if (!floatingDeleteButton || floatingDeleteButton.hidden) {
+        return false;
+      }
+
+      const rect = floatingDeleteButton.getBoundingClientRect();
+      const isOverDeleteTarget = clientX >= rect.left
+        && clientX <= rect.right
+        && clientY >= rect.top
+        && clientY <= rect.bottom;
+      floatingDeleteButton.classList.toggle('is-hover-target', isOverDeleteTarget);
+      return isOverDeleteTarget;
     }
 
     function toggleAvatarActionMenu(entry) {
@@ -1496,11 +1538,17 @@
           avatarLongPressState.timer = null;
         }
 
+        const activeEntry = avatarLongPressState.entry;
+        if (activeEntry) {
+          activeEntry.querySelector('[data-avatar-delete-floating]')?.classList.remove('is-hover-target');
+        }
+
         avatarLongPressState.pointerId = null;
         avatarLongPressState.entry = null;
         avatarLongPressState.startX = 0;
         avatarLongPressState.startY = 0;
         avatarLongPressState.triggered = false;
+        avatarLongPressState.deleteTargetActive = false;
       }
 
       function armAvatarSelectionSuppression() {
@@ -1539,11 +1587,25 @@
             avatarLongPressState.triggered = true;
             armAvatarSelectionSuppression();
             openAvatarActionMenu(entry, { mobileLongPress: true });
+            avatarLongPressState.deleteTargetActive = updateMobileDeleteHoverState(
+              entry,
+              avatarLongPressState.startX,
+              avatarLongPressState.startY
+            );
           }, mobileLongPressDelayMs);
         });
 
-        avatarSelector.addEventListener('pointermove', (event) => {
+        window.addEventListener('pointermove', (event) => {
           if (event.pointerId !== avatarLongPressState.pointerId || avatarLongPressState.pointerId === null) {
+            return;
+          }
+
+          if (avatarLongPressState.triggered) {
+            avatarLongPressState.deleteTargetActive = updateMobileDeleteHoverState(
+              avatarLongPressState.entry,
+              event.clientX,
+              event.clientY
+            );
             return;
           }
 
@@ -1560,15 +1622,27 @@
           }
 
           if (avatarLongPressState.triggered) {
+            const entry = avatarLongPressState.entry;
+            const shouldDelete = avatarLongPressState.deleteTargetActive
+              || updateMobileDeleteHoverState(entry, event.clientX, event.clientY);
             armAvatarSelectionSuppression();
+            resetAvatarLongPress();
+            closeAvatarActionMenu(entry);
+
+            if (shouldDelete) {
+              const button = entry?.querySelector('[data-avatar-button]');
+              if (button) {
+                openDeleteConfirm(button);
+              }
+            }
+            return;
           }
 
           resetAvatarLongPress();
         };
 
-        avatarSelector.addEventListener('pointerup', releaseLongPress);
-        avatarSelector.addEventListener('pointercancel', releaseLongPress);
-        avatarSelector.addEventListener('pointerleave', releaseLongPress);
+        window.addEventListener('pointerup', releaseLongPress);
+        window.addEventListener('pointercancel', releaseLongPress);
       }
 
       avatarSelector.addEventListener('click', async (event) => {
@@ -1820,17 +1894,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

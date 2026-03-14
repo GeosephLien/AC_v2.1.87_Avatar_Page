@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --bg-left: #060d36;
   --bg-mid: #150d3a;
   --bg-right: #3c1556;
@@ -766,7 +766,6 @@ body::after {
   overflow: hidden;
   box-sizing: border-box;
   background: transparent;
-  -webkit-
 }
 
 .avatar-menu-button span {
@@ -818,7 +817,6 @@ body::after {
   overflow: hidden;
   box-sizing: border-box;
   background: transparent;
-  -webkit-
 }
 
 .avatar-action-panel[hidden] {
@@ -858,6 +856,46 @@ body::after {
 .avatar-delete-btn img {
   width: 16px;
   height: 16px;
+}
+
+.avatar-delete-float {
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  z-index: 4;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 50%;
+  background: rgba(130, 24, 56, 0.94);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -6px) scale(0.96);
+  transition: opacity 0.14s ease, transform 0.14s ease, background-color 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
+}
+
+.avatar-entry.mobile-longpress-open .avatar-delete-float {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+.avatar-delete-float.is-hover-target {
+  border-color: rgba(255, 255, 255, 0.98);
+  background: rgba(218, 67, 98, 0.98);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.92), 0 0 16px rgba(244, 99, 124, 0.64);
+}
+
+.avatar-delete-float img {
+  width: 14px;
+  height: 14px;
+  display: block;
+  pointer-events: none;
 }
 .avatar-entry.menu-open .avatar-button[data-avatar-label="Howard"] + .avatar-action-panel .avatar-download-btn,
 .avatar-entry.menu-open .avatar-button[data-avatar-label="Howard"] + .avatar-action-panel .avatar-delete-btn,
@@ -1544,46 +1582,3 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
