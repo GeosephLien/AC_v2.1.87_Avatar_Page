@@ -1919,25 +1919,21 @@
         controlPanelToggle?.addEventListener('click', () => {
           setMobileCollapsed(false);
         });
-        if (isIOSSafari) {
-          return;
-        }
-        window.addEventListener('pointerdown', (event) => {
+        const collapseMobileControlsFromOutside = (event) => {
           if (document.body.classList.contains('is-mobile-controls-collapsed')) {
             return;
           }
-
           const target = event.target;
           if (!(target instanceof Element)) {
             return;
           }
-
           if (target.closest('.controls-stack, .control-panel-toggle')) {
             return;
           }
-
           setMobileCollapsed(true);
-        }, true);
+        };
+        const mobileOutsideCollapseEvent = isIOSSafari ? 'click' : 'pointerdown';
+        window.addEventListener(mobileOutsideCollapseEvent, collapseMobileControlsFromOutside, true);
         return;
       }
 
@@ -2064,4 +2060,6 @@
   </script>
 </body>
 </html>
+
+
 
