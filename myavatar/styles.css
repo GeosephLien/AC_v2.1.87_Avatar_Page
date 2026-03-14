@@ -24,9 +24,11 @@
   --bg-dust-scale: 1;
   --bg-dust-center-y: 50%;
   --viewport-height: 100vh;
+  --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --mobile-browser-ui-inset: 0px;
   --bottom-clearance: calc(10px + var(--safe-area-bottom) + var(--mobile-browser-ui-inset));
+  --creator-available-height: calc(var(--viewport-height) - var(--safe-area-top) - var(--safe-area-bottom) - var(--mobile-browser-ui-inset));
 }
 
 * {
@@ -1127,10 +1129,11 @@ body.camera-drag-active * {
 .creator-overlay {
   position: fixed;
   inset: 0;
+  height: var(--viewport-height);
   z-index: 40;
   display: grid;
   place-items: center;
-  padding: 32px;
+  padding: calc(32px + var(--safe-area-top)) 32px calc(32px + var(--safe-area-bottom) + var(--mobile-browser-ui-inset));
   background: rgba(4, 7, 20, 0.58);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -1143,9 +1146,9 @@ body.camera-drag-active * {
 .creator-panel-wrap {
   position: relative;
   width: min(calc(var(--creator-panel-width) * 1px), calc(100vw - 64px));
-  height: min(calc(var(--creator-panel-height) * 1px), calc(100vh - 64px));
+  height: min(calc(var(--creator-panel-height) * 1px), calc(var(--creator-available-height) - 64px));
   max-width: 100%;
-  max-height: calc(100vh - 64px);
+  max-height: calc(var(--creator-available-height) - 64px);
 }
 
 .creator-panel {
@@ -1670,7 +1673,7 @@ body.camera-drag-active * {
   }
 
   .creator-overlay {
-    padding: 32px 0;
+    padding: calc(16px + var(--safe-area-top)) 0 calc(16px + var(--safe-area-bottom) + var(--mobile-browser-ui-inset));
   }
 
   .creator-panel {
@@ -1679,7 +1682,8 @@ body.camera-drag-active * {
 
   .creator-panel-wrap {
     width: min(calc(var(--creator-panel-width) * 1px), 100vw);
-    height: min(calc(var(--creator-panel-height) * 1px), calc(100vh - 64px));
+    height: min(calc(var(--creator-panel-height) * 1px), calc(var(--creator-available-height) - 32px));
+    max-height: calc(var(--creator-available-height) - 32px);
   }
 
   .creator-panel-back {
@@ -1732,4 +1736,5 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
+
 
