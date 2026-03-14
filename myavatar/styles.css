@@ -468,6 +468,33 @@ body.is-desktop-avatar-device.is-desktop-controls-collapsed .controls-shortcuts 
   transform: translateY(-14px);
 }
 
+body.is-mobile-avatar-device .control-panel {
+  max-height: 180px;
+  overflow: hidden;
+  transition:
+    max-height var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90),
+    opacity var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90),
+    transform var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90),
+    padding var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90),
+    border-color var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90);
+  transition-delay: var(--control-panel-open-delay);
+}
+
+body.is-mobile-avatar-device.is-mobile-controls-collapsed .control-panel {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(10px);
+  padding-top: 0;
+  padding-bottom: 0;
+  border-color: transparent;
+  pointer-events: none;
+  transition-delay: 0s;
+}
+
+body.is-mobile-avatar-device.is-mobile-controls-collapsed .controls-shortcuts {
+  transform: translateY(-14px);
+}
+
 .control-panel-toggle {
   position: fixed;
   left: 50%;
@@ -504,12 +531,6 @@ body.is-desktop-avatar-device.is-desktop-controls-collapsed .controls-shortcuts 
 body.is-mobile-avatar-device .controls-stack {
   transition: transform var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90), opacity var(--control-panel-transition-duration) cubic-bezier(0.20,0.50,0.50,0.90);
   transition-delay: var(--control-panel-open-delay);
-}
-body.is-mobile-avatar-device.is-mobile-controls-collapsed .controls-stack {
-  transform: translate(-50%, calc(100% + 32px));
-  opacity: 0;
-  pointer-events: none;
-  transition-delay: 0s;
 }
 
 body.is-desktop-avatar-device .control-panel-toggle {
@@ -1736,5 +1757,6 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
+
 
 
