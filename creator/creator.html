@@ -27,7 +27,7 @@
               <a href="https://market.viverse.com/zh-TW/?_gl=1*15khbrs*_gcl_au*MTUyODIxNjg5Mi4xNzY4OTg5Mjg1LjQzOTM2NTE3NS4xNzcxOTUxNDA3LjE3NzE5NTE0MDY.*_ga*MTc2MDg1NDkzMC4xNzUxNDc4NDQ0*_ga_DGG9JZZMCG*czE3NzI5MjIyMzckbzI0MyRnMSR0MTc3MjkyMzQzNiRqNTkkbDAkaDA." target="_blank" rel="noopener noreferrer">Marketplace</a>
               <div class="dropdown-inline-action">
                 <button class="dropdown-action" type="button" data-upload-vrm-trigger>Upload VRM</button>
-                <a class="dropdown-info-button" href="https://avatar.viverse.com/zh-TW/avatar/what-is-vrm" target="_blank" rel="noopener noreferrer" aria-label="What is VRM?" title="What is VRM?">info</a>
+                <a class="dropdown-info-button" href="https://avatar.viverse.com/zh-TW/avatar/what-is-vrm" target="_blank" rel="noopener noreferrer" aria-label="What is VRM?">info</a>
               </div>
             </nav>
           </div>
@@ -43,7 +43,24 @@
           <p class="desc">
             Customize style, colors, and details - no two avatars look the same.
           </p>
-          <button id="cta" class="btn btn-primary" type="button">Create Now!</button>
+          <div class="cta-row">
+            <button id="cta" class="creator-cta" type="button">Create Now!</button>
+            <div class="creator-inline-action">
+              <button class="creator-upload-cta" type="button" data-upload-vrm-trigger>Upload VRM</button>
+              <div class="creator-info-wrap">
+                <a
+                  class="creator-info-button"
+                  href="https://avatar.viverse.com/zh-TW/avatar/what-is-vrm"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="What is VRM?"
+                >
+                  <img src="./images/Icon_info.svg" alt="" aria-hidden="true">
+                </a>
+                <span class="creator-info-popup" role="status">What is VRM?</span>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section class="hero-visual" aria-label="Creative hero visual">
@@ -81,7 +98,7 @@
   <script>
     (() => {
       const startButton = document.getElementById('cta');
-      const uploadVrmTrigger = document.querySelector('[data-upload-vrm-trigger]');
+      const uploadVrmTriggers = Array.prototype.slice.call(document.querySelectorAll('[data-upload-vrm-trigger]'));
       const uploadVrmInput = document.getElementById('upload-vrm-input');
       const loadingOverlay = document.getElementById('loading-overlay');
       const loadingBar = document.getElementById('loading-bar');
@@ -252,9 +269,11 @@
         });
       }
 
-      if (uploadVrmTrigger && uploadVrmInput) {
-        uploadVrmTrigger.addEventListener('click', () => {
-          uploadVrmInput.click();
+      if (uploadVrmTriggers.length && uploadVrmInput) {
+        uploadVrmTriggers.forEach((trigger) => {
+          trigger.addEventListener('click', () => {
+            uploadVrmInput.click();
+          });
         });
 
         uploadVrmInput.addEventListener('change', handleUploadSelection);
