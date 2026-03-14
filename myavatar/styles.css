@@ -1468,7 +1468,6 @@ body.camera-drag-active * {
   height: 32px;
   flex: 0 0 32px;
   opacity: 1;
-  transform: translateX(0.5px);
   transition: opacity 0.32s ease, flex-basis 0.42s ease, width 0.42s ease;
 }
 
@@ -1607,8 +1606,7 @@ body.camera-drag-active * {
     width: 32px;
     height: 32px;
     flex-basis: 32px;
-    transform: translateX(0.5px);
-  }
+    }
 
   .controls-shortcuts .creator-button .shortcut-hover-label-creator {
     font-size: clamp(1.19rem, 4.83vw, 1.35rem);
@@ -1757,6 +1755,7 @@ body.camera-drag-active * {
     opacity: 0.6;
   }
 }
+
 
 
 
