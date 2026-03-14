@@ -329,6 +329,13 @@
       { bone: 'hips', offset: new THREE.Vector3(0, -0.08, 0), distance: 4.1, pivot: null },
       { bone: 'head', offset: new THREE.Vector3(0, 0, 0.02), distance: 1.2, pivot: null }
     ];
+    const zoomOutFramingConfig = {
+      headNdcTop: 0.6,
+      footNdcBottom: -0.6,
+      distancePadding: 1.03,
+      minDistance: 2.8,
+      cameraYOffset: 0.125
+    };
 
     const dragState = {
       active: false,
@@ -1138,6 +1145,47 @@
       return humanoid.getNormalizedBoneNode(name) || humanoid.getRawBoneNode(name) || null;
     }
 
+    function getBoneWorldPosition(name) {
+      const bone = getBoneNode(name);
+      if (!bone) {
+        return null;
+      }
+
+      return bone.getWorldPosition(new THREE.Vector3());
+    }
+
+    function getZoomOutFrameFromBones() {
+      const headPosition = getBoneWorldPosition('head');
+      const leftFoot = getBoneWorldPosition('leftFoot') || getBoneWorldPosition('leftToes');
+      const rightFoot = getBoneWorldPosition('rightFoot') || getBoneWorldPosition('rightToes');
+
+      if (!headPosition || (!leftFoot && !rightFoot)) {
+        return null;
+      }
+
+      const footPosition = leftFoot && rightFoot
+        ? leftFoot.clone().add(rightFoot).multiplyScalar(0.5)
+        : (leftFoot || rightFoot);
+
+      const verticalSpan = Math.abs(headPosition.y - footPosition.y);
+      if (verticalSpan < 0.001) {
+        return null;
+      }
+
+      const availableHalfNdc = Math.min(
+        Math.max(Math.abs(zoomOutFramingConfig.headNdcTop), 0.1),
+        Math.max(Math.abs(zoomOutFramingConfig.footNdcBottom), 0.1)
+      );
+      const halfFovRad = THREE.MathUtils.degToRad(camera.fov * 0.5);
+      const distance = ((verticalSpan * 0.5) / (Math.tan(halfFovRad) * availableHalfNdc))
+        * zoomOutFramingConfig.distancePadding;
+
+      return {
+        pivot: footPosition.clone().lerp(headPosition, 0.5).add(new THREE.Vector3(0, zoomOutFramingConfig.cameraYOffset, 0)),
+        distance: Math.max(distance, zoomOutFramingConfig.minDistance)
+      };
+    }
+
     function getZoomPivot(index) {
       const step = zoomConfig[index] || zoomConfig[0];
 
@@ -1214,12 +1262,19 @@
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
       const maxSize = Math.max(size.x, size.y, size.z);
-      zoomConfig[0].distance = Math.max(maxSize * 1.42, 2.8);
+      const zoomOutFrameFromBones = getZoomOutFrameFromBones();
+      if (zoomOutFrameFromBones) {
+        zoomConfig[0].distance = zoomOutFrameFromBones.distance;
+        zoomConfig[0].pivot = zoomOutFrameFromBones.pivot;
+      } else {
+        zoomConfig[0].distance = Math.max(maxSize * 1.42, zoomOutFramingConfig.minDistance);
+        zoomConfig[0].pivot = center.clone().add(new THREE.Vector3(0, zoomOutFramingConfig.cameraYOffset, 0));
+      }
       zoomConfig[1].distance = Math.max(maxSize * 0.46, 1.05);
       cameraState.distance = zoomConfig[0].distance;
       cameraState.targetDistance = zoomConfig[0].distance;
-      cameraState.currentPivot.copy(center);
-      cameraState.targetPivot.copy(center);
+      cameraState.currentPivot.copy(zoomConfig[0].pivot || center);
+      cameraState.targetPivot.copy(zoomConfig[0].pivot || center);
       updateBackgroundZoom();
       camera.near = 0.01;
       camera.far = Math.max(maxSize * 10, 20);
@@ -2074,6 +2129,19 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
